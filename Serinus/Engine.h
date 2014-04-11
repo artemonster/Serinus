@@ -24,7 +24,7 @@ public:
 	void HandleCommandQueue();
 	void pushCommand(std::string cmd);
 
-	//std::queue<int*> voices;
+	//std::queue<int*> voices;123
 	//void loadPatch(std::string patchName);
 private:
 	std::vector<PatchModule*> currentPatch;
