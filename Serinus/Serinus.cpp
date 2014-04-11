@@ -22,7 +22,6 @@ static int audioCallback(void *outputBuffer, void *inputBuffer, unsigned int nBu
 
 static bool isDone=false;
 void siginthandler(int param){ isDone=true; }
-unsigned int bufferFrames = 1024;
 
 int main(int argc, char* args[]) {
 	cout << "Testing..." << endl;
@@ -31,25 +30,27 @@ int main(int argc, char* args[]) {
 	RtAudio dac;
 	RtAudio::StreamParameters parameters;
 	parameters.deviceId = dac.getDefaultOutputDevice();
-	parameters.nChannels = 2;
+	parameters.nChannels = 1 ;
 	parameters.firstChannel = 0;
-	dac.openStream( &parameters, NULL, RTAUDIO_SINT32,
-    SAMPLE_RATE, &bufferFrames, &audioCallback, (void *)&engine);
+    unsigned int bufferFrames = BUFFER_SIZE; //cannot be const
+    dac.openStream(&parameters, NULL, RTAUDIO_SINT32,
+        SAMPLE_RATE, &bufferFrames, &audioCallback, (void *)&engine);
 	dac.startStream();
-//	RtMidiIn *midiin = new RtMidiIn();
-//	midiin->openPort( 0 );
-//	midiin->ignoreTypes( false, false, false );
-//	std::vector<unsigned char> message;
-//	int nBytes, i;
-//	double stamp;
+
+	RtMidiIn *midiin = new RtMidiIn();
+	midiin->openPort(0);
+	midiin->ignoreTypes( false, false, false );
+	std::vector<unsigned char> message;
+	int nBytes, i;
+	double stamp;
 
 	while(!isDone) {
-//		stamp = midiin->getMessage( &message );
-//		    nBytes = message.size();
-//		    for ( i=0; i<nBytes; i++ )
-//		      std::cout << "Byte " << i << " = " << (int)message[i] << ", ";
-//		    if ( nBytes > 0 )
-//		      std::cout << "stamp = " << stamp << std::endl;
+		stamp = midiin->getMessage( &message );
+		    nBytes = message.size();
+		    for ( i=0; i<nBytes; i++ )
+		      std::cout << "Byte " << i << " = " << (int)message[i] << ", ";
+		    if ( nBytes > 0 )
+		      std::cout << "stamp = " << stamp << std::endl;
 		engine.HandleCommandQueue();
     }
 
