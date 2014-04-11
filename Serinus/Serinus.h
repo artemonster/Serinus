@@ -8,6 +8,13 @@
 #ifndef SREINUS_H_
 #define SREINUS_H_
 
+#include <iostream>
+#include <math.h>
+#include <cstdio>
+#include "signal.h"
+#include "HAL\RtAudio.h"
+#include "HAL\RtMidi.h"
+
 typedef int Sample; 					//this is what currently used in this configuration
 const unsigned int SAMPLE_RATE = 44100;			//won't change (I guess)
 const unsigned int BUFFER_SIZE = 1024; 			//specify min max

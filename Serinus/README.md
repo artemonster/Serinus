@@ -2,7 +2,9 @@ Software Synthesizer Project. Codename: Serinus
 ===================
 
 This is a test repository for the core of the digital synth.
-Currently, it uses portaudio and RtMidi libraries (will be discarded later).
+Currently, it uses RtMidi and RtAudio libraries as HAL, so please refer to the projects for the license information:
+https://github.com/thestk/rtmidi
+https://github.com/thestk/rtaudio
 
 TODO
 ===================
@@ -20,14 +22,6 @@ Latency Table
 | drums | 6 ms  |
 | guitar  | 12 ms  |
 | keys  | 10-20 ms  |
-
-Installation
-===================
-0. Install MinGW (base, g++)
-1. Install Eclipse CDT
-2. Import a project from GIT
-3. Download portaudio library
-4.  Copy \lib\to mingw\lib and \include to \include\
 
 Useful guidelines
 ===================

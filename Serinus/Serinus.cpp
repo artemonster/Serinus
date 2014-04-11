@@ -1,12 +1,5 @@
-#include <iostream>
-#include <math.h>
-#include <cstdio>
-#include "signal.h"
-#include "HAL\RtAudio.h"
-#include "HAL\RtMidi.h"
+#include "Serinus.h"
 #include "Engine.h"
-#define __WINDOWS_MM__
-using namespace std;
 
 static int audioCallback(void *outputBuffer, void *inputBuffer, unsigned int nBufferFrames,
         double streamTime, RtAudioStreamStatus status, void *userData  ) {
@@ -20,41 +13,41 @@ static int audioCallback(void *outputBuffer, void *inputBuffer, unsigned int nBu
     return 0;
 }
 
+static void midiMonitor(double deltatime, std::vector<unsigned char> *message, void *userData) {
+    Engine* engine = (Engine*)userData;
+    engine->pushCommand(*message);
+}
+
 static bool isDone=false;
 void siginthandler(int param){ isDone=true; }
 
 int main(int argc, char* args[]) {
-	cout << "Testing..." << endl;
+	std::cout << "Testing..." << std::endl;
 	signal(SIGINT, siginthandler);
+
 	Engine engine;
 	RtAudio dac;
 	RtAudio::StreamParameters parameters;
 	parameters.deviceId = dac.getDefaultOutputDevice();
 	parameters.nChannels = 1 ;
 	parameters.firstChannel = 0;
-    unsigned int bufferFrames = BUFFER_SIZE; //cannot be const
+
+    unsigned int bufferFrames = BUFFER_SIZE; //cannot be const, a hack for RtAudio
+
     dac.openStream(&parameters, NULL, RTAUDIO_SINT32,
         SAMPLE_RATE, &bufferFrames, &audioCallback, (void *)&engine);
 	dac.startStream();
 
-	RtMidiIn *midiin = new RtMidiIn();
-	midiin->openPort(0);
-	midiin->ignoreTypes( false, false, false );
-	std::vector<unsigned char> message;
-	int nBytes, i;
-	double stamp;
+	RtMidiIn midiin;
+	midiin.openPort(0);
+	midiin.ignoreTypes(false, false, false);
+    midiin.setCallback(&midiMonitor, &engine);
 
 	while(!isDone) {
-		stamp = midiin->getMessage( &message );
-		    nBytes = message.size();
-		    for ( i=0; i<nBytes; i++ )
-		      std::cout << "Byte " << i << " = " << (int)message[i] << ", ";
-		    if ( nBytes > 0 )
-		      std::cout << "stamp = " << stamp << std::endl;
 		engine.HandleCommandQueue();
     }
 
 	dac.stopStream();
-    cout << "Finished!";
+    std::cout << "Finished!";
     return 0;
 }
