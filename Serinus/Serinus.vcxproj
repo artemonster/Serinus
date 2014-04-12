@@ -41,6 +41,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
+    <IncludePath>C:\Users\akoso_000\Documents\Visual Studio 2013\Projects\Serinus\Serinus\HAL\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -51,13 +52,14 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;__WINDOWS_ASIO__;_DEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;__WINDOWS_DS__;__WINDOWS_MM__;_DEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>C:\Users\akoso_000\Documents\Visual Studio 2013\Projects\Serinus\Serinus;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>dsound.lib;winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -80,15 +82,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Engine.h" />
-    <ClInclude Include="HAL\include\asio.h" />
-    <ClInclude Include="HAL\include\asiodrivers.h" />
-    <ClInclude Include="HAL\include\asiodrvr.h" />
-    <ClInclude Include="HAL\include\asiolist.h" />
-    <ClInclude Include="HAL\include\asiosys.h" />
     <ClInclude Include="HAL\include\dsound.h" />
     <ClInclude Include="HAL\include\ginclude.h" />
-    <ClInclude Include="HAL\include\iasiodrv.h" />
-    <ClInclude Include="HAL\include\iasiothiscallresolver.h" />
     <ClInclude Include="HAL\include\soundcard.h" />
     <ClInclude Include="HAL\RtAudio.h" />
     <ClInclude Include="HAL\RtError.h" />
@@ -100,10 +95,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine.cpp" />
-    <ClCompile Include="HAL\include\asio.cpp" />
-    <ClCompile Include="HAL\include\asiodrivers.cpp" />
-    <ClCompile Include="HAL\include\asiolist.cpp" />
-    <ClCompile Include="HAL\include\iasiothiscallresolver.cpp" />
     <ClCompile Include="HAL\RtAudio.cpp" />
     <ClCompile Include="HAL\RtMidi.cpp" />
     <ClCompile Include="Modules\Filters\LowPass.cpp" />
@@ -112,6 +103,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Modules\modules.md" />
+    <None Include="README.md" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

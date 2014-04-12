@@ -48,12 +48,18 @@ Sample Engine::Tick() {
 
 void Engine::HandleCommandQueue() {
 	while (!cmds.empty()) {
-		//TODO add new class: command and add handling here
-		//std::string command = cmds.pop();
-		//....
+		//TODO decide on how to handle the commands
+        // -using hashmaps/arrays?
+        std::vector<unsigned char> message = cmds.front();
+        cmds.pop();
+        unsigned int nBytes = message.size();
+        for (unsigned int i = 0; i < nBytes; i++) {
+            std::cout << "Byte " << i << " = " << (int)message.at(i) << ", ";
+        }      
+        std::cout << std::endl;
 	}
 }
 
-void Engine::pushCommand(std::string cmd) {
+void Engine::pushCommand(std::vector<unsigned char> cmd) {
 	cmds.push(cmd);
 }

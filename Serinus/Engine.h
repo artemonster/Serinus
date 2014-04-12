@@ -22,13 +22,13 @@ public:
 	~Engine() {};
 	Sample Tick();
 	void HandleCommandQueue();
-	void pushCommand(std::string cmd);
+    void pushCommand(std::vector<unsigned char> cmd);
 
-	//std::queue<int*> voices;
+	//std::queue<int*> voices;123
 	//void loadPatch(std::string patchName);
 private:
 	std::vector<PatchModule*> currentPatch;
-	std::queue<std::string> cmds;
+    std::queue<std::vector<unsigned char>> cmds;
 	Sample *inSample;
 	Sample *lastSample;
 };

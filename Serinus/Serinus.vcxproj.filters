@@ -16,49 +16,22 @@
     <Filter Include="Source Files\HAL">
       <UniqueIdentifier>{2a6701e9-75f7-4339-8e29-3d034ef194b7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\HAL\include">
+    <Filter Include="Header Files\HAL">
+      <UniqueIdentifier>{f8e469ea-66a0-4095-a006-2feb9c1b112e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\HAL\include">
       <UniqueIdentifier>{7a22bec9-1dac-4710-a2e2-9a150aae4f31}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="HAL\RtAudio.h">
-      <Filter>Source Files\HAL</Filter>
-    </ClInclude>
-    <ClInclude Include="HAL\RtError.h">
-      <Filter>Source Files\HAL</Filter>
-    </ClInclude>
-    <ClInclude Include="HAL\RtMidi.h">
-      <Filter>Source Files\HAL</Filter>
-    </ClInclude>
     <ClInclude Include="HAL\include\soundcard.h">
-      <Filter>Source Files\HAL\include</Filter>
-    </ClInclude>
-    <ClInclude Include="HAL\include\asio.h">
-      <Filter>Source Files\HAL\include</Filter>
-    </ClInclude>
-    <ClInclude Include="HAL\include\asiodrivers.h">
-      <Filter>Source Files\HAL\include</Filter>
-    </ClInclude>
-    <ClInclude Include="HAL\include\asiodrvr.h">
-      <Filter>Source Files\HAL\include</Filter>
-    </ClInclude>
-    <ClInclude Include="HAL\include\asiolist.h">
-      <Filter>Source Files\HAL\include</Filter>
-    </ClInclude>
-    <ClInclude Include="HAL\include\asiosys.h">
-      <Filter>Source Files\HAL\include</Filter>
+      <Filter>Header Files\HAL\include</Filter>
     </ClInclude>
     <ClInclude Include="HAL\include\dsound.h">
-      <Filter>Source Files\HAL\include</Filter>
+      <Filter>Header Files\HAL\include</Filter>
     </ClInclude>
     <ClInclude Include="HAL\include\ginclude.h">
-      <Filter>Source Files\HAL\include</Filter>
-    </ClInclude>
-    <ClInclude Include="HAL\include\iasiodrv.h">
-      <Filter>Source Files\HAL\include</Filter>
-    </ClInclude>
-    <ClInclude Include="HAL\include\iasiothiscallresolver.h">
-      <Filter>Source Files\HAL\include</Filter>
+      <Filter>Header Files\HAL\include</Filter>
     </ClInclude>
     <ClInclude Include="Engine.h">
       <Filter>Header Files</Filter>
@@ -75,6 +48,15 @@
     <ClInclude Include="Modules\Filters\LowPass.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="HAL\RtAudio.h">
+      <Filter>Header Files\HAL</Filter>
+    </ClInclude>
+    <ClInclude Include="HAL\RtMidi.h">
+      <Filter>Header Files\HAL</Filter>
+    </ClInclude>
+    <ClInclude Include="HAL\RtError.h">
+      <Filter>Header Files\HAL</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Serinus.cpp">
@@ -89,18 +71,6 @@
     <ClCompile Include="HAL\RtMidi.cpp">
       <Filter>Source Files\HAL</Filter>
     </ClCompile>
-    <ClCompile Include="HAL\include\asio.cpp">
-      <Filter>Source Files\HAL\include</Filter>
-    </ClCompile>
-    <ClCompile Include="HAL\include\asiodrivers.cpp">
-      <Filter>Source Files\HAL\include</Filter>
-    </ClCompile>
-    <ClCompile Include="HAL\include\asiolist.cpp">
-      <Filter>Source Files\HAL\include</Filter>
-    </ClCompile>
-    <ClCompile Include="HAL\include\iasiothiscallresolver.cpp">
-      <Filter>Source Files\HAL\include</Filter>
-    </ClCompile>
     <ClCompile Include="Modules\Generators\SawDCO.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -110,5 +80,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Modules\modules.md" />
+    <None Include="README.md" />
   </ItemGroup>
 </Project>

@@ -13,7 +13,7 @@ SawDCO::SawDCO() {
 }
 
 void SawDCO::Tick() {
-	outSample = phase*INT32_UPSCALE;
+    outSample = phase*UPSCALE;
 	phase += frequency*2/SAMPLE_RATE;
     if(phase >= 1.0f) phase -= 2.0f;
 }
