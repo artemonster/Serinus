@@ -102,7 +102,6 @@
     <ClCompile Include="Serinus.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Modules\modules.md" />
     <None Include="README.md" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -7,7 +7,7 @@
 
 #ifndef PATCHMODULE_H_
 #define PATCHMODULE_H_
-
+#include <map>
 #include "../Serinus.h"
 
 class PatchModule {
@@ -19,4 +19,6 @@ public:
 	Sample *inSample;
 };
 
+template<typename T> PatchModule* createInstance() { return new T; }
+typedef std::map<std::string, PatchModule*(*)()> ModulesMap;
 #endif /* PATCHMODULE_H_ */

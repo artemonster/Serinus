@@ -5,7 +5,6 @@ This is a test repository for the core of the digital synth.
 Currently, it uses RtMidi and RtAudio libraries as HAL, so please refer to the projects for the license information:
 https://github.com/thestk/rtmidi
 https://github.com/thestk/rtaudio
-тесто!
 
 
 TODO

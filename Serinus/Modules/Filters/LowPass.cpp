@@ -18,3 +18,5 @@ void LowPass::Tick() {
 	inT_2=inT_1;
 	inT_1=*inSample;
 }
+
+
