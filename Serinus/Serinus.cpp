@@ -15,7 +15,7 @@ static int audioCallback(void *outputBuffer, void *inputBuffer, unsigned int nBu
 
 static void midiMonitor(double deltatime, std::vector<unsigned char> *message, void *userData) {
     Engine* engine = (Engine*)userData;
-    engine->pushCommand(*message);
+    engine->PushCommand(*message);
 }
 
 static bool isDone=false;

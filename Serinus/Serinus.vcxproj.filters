@@ -22,6 +22,12 @@
     <Filter Include="Header Files\HAL\include">
       <UniqueIdentifier>{7a22bec9-1dac-4710-a2e2-9a150aae4f31}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Util">
+      <UniqueIdentifier>{d23ee950-e72c-49eb-bd8c-41db2d3ea066}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Util">
+      <UniqueIdentifier>{3fc2d0ee-7f09-437a-a013-ebd046eeb627}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="HAL\include\soundcard.h">
@@ -57,14 +63,14 @@
     <ClInclude Include="HAL\RtError.h">
       <Filter>Header Files\HAL</Filter>
     </ClInclude>
-    <ClInclude Include="Factory.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Creator.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Util</Filter>
     </ClInclude>
     <ClInclude Include="CreatorImpl.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="Factory.h">
+      <Filter>Header Files\Util</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -86,11 +92,11 @@
     <ClCompile Include="Modules\Filters\LowPass.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Factory.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Creator.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Util</Filter>
+    </ClCompile>
+    <ClCompile Include="Factory.cpp">
+      <Filter>Source Files\Util</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

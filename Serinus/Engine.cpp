@@ -15,8 +15,8 @@ Engine::Engine() {
         TODO initialize filesystem and load a patch from it.
         ^^^^ this all will be supplied by the OS as EngineParameters in the constructor.
     */
-    MidiHandler midiLookUp[] = { &Engine::HandleUnknownCmd, &Engine::HandleUnknownCmd, &Engine::HandleUnknownCmd, &Engine::HandleUnknownCmd,
-        &Engine::HandleUnknownCmd, &Engine::HandleUnknownCmd, &Engine::HandleUnknownCmd, &Engine::HandleUnknownCmd,
+    MidiHandler midiLookUp[] = { &Engine::HandleRunningCmd, &Engine::HandleRunningCmd, &Engine::HandleRunningCmd, &Engine::HandleRunningCmd,
+        &Engine::HandleRunningCmd, &Engine::HandleRunningCmd, &Engine::HandleRunningCmd, &Engine::HandleRunningCmd,
         &Engine::NoteOff, &Engine::NoteOn, &Engine::Aftertouch, &Engine::ControlChange,
         &Engine::PatchChange, &Engine::ChannelPressure, &Engine::PitchWheel, &Engine::Sysex };
     //I don't trust std::memcpy :)
@@ -24,8 +24,9 @@ Engine::Engine() {
         midiHndlTable[i] = midiLookUp[i];
     }
 
-    for (int x = 0; x < 127; ++x) {
-        midiNotes[x] = (440 / 32) * (2 ^ ((x - 9) / 12));
+    float tune = 440.0;
+    for (int x = 0; x <= 127; ++x) {
+        midiNotes[x] = tune * pow(2, (((float)x - 69) / 12));
     }
 
     //this is a test data, ofc
@@ -35,27 +36,23 @@ Engine::Engine() {
 
     //LOG.debug("Instantiating modules for a patch...");
     std::list<std::string>::iterator iterator;
-    for (iterator = modulesInApatch.begin(); iterator != modulesInApatch.end(); ++iterator) {
-        currentPatch.push_back(Factory::create(*iterator));
-    }
-
-	/*
-	 * Link all modules together. The input of module_i points to the output of the module_(i-x).
-	 * This way we can use one output sample of some module at multiple places at once.
-	 * TODO how modulation will be handled? Maybe some multiple input ports should be defined?
-     * TODO how hardware inputs and outputs will be handled? they should be routed also together somehow (maybe a special index, or better: enum)
-
-     * Also, because we are in the loop for all modules, load up their configurations.
-
-	 * Alternative way to this idea is to call Tick(inSample) in a recursive way (pointed), so that every output lands on the stack
-     * (Can be problematic when multiple sinks are registered for the same source!)
-	 */
-    std::vector<PatchModule*>::size_type i;
     int matrixIndex;
-    for (i = 0, matrixIndex = 0; i != currentPatch.size(); i++, matrixIndex++) {
-        PatchModule* source = currentPatch[routingMatrix[matrixIndex]]; //will be an array of multiple sources
-        //TODO: currentPatch[i]->Configure(configs[i]) //something like that
-        currentPatch[i]->inSample = &(source->outSample);
+    /*
+    * Dynamically insantiate the module.
+    * Apply the configuration.
+    * Link all modules together. The input of module_i points to the output of the module_(i-x).
+    * This way we can use one output sample of some module at multiple places at once.
+    * TODO how modulation will be handled? Maybe some multiple input ports should be defined?
+    * TODO how hardware inputs and outputs will be handled? they should be routed also together somehow (maybe a special index, or better: enum)
+    * TODO register module as special message receiver
+    * Alternative way to this idea is to call Tick(inSample) in a recursive way (pointed), so that every output lands on the stack
+    * (Can be problematic when multiple sinks are registered for the same source!)
+    */
+    for (matrixIndex = 0, iterator = modulesInApatch.begin(); iterator != modulesInApatch.end(); ++iterator, matrixIndex++) {
+        PatchModule* currentModule = Factory::create(*iterator);
+        currentPatch.push_back(currentModule);
+        PatchModule* source = currentPatch[routingMatrix[matrixIndex]];
+        currentPatch.back()->inSample = &(source->outSample);
     }
     //Map inputs on hardware properly (see previous comment on linking)
 	PatchModule* exitModule = this->currentPatch.back();
@@ -95,7 +92,7 @@ void Engine::HandleCommandQueue() {
 	}
 }
 
-void Engine::pushCommand(std::vector<unsigned char> cmd) {
+void Engine::PushCommand(std::vector<unsigned char> cmd) {
 	cmds.push(cmd);
 }
 
@@ -113,7 +110,7 @@ void Engine::NoteOn(unsigned char voice, std::vector<unsigned char> cmd) {
     //for all registered trigger destinations
 };
 
-void Engine::HandleUnknownCmd(unsigned char wtf, std::vector<unsigned char> cmd) {
+void Engine::HandleRunningCmd(unsigned char wtf, std::vector<unsigned char> cmd) {
     if (runningStatus != 0) {
         Engine::MidiHandler handler = midiHndlTable[runningStatus];
         (this->*(handler))(wtf, cmd);
