@@ -30,10 +30,12 @@ public:
     void PatchChange(unsigned char voice, std::vector<unsigned char> cmd) {};
     void ChannelPressure(unsigned char voice, std::vector<unsigned char> cmd) {};
     void PitchWheel(unsigned char voice, std::vector<unsigned char> cmd) {};
-    void Sysex(unsigned char type, std::vector<unsigned char> cmd) {};
+    void Sysex(unsigned char type, std::vector<unsigned char> cmd);
     void HandleUnknownCmd(unsigned char wtf, std::vector<unsigned char> cmd);
      
 private:
+    // Midi stuff:
+    float midiNotes[127];
     unsigned char runningStatus = 0;
 	std::vector<PatchModule*> currentPatch;
     std::queue<std::vector<unsigned char>> cmds;

@@ -11,7 +11,8 @@
 
 class SawDCO : public PatchModule  {
 public:
-	SawDCO();
+    static const CreatorImpl<SawDCO> creator;
+	SawDCO(); 
 	~SawDCO() {};
 	void Tick();
 	void setFrequency(float inFreq);
@@ -19,5 +20,7 @@ private:
 	float phase;
 	float frequency;
 };
+
+
 
 #endif /* SAWDCO_H_ */

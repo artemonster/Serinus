@@ -7,10 +7,7 @@
 
 #include "Engine.h"
 #include "Modules/PatchModule.h"
-#include "Modules/Generators/SawDCO.h"
-#include "Modules/Filters/LowPass.h"
 #include <list>
-ModulesMap availableModules;
 
 Engine::Engine() { 
     /*
@@ -27,16 +24,9 @@ Engine::Engine() {
         midiHndlTable[i] = midiLookUp[i];
     }
 
-    /*
-        This can be substitued by a simple factory if (sting = "SawDCO") { return new SawDCO } else if.... else return NULL;
-        I think map should be more performant in this case, as the amount of available modules can be pretty big.
-        http://stackoverflow.com/questions/8269465/how-can-i-instantiate-an-object-knowing-only-its-name
-        TODO: maybe auto-register is not a bad idea...
-    */
-    //LOG.debug("Registering modules...");
-    availableModules["SawDCO"] = &createInstance<SawDCO>;
-    availableModules["LowPass"] = &createInstance<LowPass>;
-    
+    for (int x = 0; x < 127; ++x) {
+        midiNotes[x] = (440 / 32) * (2 ^ ((x - 9) / 12));
+    }
 
     //this is a test data, ofc
     std::list<std::string> modulesInApatch = { "SawDCO", "LowPass" };
@@ -46,7 +36,7 @@ Engine::Engine() {
     //LOG.debug("Instantiating modules for a patch...");
     std::list<std::string>::iterator iterator;
     for (iterator = modulesInApatch.begin(); iterator != modulesInApatch.end(); ++iterator) {
-        currentPatch.push_back(availableModules[*iterator]());
+        currentPatch.push_back(Factory::create(*iterator));
     }
 
 	/*
@@ -120,7 +110,7 @@ void Engine::NoteOn(unsigned char voice, std::vector<unsigned char> cmd) {
     if (velocity == 0) {
         //handle like NoteOff, but do not set runningStatus
     }
-
+    //for all registered trigger destinations
 };
 
 void Engine::HandleUnknownCmd(unsigned char wtf, std::vector<unsigned char> cmd) {
@@ -129,5 +119,15 @@ void Engine::HandleUnknownCmd(unsigned char wtf, std::vector<unsigned char> cmd)
         (this->*(handler))(wtf, cmd);
     } else {
         //WTF that can be?!
+    }
+};
+
+void Engine::Sysex(unsigned char type, std::vector<unsigned char> cmd) {
+    if (type >= 0 && type <= 7) {
+        //System Common Category
+        runningStatus = 0;
+    } else {
+        //RealTime Category
+        //cmd.length()==1
     }
 };

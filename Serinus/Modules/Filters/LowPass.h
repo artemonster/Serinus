@@ -11,6 +11,7 @@
 
 class LowPass : public PatchModule {
 public:
+    static const CreatorImpl<LowPass> creator;
 	LowPass();
 	~LowPass() {};
 	void Tick();

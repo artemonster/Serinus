@@ -7,6 +7,8 @@
 
 #include "SawDCO.h"
 
+const CreatorImpl<SawDCO> SawDCO::creator("SawDCO");
+
 SawDCO::SawDCO() {
 	frequency=220;
 	phase=0.0;

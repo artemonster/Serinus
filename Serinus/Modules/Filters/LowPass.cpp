@@ -7,6 +7,8 @@
 
 #include "LowPass.h"
 
+const CreatorImpl<LowPass> LowPass::creator("LowPass");
+
 LowPass::LowPass() {
 	inT_1=0;
 	inT_2=0;
