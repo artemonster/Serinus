@@ -93,6 +93,7 @@
     <ClInclude Include="HAL\RtMidi.h" />
     <ClInclude Include="Modules\Filters\LowPass.h" />
     <ClInclude Include="Modules\Generators\SawDCO.h" />
+    <ClInclude Include="Modules\Generators\WaveTableOsc.h" />
     <ClInclude Include="Modules\PatchModule.h" />
     <ClInclude Include="Serinus.h" />
   </ItemGroup>
@@ -104,6 +105,7 @@
     <ClCompile Include="HAL\RtMidi.cpp" />
     <ClCompile Include="Modules\Filters\LowPass.cpp" />
     <ClCompile Include="Modules\Generators\SawDCO.cpp" />
+    <ClCompile Include="Modules\Generators\WaveTableOsc.cpp" />
     <ClCompile Include="Serinus.cpp" />
   </ItemGroup>
   <ItemGroup>

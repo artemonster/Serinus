@@ -30,7 +30,8 @@ Engine::Engine() {
     }
 
     //this is a test data, ofc
-    std::list<std::string> modulesInApatch = { "SawDCO", "LowPass" };
+    //std::list<std::string> modulesInApatch = { "SawDCO", "LowPass" };
+    std::list<std::string> modulesInApatch = { "WaveTableOsc"};
     int routingMatrix[2] = { 0, 0 };
 
 

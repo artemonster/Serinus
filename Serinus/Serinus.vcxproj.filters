@@ -72,6 +72,9 @@
     <ClInclude Include="Factory.h">
       <Filter>Header Files\Util</Filter>
     </ClInclude>
+    <ClInclude Include="Modules\Generators\WaveTableOsc.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Serinus.cpp">
@@ -97,6 +100,9 @@
     </ClCompile>
     <ClCompile Include="Factory.cpp">
       <Filter>Source Files\Util</Filter>
+    </ClCompile>
+    <ClCompile Include="Modules\Generators\WaveTableOsc.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

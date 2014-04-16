@@ -7,9 +7,8 @@
 
 #ifndef PATCHMODULE_H_
 #define PATCHMODULE_H_
-#include <map>
 #include "../Serinus.h"
-#include "Factory.h"
+#include "../Factory.h"
 
 class PatchModule {
 public:
@@ -18,6 +17,7 @@ public:
 	virtual ~PatchModule() {};
 	Sample outSample;
 	Sample *inSample;
+    Sample **modIn;
 };
 
 #endif /* PATCHMODULE_H_ */

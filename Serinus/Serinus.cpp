@@ -38,10 +38,15 @@ int main(int argc, char* args[]) {
         SAMPLE_RATE, &bufferFrames, &audioCallback, (void *)&engine);
 	dac.startStream();
 
-	RtMidiIn midiin;
-	midiin.openPort(0);
-	midiin.ignoreTypes(false, false, false);
-    midiin.setCallback(&midiMonitor, &engine);
+    RtMidiIn* midiin;
+    try {
+        midiin = new RtMidiIn();
+        midiin->openPort(0);
+        midiin->ignoreTypes(false, false, false);
+        midiin->setCallback(&midiMonitor, &engine);
+    } catch (RtMidiError &error) {
+        error.printMessage();
+    }
 
 	while(!isDone) {
 		engine.HandleCommandQueue();
