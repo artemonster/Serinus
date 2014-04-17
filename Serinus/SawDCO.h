@@ -7,7 +7,7 @@
 
 #ifndef SAWDCO_H_
 #define SAWDCO_H_
-#include "..\PatchModule.h"
+#include "PatchModule.h"
 
 class SawDCO : public PatchModule  {
 public:
@@ -16,7 +16,8 @@ public:
 	~SawDCO() {};
 	void Tick();
 	void setFrequency(float inFreq);
-    void modulate(int memberIndex, Sample inValue);
+    void Modulate(int targetIndex, Sample inValue);
+    void ProcessCommand(int commandIndex, int inValue) {};
     //internals! cannot be private because of damn thing...
 	float phase;
 	float frequency;

@@ -1,7 +1,7 @@
 #ifndef WAVETABLEOSC_H_
 #define WAVETABLEOSC_H_
 
-#include "..\PatchModule.h"
+#include "PatchModule.h"
 
 class WaveTableOsc : public PatchModule {
 public:
@@ -9,6 +9,8 @@ public:
     WaveTableOsc();
     ~WaveTableOsc() {};
     void Tick();
+    void Modulate(int targetIndex, Sample inValue) {};
+    void ProcessCommand(int commandIndex, int inValue) {};
     void setFrequency(float inc);
     void setPhaseOffset(float offset);
     void loadWaveTable(int tableLen, float *input);

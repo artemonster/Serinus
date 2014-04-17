@@ -6,7 +6,7 @@
  */
 
 #include "Engine.h"
-#include "Modules/PatchModule.h"
+#include "PatchModule.h"
 #include <list>
 
 Engine::Engine() { 
@@ -32,6 +32,12 @@ Engine::Engine() {
     //this is a test data, ofc
     //std::list<std::string> modulesInApatch = { "SawDCO", "LowPass" };
     std::list<std::string> modulesInApatch = { "WaveTableOsc"};
+    PatchModule* test1 = Factory::create("SawDCO");
+    PatchModule* test2 = Factory::create("SawDCO");
+    test1->Tick();
+    test2->Tick();
+    test2->Tick();
+    test1->Modulate(2, test2->outSample);
     int routingMatrix[2] = { 0, 0 };
 
 

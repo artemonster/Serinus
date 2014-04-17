@@ -9,6 +9,7 @@
 
 const CreatorImpl<SawDCO> SawDCO::creator("SawDCO");
 static mem_ptr members[3] = { &SawDCO::phase, &SawDCO::frequency, &SawDCO::amplitude };
+enum { PHASE, FREQ, AMP };
 
 SawDCO::SawDCO() {
 	frequency=220;
@@ -26,6 +27,6 @@ void SawDCO::setFrequency(float inFreq) {
 	frequency=inFreq;
 }
 
-void SawDCO::modulate(int memberIndex, Sample inValue) {
-    this->*(members[memberIndex]) *= inValue;
+void SawDCO::Modulate(int targetIndex, Sample inValue) {
+    this->*(members[targetIndex]) *= (float)inValue/UPSCALE;
 }

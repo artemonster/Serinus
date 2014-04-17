@@ -7,7 +7,7 @@
 
 #ifndef LOWPASS_H_
 #define LOWPASS_H_
-#include "..\PatchModule.h"
+#include "PatchModule.h"
 
 class LowPass : public PatchModule {
 public:
@@ -15,6 +15,8 @@ public:
 	LowPass();
 	~LowPass() {};
 	void Tick();
+    void Modulate(int targetIndex, Sample inValue) {};
+    void ProcessCommand(int commandIndex, int inValue) {};
 private:
 	Sample inT_1;
 	Sample inT_2;

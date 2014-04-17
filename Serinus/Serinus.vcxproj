@@ -91,11 +91,11 @@
     <ClInclude Include="HAL\RtAudio.h" />
     <ClInclude Include="HAL\RtError.h" />
     <ClInclude Include="HAL\RtMidi.h" />
-    <ClInclude Include="Modules\Filters\LowPass.h" />
-    <ClInclude Include="Modules\Generators\SawDCO.h" />
-    <ClInclude Include="Modules\Generators\WaveTableOsc.h" />
-    <ClInclude Include="Modules\PatchModule.h" />
+    <ClInclude Include="LowPass.h" />
+    <ClInclude Include="PatchModule.h" />
+    <ClInclude Include="SawDCO.h" />
     <ClInclude Include="Serinus.h" />
+    <ClInclude Include="WaveTableOsc.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Creator.cpp" />
@@ -103,10 +103,10 @@
     <ClCompile Include="Factory.cpp" />
     <ClCompile Include="HAL\RtAudio.cpp" />
     <ClCompile Include="HAL\RtMidi.cpp" />
-    <ClCompile Include="Modules\Filters\LowPass.cpp" />
-    <ClCompile Include="Modules\Generators\SawDCO.cpp" />
-    <ClCompile Include="Modules\Generators\WaveTableOsc.cpp" />
+    <ClCompile Include="LowPass.cpp" />
+    <ClCompile Include="SawDCO.cpp" />
     <ClCompile Include="Serinus.cpp" />
+    <ClCompile Include="WaveTableOsc.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="README.md" />

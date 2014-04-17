@@ -28,6 +28,12 @@
     <Filter Include="Header Files\Util">
       <UniqueIdentifier>{3fc2d0ee-7f09-437a-a013-ebd046eeb627}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Modules">
+      <UniqueIdentifier>{b02f2aca-8cbc-4b04-9f70-2f762704006e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Modules">
+      <UniqueIdentifier>{d63c11da-96e0-4d54-81f7-778338948c84}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="HAL\include\soundcard.h">
@@ -43,15 +49,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Serinus.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Modules\PatchModule.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Modules\Generators\SawDCO.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Modules\Filters\LowPass.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="HAL\RtAudio.h">
@@ -72,8 +69,17 @@
     <ClInclude Include="Factory.h">
       <Filter>Header Files\Util</Filter>
     </ClInclude>
-    <ClInclude Include="Modules\Generators\WaveTableOsc.h">
+    <ClInclude Include="PatchModule.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="LowPass.h">
+      <Filter>Header Files\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="SawDCO.h">
+      <Filter>Header Files\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="WaveTableOsc.h">
+      <Filter>Header Files\Modules</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -89,20 +95,20 @@
     <ClCompile Include="HAL\RtMidi.cpp">
       <Filter>Source Files\HAL</Filter>
     </ClCompile>
-    <ClCompile Include="Modules\Generators\SawDCO.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Modules\Filters\LowPass.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Creator.cpp">
       <Filter>Source Files\Util</Filter>
     </ClCompile>
     <ClCompile Include="Factory.cpp">
       <Filter>Source Files\Util</Filter>
     </ClCompile>
-    <ClCompile Include="Modules\Generators\WaveTableOsc.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="LowPass.cpp">
+      <Filter>Source Files\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="SawDCO.cpp">
+      <Filter>Source Files\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="WaveTableOsc.cpp">
+      <Filter>Source Files\Modules</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
