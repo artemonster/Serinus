@@ -1,13 +1,7 @@
-/*
- * SawDCO.h
- *
- *  Created on: 8 Apr 2014
- *      Author: akoso_000
- */
-
 #ifndef SAWDCO_H_
 #define SAWDCO_H_
 #include "PatchModule.h"
+#include "PatchModuleConfigs.h"
 
 class SawDCO : public PatchModule  {
 public:
@@ -15,10 +9,11 @@ public:
 	SawDCO(); 
 	~SawDCO() {};
 	void Tick();
-    void ProcessCommand(int commandType, int commandIndex, int inValue) {};
-    void FoldInputsToInternals() {};
+    void ProcessCommand(const int &commandType, const int &commandIndex, const int &inValue) {};
 private:
-    InternalVal phase;
+    Sample phase;
+    Sample freq;
+    Sample amplitude;
 };
 
 #endif /* SAWDCO_H_ */

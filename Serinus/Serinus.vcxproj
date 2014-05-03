@@ -104,6 +104,7 @@
     <ClCompile Include="Factory.cpp" />
     <ClCompile Include="HAL\RtAudio.cpp" />
     <ClCompile Include="HAL\RtMidi.cpp" />
+    <ClCompile Include="Knob.cpp" />
     <ClCompile Include="SawDCO.cpp" />
     <ClCompile Include="Serinus.cpp" />
     <ClCompile Include="WaveTableOsc.cpp" />

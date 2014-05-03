@@ -9,9 +9,7 @@ public:
     WaveTableOsc();
     ~WaveTableOsc() {};
     void Tick();
-    //void Modulate(int targetIndex, Sample inValue) {};
-    void ProcessCommand(int commandType, int commandIndex, int inValue) {};
-    void FoldInputsToInternals() {};
+    void ProcessCommand(const int &commandType, const int &commandIndex, const int &inValue) {};
 
     void setFrequency(float inc);
     void setPhaseOffset(float offset);

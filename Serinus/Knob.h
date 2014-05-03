@@ -6,27 +6,13 @@
 class Knob : public PatchModule {
 public:
     static const CreatorImpl<Knob> creator;
-    inline Knob() {
-        value = 1.0;
-        output = new Sample[O_Knob::MAX + 1];
-        input = NULL;
-    };
-
+    Knob();
     ~Knob() {};
-
-    inline void Tick() {
-        output[O_Knob::VALUE] = value;
-    };
-
-    inline void setValue(InternalVal val) {
-        value = val;
-    }
-
-    void ProcessCommand(int commandType, int commandIndex, int inValue) {};
-    void FoldInputsToInternals() {};
+    inline void Tick();
+    inline void setValue(InternalVal val);
+    void ProcessCommand(const int &commandType, const int &commandIndex, const int &inValue) {};
 private:
     InternalVal value;
 };
 
-const CreatorImpl<Knob> Knob::creator("Knob");
 #endif /* KNOB_H_ */

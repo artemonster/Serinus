@@ -9,11 +9,20 @@ https://github.com/thestk/rtaudio
 
 TODO
 ===================
-1. Decide on patch configuration format
-2. Decide on module configuration format
-3. Add command class and implement handlers (maybe also class-specific, directly embedded in respective class)
-4. Populate some modules so we have something to play with (weighted mixers, effects, lfo, oscillators)
-5. Add midi device
+1. Add some basic modules to play with
+2. Use basic XML parser to load configs
+3. Implement _simple_ voice allocation system
+4. Handle NoteOn and NoteOff events
+5. Implement command dispatch/handling system
+
+
+Goals
+===================
+1. Multi-timbral support
+2. Hardware IO registry
+3. Filesystem functions
+4. Scheduler
+5. ...
 
 Latency Table
 ===================

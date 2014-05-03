@@ -38,6 +38,7 @@ private:
     float midiNotes[128];
     unsigned char runningStatus = 0;
 	std::vector<PatchModule*> currentPatch;
+    const std::pair<int, int> NO_INPUT = { 0, 0 };
     std::queue<std::vector<unsigned char>> cmds;
 	Sample *inSample;
     Sample *lastSample;

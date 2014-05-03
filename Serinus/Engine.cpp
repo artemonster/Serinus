@@ -1,10 +1,3 @@
-/*
- * Engine.cpp
- *
- *  Created on: 8 Apr 2014
- *      Author: akoso_000
- */
-
 #include "Engine.h"
 #include "PatchModule.h"
 #include "PatchModuleConfigs.h"
@@ -31,16 +24,27 @@ Engine::Engine() {
     }
 
     //this is a test data, ofc
-    //List of string-named classes to instantiate. Index in this list is unique ID
-    std::list<std::string> modulesInApatch = { "Knob", "Knob", "Knob", "SawDCO", "WaveTableOsc"};
+    //List of string-named classes to instantiate. Index in this list is also an unique ID for this instance.
+    std::list<std::string> modulesInApatch = { "Knob", "Knob", "SawDCO" };
+    ModuleConfig KnobConfig1{
+        std::make_pair(O_Knob::VALUE, 110)
+    };
+    ModuleConfig KnobConfig2{
+        std::make_pair(O_Knob::VALUE, 1)
+    };
+    ModuleConfig SawDCOConfig{
+        std::make_pair(I_SawDCO::PHASE, 0),
+        std::make_pair(I_SawDCO::FREQ, 50),
+        std::make_pair(I_SawDCO::AMP, 0)
+    };
+    std::list<ModuleConfig> configs = { KnobConfig1, KnobConfig2, SawDCOConfig };
     //This is a bit tricky: each module has vector of inputs, which can be mapped so some previous element, which has multiple outputs. SO:
-    //For element E (vector), for input I of E (vector of inputs), specify source element S with needed output index O (int pair)
+    std::list<ModuleInputs> connections = { { NO_INPUT }, { NO_INPUT }, { { 0, 0 }, { 0, 0 } } };
     
-    std::list<std::vector<std::pair<int, int>>> routingMatrix = { { { 0, 0 } }, { { 0, 0 } }, { { 0, 0 } }, { { 0, 0 }, { 0, 0 } }, { { 2, 0 }, { 3, 0 } } };
-
     //LOG.debug("Instantiating modules for a patch...");
-    std::list<std::string>::iterator iterator;
-    std::list<std::vector<std::pair<int, int>>>::iterator routeIt;
+    std::list<std::string>::iterator moduleIt;
+    std::list<ModuleInputs>::iterator connectonIt;
+    std::list<ModuleConfig>::iterator configIt;
     /*
     * Dynamically insantiate the module and apply configuration.
     * Then, link all modules together. All inputs of module_i point to the output of the module_(i-x).
@@ -52,18 +56,25 @@ Engine::Engine() {
     * Alternative way to this idea is to call Tick(inSample) in a recursive way (pointed), so that every output lands on the stack
     * (Can be problematic when multiple sinks are registered for the same source!)
     */
-    for (routeIt = routingMatrix.begin(), iterator = modulesInApatch.begin(); iterator != modulesInApatch.end(); ++iterator, ++routeIt) {
-        PatchModule* currentModule = Factory::create(*iterator);
-        currentPatch.push_back(currentModule);
-        //vector of inputs of currentModule, each of them pointing to the tuple of source module's index ([0]), and it's output index ([1])
-        std::vector<std::pair<int, int>> router = *routeIt;
-        std::vector<std::pair<int, int>>::iterator inputsIterator;
-        for (inputsIterator = router.begin(); inputsIterator != router.end(); ++inputsIterator) {
+    for (connectonIt = connections.begin(), moduleIt = modulesInApatch.begin(), configIt = configs.begin(); 
+        moduleIt != modulesInApatch.end();  //assume, all lists are same size. TODO: replace all 3 with tuple (now its easier to handle this all stuff)
+        ++moduleIt, ++connectonIt, ++configIt) {
+
+        PatchModule* currentModule = Factory::create(*moduleIt);
+        currentModule->LoadConfiguration(*configIt);
+        //vector of inputs of currentModule, each of them pointing to the tuple of source module's index (first), and it's output index (second)
+        ModuleInputs moduleConnections = *connectonIt;
+        ModuleInputs::iterator inputsIterator;
+        for (inputsIterator = moduleConnections.begin(); inputsIterator != moduleConnections.end(); ++inputsIterator) {
+            //TODO: check for inputsIterator->first (0:NULL, 1024: HW, 1...999 patchModules)
             PatchModule* source = currentPatch[inputsIterator->first];
-            currentModule->input[std::distance(router.begin(), inputsIterator)] = &(source->output[inputsIterator->second]);
-            //Fold unrouted inputs to internals, if needed
-            currentModule->FoldInputsToInternals();
+            if (currentModule->input != NULL) { //check, if module even has inputs :)
+                //TODO: check for inputsIterator->second (0:NULL ....)
+                currentModule->input[std::distance(moduleConnections.begin(), inputsIterator)] = &(source->output[inputsIterator->second]);
+            }
         }
+        //this->registerReceiver(currentModule);
+        currentPatch.push_back(currentModule);
     }
     //Map inputs on hardware properly (see previous comment on linking)
 	PatchModule* exitModule = this->currentPatch.back();
