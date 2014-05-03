@@ -69,9 +69,6 @@
     <ClInclude Include="Factory.h">
       <Filter>Header Files\Util</Filter>
     </ClInclude>
-    <ClInclude Include="LowPass.h">
-      <Filter>Header Files\Modules</Filter>
-    </ClInclude>
     <ClInclude Include="SawDCO.h">
       <Filter>Header Files\Modules</Filter>
     </ClInclude>
@@ -80,6 +77,12 @@
     </ClInclude>
     <ClInclude Include="PatchModule.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Knob.h">
+      <Filter>Header Files\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="PatchModuleConfigs.h">
+      <Filter>Header Files\Modules</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -100,9 +103,6 @@
     </ClCompile>
     <ClCompile Include="Factory.cpp">
       <Filter>Source Files\Util</Filter>
-    </ClCompile>
-    <ClCompile Include="LowPass.cpp">
-      <Filter>Source Files\Modules</Filter>
     </ClCompile>
     <ClCompile Include="SawDCO.cpp">
       <Filter>Source Files\Modules</Filter>

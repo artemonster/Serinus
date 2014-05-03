@@ -7,6 +7,7 @@
 
 #include "Engine.h"
 #include "PatchModule.h"
+#include "PatchModuleConfigs.h"
 #include <list>
 
 Engine::Engine() { 
@@ -30,40 +31,43 @@ Engine::Engine() {
     }
 
     //this is a test data, ofc
-    //std::list<std::string> modulesInApatch = { "SawDCO", "LowPass" };
-    std::list<std::string> modulesInApatch = { "WaveTableOsc"};
-    PatchModule* test1 = Factory::create("SawDCO");
-    PatchModule* test2 = Factory::create("SawDCO");
-    test1->Tick();
-    test2->Tick();
-    test2->Tick();
-    test1->Modulate(2, test2->outSample);
-    int routingMatrix[2] = { 0, 0 };
-
+    //List of string-named classes to instantiate. Index in this list is unique ID
+    std::list<std::string> modulesInApatch = { "Knob", "Knob", "Knob", "SawDCO", "WaveTableOsc"};
+    //This is a bit tricky: each module has vector of inputs, which can be mapped so some previous element, which has multiple outputs. SO:
+    //For element E (vector), for input I of E (vector of inputs), specify source element S with needed output index O (int pair)
+    
+    std::list<std::vector<std::pair<int, int>>> routingMatrix = { { { 0, 0 } }, { { 0, 0 } }, { { 0, 0 } }, { { 0, 0 }, { 0, 0 } }, { { 2, 0 }, { 3, 0 } } };
 
     //LOG.debug("Instantiating modules for a patch...");
     std::list<std::string>::iterator iterator;
-    int matrixIndex;
+    std::list<std::vector<std::pair<int, int>>>::iterator routeIt;
     /*
-    * Dynamically insantiate the module.
-    * Apply the configuration.
-    * Link all modules together. The input of module_i points to the output of the module_(i-x).
+    * Dynamically insantiate the module and apply configuration.
+    * Then, link all modules together. All inputs of module_i point to the output of the module_(i-x).
     * This way we can use one output sample of some module at multiple places at once.
-    * TODO how modulation will be handled? Maybe some multiple input ports should be defined?
-    * TODO how hardware inputs and outputs will be handled? they should be routed also together somehow (maybe a special index, or better: enum)
+    * Q: how hardware inputs and outputs will be handled? 
+    * A: Special input and output PatchModules will be instantiated at the beginning and end of the configuration
     * TODO register module as special message receiver
+    *
     * Alternative way to this idea is to call Tick(inSample) in a recursive way (pointed), so that every output lands on the stack
     * (Can be problematic when multiple sinks are registered for the same source!)
     */
-    for (matrixIndex = 0, iterator = modulesInApatch.begin(); iterator != modulesInApatch.end(); ++iterator, matrixIndex++) {
+    for (routeIt = routingMatrix.begin(), iterator = modulesInApatch.begin(); iterator != modulesInApatch.end(); ++iterator, ++routeIt) {
         PatchModule* currentModule = Factory::create(*iterator);
         currentPatch.push_back(currentModule);
-        PatchModule* source = currentPatch[routingMatrix[matrixIndex]];
-        currentPatch.back()->inSample = &(source->outSample);
+        //vector of inputs of currentModule, each of them pointing to the tuple of source module's index ([0]), and it's output index ([1])
+        std::vector<std::pair<int, int>> router = *routeIt;
+        std::vector<std::pair<int, int>>::iterator inputsIterator;
+        for (inputsIterator = router.begin(); inputsIterator != router.end(); ++inputsIterator) {
+            PatchModule* source = currentPatch[inputsIterator->first];
+            currentModule->input[std::distance(router.begin(), inputsIterator)] = &(source->output[inputsIterator->second]);
+            //Fold unrouted inputs to internals, if needed
+            currentModule->FoldInputsToInternals();
+        }
     }
     //Map inputs on hardware properly (see previous comment on linking)
 	PatchModule* exitModule = this->currentPatch.back();
-	lastSample=&(exitModule->outSample);
+	lastSample=&(exitModule->output[0]);
     inSample = NULL;
 }
 

@@ -15,7 +15,8 @@
 #include "HAL\RtAudio.h"
 #include "HAL\RtMidi.h"
 
-typedef int Sample; 					//this is what currently used in this configuration
+typedef int Sample; 					//this type is used for samples
+typedef float InternalVal;              //this is what used inside each module to store parameters!
 const unsigned int SAMPLE_RATE = 44100;			//won't change (I guess)
 const unsigned int BUFFER_SIZE = 1024; 			//specify min max
 const unsigned int MAX_VOICES = 16; 				//just for fun

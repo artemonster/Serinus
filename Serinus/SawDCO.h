@@ -15,14 +15,10 @@ public:
 	SawDCO(); 
 	~SawDCO() {};
 	void Tick();
-	void setFrequency(float inFreq);
-    void Modulate(int targetIndex, Sample inValue);
-    void ProcessCommand(int commandIndex, int inValue) {};
-    //internals! cannot be private because of damn thing...
-	float phase;
-	float frequency;
-    float amplitude;
+    void ProcessCommand(int commandType, int commandIndex, int inValue) {};
+    void FoldInputsToInternals() {};
+private:
+    InternalVal phase;
 };
 
-typedef float SawDCO::*mem_ptr;
 #endif /* SAWDCO_H_ */

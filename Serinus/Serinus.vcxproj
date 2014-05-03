@@ -91,8 +91,9 @@
     <ClInclude Include="HAL\RtAudio.h" />
     <ClInclude Include="HAL\RtError.h" />
     <ClInclude Include="HAL\RtMidi.h" />
-    <ClInclude Include="LowPass.h" />
+    <ClInclude Include="Knob.h" />
     <ClInclude Include="PatchModule.h" />
+    <ClInclude Include="PatchModuleConfigs.h" />
     <ClInclude Include="SawDCO.h" />
     <ClInclude Include="Serinus.h" />
     <ClInclude Include="WaveTableOsc.h" />
@@ -103,7 +104,6 @@
     <ClCompile Include="Factory.cpp" />
     <ClCompile Include="HAL\RtAudio.cpp" />
     <ClCompile Include="HAL\RtMidi.cpp" />
-    <ClCompile Include="LowPass.cpp" />
     <ClCompile Include="SawDCO.cpp" />
     <ClCompile Include="Serinus.cpp" />
     <ClCompile Include="WaveTableOsc.cpp" />

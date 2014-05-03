@@ -6,27 +6,17 @@
  */
 
 #include "SawDCO.h"
-
+#include "PatchModuleConfigs.h"
 const CreatorImpl<SawDCO> SawDCO::creator("SawDCO");
-static mem_ptr members[3] = { &SawDCO::phase, &SawDCO::frequency, &SawDCO::amplitude };
-enum { PHASE, FREQ, AMP };
 
 SawDCO::SawDCO() {
-	frequency=220;
+    output = new Sample[O_SawDCO::MAX + 1];
+    input = new Sample*[I_SawDCO::MAX + 1];
 	phase=0.0;
-    amplitude = 1.0;
 }
 
 void SawDCO::Tick() {
-    outSample = amplitude*phase*UPSCALE;
-	phase += frequency*2/SAMPLE_RATE;
-    if(phase >= 1.0f) phase -= 2.0f;
-}
-
-void SawDCO::setFrequency(float inFreq) {
-	frequency=inFreq;
-}
-
-void SawDCO::Modulate(int targetIndex, Sample inValue) {
-    this->*(members[targetIndex]) *= (float)inValue/UPSCALE;
+    output[O_SawDCO::SAMPLE] = (Sample)*input[I_SawDCO::AMP] * phase * UPSCALE;
+    phase += *input[I_SawDCO::FREQ] * 2 / SAMPLE_RATE;
+    if (phase >= 1.0f) phase -= 2.0f;
 }
