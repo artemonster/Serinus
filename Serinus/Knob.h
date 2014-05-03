@@ -12,7 +12,7 @@ public:
     inline void setValue(InternalVal val);
     void ProcessCommand(const int &commandType, const int &commandIndex, const int &inValue) {};
 private:
-    InternalVal value;
+    Sample value;
 };
 
 #endif /* KNOB_H_ */

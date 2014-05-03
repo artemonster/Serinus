@@ -17,34 +17,38 @@ Engine::Engine() {
     for (int i = 0; i < 16; i++) {
         midiHndlTable[i] = midiLookUp[i];
     }
-
+    //Initialize midi note table
     float tune = 440.0;
     for (int x = 0; x <= 127; ++x) {
-        midiNotes[x] = tune * pow(2, (((float)x - 69) / 12));
+        midiNotes[x] = tune * (float)pow(2, (((float)x - 69) / 12));
     }
 
-    //this is a test data, ofc
-    //List of string-named classes to instantiate. Index in this list is also an unique ID for this instance.
-    std::list<std::string> modulesInApatch = { "Knob", "Knob", "SawDCO" };
+    //TEST DATA
     ModuleConfig KnobConfig1{
         std::make_pair(O_Knob::VALUE, 110)
     };
+
     ModuleConfig KnobConfig2{
         std::make_pair(O_Knob::VALUE, 1)
     };
+
     ModuleConfig SawDCOConfig{
         std::make_pair(I_SawDCO::PHASE, 0),
-        std::make_pair(I_SawDCO::FREQ, 50),
-        std::make_pair(I_SawDCO::AMP, 0)
+        std::make_pair(I_SawDCO::FREQ, 5),
+        std::make_pair(I_SawDCO::AMP, 1)
     };
-    std::list<ModuleConfig> configs = { KnobConfig1, KnobConfig2, SawDCOConfig };
-    //This is a bit tricky: each module has vector of inputs, which can be mapped so some previous element, which has multiple outputs. SO:
-    std::list<ModuleInputs> connections = { { NO_INPUT }, { NO_INPUT }, { { 0, 0 }, { 0, 0 } } };
     
+    std::list<Module> patch = { 
+        { "Knob", KnobConfig1, { NO_INPUT } },//Frequency setting for OSC
+        { "Knob", KnobConfig2, { NO_INPUT } },//LFO depth
+        { "Knob", KnobConfig2, { NO_INPUT } },//LFO freq
+        { "SawDCO", SawDCOConfig, { { I_SawDCO::FREQ, 2, 0 }, { I_SawDCO::AMP, 2, 0 } } }, //LFO
+        { "SawDCO", SawDCOConfig, { { I_SawDCO::FREQ, 0, 0 }, { I_SawDCO::AMP, 3, 0 } } } //actual osc
+    };
+    //TEST DATA END
+
     //LOG.debug("Instantiating modules for a patch...");
-    std::list<std::string>::iterator moduleIt;
-    std::list<ModuleInputs>::iterator connectonIt;
-    std::list<ModuleConfig>::iterator configIt;
+    std::list<Module>::iterator moduleIt;
     /*
     * Dynamically insantiate the module and apply configuration.
     * Then, link all modules together. All inputs of module_i point to the output of the module_(i-x).
@@ -56,28 +60,25 @@ Engine::Engine() {
     * Alternative way to this idea is to call Tick(inSample) in a recursive way (pointed), so that every output lands on the stack
     * (Can be problematic when multiple sinks are registered for the same source!)
     */
-    for (connectonIt = connections.begin(), moduleIt = modulesInApatch.begin(), configIt = configs.begin(); 
-        moduleIt != modulesInApatch.end();  //assume, all lists are same size. TODO: replace all 3 with tuple (now its easier to handle this all stuff)
-        ++moduleIt, ++connectonIt, ++configIt) {
-
-        PatchModule* currentModule = Factory::create(*moduleIt);
-        currentModule->LoadConfiguration(*configIt);
+    for (moduleIt = patch.begin(); moduleIt != patch.end(); ++moduleIt) {
+        PatchModule* currentModule = Factory::create(moduleIt->name);
+        currentModule->LoadConfiguration(moduleIt->config);
         //vector of inputs of currentModule, each of them pointing to the tuple of source module's index (first), and it's output index (second)
-        ModuleInputs moduleConnections = *connectonIt;
-        ModuleInputs::iterator inputsIterator;
-        for (inputsIterator = moduleConnections.begin(); inputsIterator != moduleConnections.end(); ++inputsIterator) {
-            //TODO: check for inputsIterator->first (0:NULL, 1024: HW, 1...999 patchModules)
-            PatchModule* source = currentPatch[inputsIterator->first];
+        ModuleInputs moduleConnections = moduleIt->connections;
+        ModuleInputs::iterator inputsConfigIt;
+        for (inputsConfigIt = moduleConnections.begin(); inputsConfigIt != moduleConnections.end(); ++inputsConfigIt) {
+            //TODO: check for inputsConfigIt->first (0:NULL, 1024: HW, 1...999 patchModules)
+            PatchModule* source = currentPatch[inputsConfigIt->sourceModule];
             if (currentModule->input != NULL) { //check, if module even has inputs :)
-                //TODO: check for inputsIterator->second (0:NULL ....)
-                currentModule->input[std::distance(moduleConnections.begin(), inputsIterator)] = &(source->output[inputsIterator->second]);
+                //TODO: check for inputsConfigIt->second (0:NULL ....)
+                currentModule->input[inputsConfigIt->inputIndex] = &(source->output[inputsConfigIt->outputIndex]);
             }
         }
         //this->registerReceiver(currentModule);
         currentPatch.push_back(currentModule);
     }
     //Map inputs on hardware properly (see previous comment on linking)
-	PatchModule* exitModule = this->currentPatch.back();
+	PatchModule* exitModule = currentPatch.back();
 	lastSample=&(exitModule->output[0]);
     inSample = NULL;
 }
@@ -86,7 +87,7 @@ Sample Engine::Tick() {
 	//for all active allocated voices
 	//for all modules
 	std::vector<PatchModule*>::iterator mod;
-	for (mod=this->currentPatch.begin(); mod != this->currentPatch.end(); ++mod) {
+	for (mod=currentPatch.begin(); mod != currentPatch.end(); ++mod) {
 		(*mod)->Tick();
 	}
     //look up if a voice needs to be freed

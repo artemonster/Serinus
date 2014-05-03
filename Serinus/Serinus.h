@@ -14,7 +14,13 @@
 typedef int Sample; 					//this type is used for samples
 typedef float InternalVal;              //this is what used inside each module to store parameters!
 typedef std::map<int, Sample> ModuleConfig;
-typedef std::vector<std::pair<int, int>> ModuleInputs;
+struct InputConfig {
+    int inputIndex;
+    int sourceModule;
+    int outputIndex;
+};
+const InputConfig NO_INPUT = { 0, 0, 0 };
+typedef std::vector<InputConfig> ModuleInputs;
 const unsigned int SAMPLE_RATE = 44100;			//won't change (I guess)
 const unsigned int BUFFER_SIZE = 1024; 			//specify min max
 const unsigned int MAX_VOICES = 16; 				//just for fun
