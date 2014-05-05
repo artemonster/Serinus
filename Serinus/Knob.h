@@ -9,7 +9,13 @@ public:
     Knob();
     ~Knob() {};
     inline void Tick();
-    inline void setValue(InternalVal val);
+    inline void setValue(Sample val);
+	ModuleTypes getParameterTypes() {
+		ModuleTypes map{
+			std::make_pair(0, Types::INT),
+		};
+		return map;
+	};
     void ProcessCommand(const int &commandType, const int &commandIndex, const int &inValue) {};
 private:
     Sample value;

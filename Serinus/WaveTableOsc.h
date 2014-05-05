@@ -10,7 +10,12 @@ public:
     ~WaveTableOsc() {};
     void Tick();
     void ProcessCommand(const int &commandType, const int &commandIndex, const int &inValue) {};
-
+	ModuleTypes getParameterTypes() {
+		ModuleTypes map{
+			std::make_pair(0, Types::FLOAT),
+		};
+		return map;
+	};
     void setFrequency(float inc);
     void setPhaseOffset(float offset);
     void loadWaveTable(int tableLen, float *input);

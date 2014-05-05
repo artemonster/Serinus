@@ -3,17 +3,16 @@
 const CreatorImpl<SawDCO> SawDCO::creator("SawDCO");
 
 SawDCO::SawDCO() {
-    phase = 0;
-    amplitude = 1;
-    freq = 220;
 
-    output = new Sample[O_SawDCO::MAX + 1];
+    output = new Sample[O_SawDCO::MAX];
     output[O_SawDCO::SAMPLE] = 0;
-    input = new Sample*[I_SawDCO::MAX + 1];
-    //fold everything to internals
-    input[I_SawDCO::PHASE] = &this->phase;
-    input[I_SawDCO::AMP] = &this->amplitude;
-    input[I_SawDCO::FREQ] = &this->freq;
+    input = new Sample*[I_SawDCO::MAX];
+	parameters = new void*[P_SawDCO::MAX];
+	parameters[0] = &tuneFreq;
+	parameters[1] = &detune;
+	parameters[2] = &phasor;
+	parameters[3] = &reTrigger;
+	parameters[4] = &waveform;
 }
 
 void SawDCO::Tick() {
@@ -21,3 +20,14 @@ void SawDCO::Tick() {
     phase += *input[I_SawDCO::FREQ] * 2 / SAMPLE_RATE;
     if (phase >= 1 * UPSCALE) phase -= 2 * UPSCALE;
 }
+
+ModuleTypes SawDCO::getParameterTypes() {
+	ModuleTypes map{
+		std::make_pair(P_SawDCO::TUNE, Types::FLOAT),
+		std::make_pair(P_SawDCO::DETUNE, Types::FLOAT),
+		std::make_pair(P_SawDCO::PHASOR, Types::FLOAT),
+		std::make_pair(P_SawDCO::TRIG, Types::BOOL),
+		std::make_pair(P_SawDCO::WF, Types::INT),
+	};
+	return map;
+};

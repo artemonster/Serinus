@@ -6,6 +6,7 @@
   * Naming for the namespace is following: prefix+class name. Prefixes:
   * "I_" for inputs
   * "O_" for outputs
+  * "P_" for internal parameters
   * "C_" for commands
   * Internal enum can have any name.
   * All enums should contain MAX element, which is assigned the value from the last usable element.
@@ -15,12 +16,15 @@
   *
 */
 
-namespace I_SawDCO { enum e { PHASE, FREQ, AMP, MAX = AMP }; }
-namespace O_SawDCO { enum e { SAMPLE, MAX = SAMPLE }; }
+namespace I_SawDCO { enum e { PHASE, FREQ, AMP, MAX }; }
+namespace O_SawDCO { enum e { SAMPLE, MAX }; }
+namespace P_SawDCO { enum e { TUNE, DETUNE, PHASOR, TRIG, WF, MAX }; }
 
-namespace O_Knob { enum e { VALUE, MAX = VALUE }; }
 
-namespace O_WaveTableOsc { enum e { SAMPLE, MAX = SAMPLE }; }
-namespace I_WaveTableOsc { enum e { FREQ, INTERPOLATE, MAX = INTERPOLATE }; }
+namespace O_Knob { enum e { VALUE, MAX }; }
+namespace P_Knob { enum e { VALUE, MAX }; }
+
+namespace O_WaveTableOsc { enum e { SAMPLE, MAX }; }
+namespace I_WaveTableOsc { enum e { FREQ, INTERPOLATE, MAX }; }
 
 #endif /* PATCHMODULECONFIGS_H_ */

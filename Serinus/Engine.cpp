@@ -24,18 +24,18 @@ Engine::Engine() {
     }
 
     //TEST DATA
-    ModuleConfig KnobConfig1{
-        std::make_pair(O_Knob::VALUE, 110)
+	ModuleValues KnobConfig1{
+		std::make_pair(P_Knob::VALUE, "110")
     };
 
-    ModuleConfig KnobConfig2{
-        std::make_pair(O_Knob::VALUE, 1)
+	ModuleValues KnobConfig2{
+		std::make_pair(P_Knob::VALUE, "1")
     };
 
-    ModuleConfig SawDCOConfig{
-        std::make_pair(I_SawDCO::PHASE, 0),
-        std::make_pair(I_SawDCO::FREQ, 5),
-        std::make_pair(I_SawDCO::AMP, 1)
+	ModuleValues SawDCOConfig{
+        std::make_pair(P_SawDCO::TUNE, "440"),
+        std::make_pair(P_SawDCO::TRIG, "true"),
+        std::make_pair(P_SawDCO::WF, "3")
     };
     
     std::list<Module> patch = { 
@@ -62,8 +62,8 @@ Engine::Engine() {
     */
     for (moduleIt = patch.begin(); moduleIt != patch.end(); ++moduleIt) {
         PatchModule* currentModule = Factory::create(moduleIt->name);
-        currentModule->LoadConfiguration(moduleIt->config);
-        //vector of inputs of currentModule, each of them pointing to the tuple of source module's index (first), and it's output index (second)
+		currentPatch.push_back(currentModule);
+		currentModule->LoadConfiguration(currentModule->getParameterTypes(), moduleIt->config);
         ModuleInputs moduleConnections = moduleIt->connections;
         ModuleInputs::iterator inputsConfigIt;
         for (inputsConfigIt = moduleConnections.begin(); inputsConfigIt != moduleConnections.end(); ++inputsConfigIt) {
@@ -74,8 +74,7 @@ Engine::Engine() {
                 currentModule->input[inputsConfigIt->inputIndex] = &(source->output[inputsConfigIt->outputIndex]);
             }
         }
-        //this->registerReceiver(currentModule);
-        currentPatch.push_back(currentModule);
+        //this->registerReceiver(currentModule);      
     }
     //Map inputs on hardware properly (see previous comment on linking)
 	PatchModule* exitModule = currentPatch.back();

@@ -1,10 +1,3 @@
-/*
- * Engine.h
- *
- *  Created on: 8 Apr 2014
- *      Author: akoso_000
- */
-
 #ifndef ENGINE_H_
 #define ENGINE_H_
 
@@ -12,7 +5,17 @@
 #include <queue>
 #include <string>
 #include "PatchModule.h"
-
+/**
+ * This is the engine class, which handles everything in the system.
+ * Currently, only midi handling and patchmodule loading/configuration/connectivity is managed.
+ * Additionally, there will be a hardware IO registry, filesystem handling and UI.
+ * After bootloader is done checking/updating firmware, the main program will take over. 
+ * Main program will consist only of the engine instantiation, which will take over from this point, managing everything.
+ *
+ * Authored: AK
+ * Last revision: 04.05.2014
+*
+*/
 class Engine {
 public:
 	Engine();
@@ -44,7 +47,7 @@ private:
     MidiHandler midiHndlTable[16];
     struct Module {
         std::string name;
-        ModuleConfig config;
+		ModuleValues config;
         ModuleInputs connections;
     };
 };

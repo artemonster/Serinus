@@ -5,6 +5,8 @@ const CreatorImpl<WaveTableOsc> WaveTableOsc::creator("WaveTableOsc");
 WaveTableOsc::WaveTableOsc() {
     phasor = 0.0;
     phasorInc = 0.0;
+	parameters = new void*[1];
+	parameters[0] = &phasor;
     //todo make these constructor-dependent
     willInterpolate = false;
     tableLength = 4096;
