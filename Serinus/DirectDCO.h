@@ -1,24 +1,25 @@
-#ifndef SAWDCO_H_
-#define SAWDCO_H_
+#ifndef DIRECTDCO_H_
+#define DIRECTDCO_H_
 #include "PatchModule.h"
 #include "PatchModuleConfigs.h"
 
-class SawDCO : public PatchModule  {
+class DirectDCO : public PatchModule  {
 public:
-    static const CreatorImpl<SawDCO> creator;
+    static const CreatorImpl<DirectDCO> creator;
 	
-	SawDCO(); 
-	~SawDCO() {};
+	DirectDCO(); 
+	~DirectDCO() {};
 	void Tick();
     void ProcessCommand(const int &commandType, const int &commandIndex, const int &inValue) {};
 	ModuleTypes getParameterTypes();
 private: 
+	enum WaveForm { SAW, TRI, SIN, SQR };
 	//Modulation inputs
 	Sample pitch;
 	Sample pwm;
 	Sample phase;
 	Sample pan;
-
+	Sample amp;
 	//Internal params
 	float tuneFreq;
 	float detune;
@@ -27,4 +28,4 @@ private:
 	int waveform;
 };
 
-#endif /* SAWDCO_H_ */
+#endif /* DIRECTDCO_H_ */

@@ -16,9 +16,9 @@
   *
 */
 
-namespace I_SawDCO { enum e { PHASE, FREQ, AMP, MAX }; }
-namespace O_SawDCO { enum e { SAMPLE, MAX }; }
-namespace P_SawDCO { enum e { TUNE, DETUNE, PHASOR, TRIG, WF, MAX }; }
+namespace I_DirectDCO { enum e { PITCH, PWM, PHASE, AMP, MAX }; }
+namespace O_DirectDCO { enum e { SAMPLE, MAX }; }
+namespace P_DirectDCO { enum e { TUNE, DETUNE, PHASOR, TRIG, WF, MAX }; }
 
 
 namespace O_Knob { enum e { VALUE, MAX }; }

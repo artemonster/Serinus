@@ -69,9 +69,6 @@
     <ClInclude Include="Factory.h">
       <Filter>Header Files\Util</Filter>
     </ClInclude>
-    <ClInclude Include="SawDCO.h">
-      <Filter>Header Files\Modules</Filter>
-    </ClInclude>
     <ClInclude Include="WaveTableOsc.h">
       <Filter>Header Files\Modules</Filter>
     </ClInclude>
@@ -82,6 +79,9 @@
       <Filter>Header Files\Modules</Filter>
     </ClInclude>
     <ClInclude Include="PatchModuleConfigs.h">
+      <Filter>Header Files\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectDCO.h">
       <Filter>Header Files\Modules</Filter>
     </ClInclude>
   </ItemGroup>
@@ -104,13 +104,13 @@
     <ClCompile Include="Factory.cpp">
       <Filter>Source Files\Util</Filter>
     </ClCompile>
-    <ClCompile Include="SawDCO.cpp">
-      <Filter>Source Files\Modules</Filter>
-    </ClCompile>
     <ClCompile Include="WaveTableOsc.cpp">
       <Filter>Source Files\Modules</Filter>
     </ClCompile>
     <ClCompile Include="Knob.cpp">
+      <Filter>Source Files\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectDCO.cpp">
       <Filter>Source Files\Modules</Filter>
     </ClCompile>
   </ItemGroup>

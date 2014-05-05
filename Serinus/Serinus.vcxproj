@@ -94,7 +94,7 @@
     <ClInclude Include="Knob.h" />
     <ClInclude Include="PatchModule.h" />
     <ClInclude Include="PatchModuleConfigs.h" />
-    <ClInclude Include="SawDCO.h" />
+    <ClInclude Include="DirectDCO.h" />
     <ClInclude Include="Serinus.h" />
     <ClInclude Include="WaveTableOsc.h" />
   </ItemGroup>
@@ -105,7 +105,7 @@
     <ClCompile Include="HAL\RtAudio.cpp" />
     <ClCompile Include="HAL\RtMidi.cpp" />
     <ClCompile Include="Knob.cpp" />
-    <ClCompile Include="SawDCO.cpp" />
+    <ClCompile Include="DirectDCO.cpp" />
     <ClCompile Include="Serinus.cpp" />
     <ClCompile Include="WaveTableOsc.cpp" />
   </ItemGroup>

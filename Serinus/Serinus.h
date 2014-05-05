@@ -18,6 +18,7 @@
 05.05.2014: Creation of the work log. 
 	Today I've finally tweaked the module configuration system, so it will be as generic as possible. 
 	If everything goes wrong, then I always can revert to stupid switchcase implementation for every module.
+	Also, the one and only SawDCO was renamed to DirectDCO (DDS), which now contains all 4 needed waveforms.
 
 
 */

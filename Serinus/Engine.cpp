@@ -23,29 +23,35 @@ Engine::Engine() {
         midiNotes[x] = tune * (float)pow(2, (((float)x - 69) / 12));
     }
 
-    //TEST DATA
+    //<---------------------------------- TEST DATA ---------------------------------->
 	ModuleValues KnobConfig1{
-		std::make_pair(P_Knob::VALUE, "110")
+		std::make_pair(P_Knob::VALUE, "220")
     };
 
 	ModuleValues KnobConfig2{
 		std::make_pair(P_Knob::VALUE, "1")
     };
 
-	ModuleValues SawDCOConfig{
-        std::make_pair(P_SawDCO::TUNE, "440"),
-        std::make_pair(P_SawDCO::TRIG, "true"),
-        std::make_pair(P_SawDCO::WF, "3")
+	ModuleValues KnobConfig3{
+		std::make_pair(P_Knob::VALUE, "2147483647")
+	};
+
+	ModuleValues DirectDCOConfig{
+		std::make_pair(P_DirectDCO::WF, "2")
+	};
+
+	ModuleValues DirectDCOConfig2{
+        std::make_pair(P_DirectDCO::WF, "0")
     };
     
     std::list<Module> patch = { 
         { "Knob", KnobConfig1, { NO_INPUT } },//Frequency setting for OSC
-        { "Knob", KnobConfig2, { NO_INPUT } },//LFO depth
         { "Knob", KnobConfig2, { NO_INPUT } },//LFO freq
-        { "SawDCO", SawDCOConfig, { { I_SawDCO::FREQ, 2, 0 }, { I_SawDCO::AMP, 2, 0 } } }, //LFO
-        { "SawDCO", SawDCOConfig, { { I_SawDCO::FREQ, 0, 0 }, { I_SawDCO::AMP, 3, 0 } } } //actual osc
+        { "Knob", KnobConfig3, { NO_INPUT } },//LFO depth
+		{ "DirectDCO", DirectDCOConfig, { { I_DirectDCO::PITCH, 1, O_Knob::VALUE }, { I_DirectDCO::AMP, 2, O_Knob::VALUE } } }, //LFO
+		{ "DirectDCO", DirectDCOConfig2, { { I_DirectDCO::PITCH, 0, O_Knob::VALUE }, { I_DirectDCO::AMP, 3, O_DirectDCO::SAMPLE } } } //actual osc
     };
-    //TEST DATA END
+	//<---------------------------------- TEST DATA END ---------------------------------->
 
     //LOG.debug("Instantiating modules for a patch...");
     std::list<Module>::iterator moduleIt;
