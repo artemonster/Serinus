@@ -2,7 +2,7 @@
 #define PATCHMODULECONFIGS_H_
 /**
   * This is a header that contains custom enumeration for each module in the engine.
-  * Each enum should be enclosed with a special namespace. 
+  * Each enum should be enclosed with a special namespace.
   * Naming for the namespace is following: prefix+class name. Prefixes:
   * "I_" for inputs
   * "O_" for outputs
@@ -14,7 +14,7 @@
   * Authored: AK
   * Last revision: 03.05.2014
   *
-*/
+  */
 
 namespace I_DirectDCO { enum e { PITCH, PWM, PHASE, AMP, MAX }; }
 namespace O_DirectDCO { enum e { SAMPLE, MAX }; }

@@ -2,10 +2,13 @@ Software Synthesizer Project. Codename: Serinus
 ===================
 
 This is a test repository for the core of the digital synth.
-Currently, it uses RtMidi and RtAudio libraries as HAL, so please refer to the projects for the license information:
-https://github.com/thestk/rtmidi
-https://github.com/thestk/rtaudio
+Currently, it uses RtMidi and RtAudio libraries as HAL, so please refer to the projects for the license information:<br>
+https://github.com/thestk/rtmidi <br>
+https://github.com/thestk/rtaudio <br>
 
+Some interesting files to look up: <br>
+* Engine.cpp
+* PathModule.h
 
 TODO
 ===================
@@ -14,10 +17,15 @@ TODO
 3. Implement _simple_ voice allocation system
 4. Handle NoteOn and NoteOff events
 5. Implement command dispatch/handling system
+	* Message receiver registry 
+	* Message bus
+6. Module grouping (dynamic) e.g like a patch in a patch
+7. Buffered tick calls (e.g 1 module fills a whole buffer instead of emitting 1 sample)
 
 
-Goals
+Big Goals
 ===================
+
 1. Multi-timbral support
 2. Hardware IO registry
 3. Filesystem functions

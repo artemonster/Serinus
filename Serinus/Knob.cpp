@@ -3,11 +3,11 @@
 const CreatorImpl<Knob> Knob::creator("Knob");
 
 Knob::Knob() {
-	value = 0;
+    value = 0;
     output = new Sample[O_Knob::MAX];
-	input = NULL;
-	parameters = new void*[P_Knob::MAX];
-	parameters[0] = &value;
+    input = NULL;
+    parameters = new void*[P_Knob::MAX];
+    parameters[0] = &value;
 }
 
 inline void Knob::Tick() {

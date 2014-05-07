@@ -5,8 +5,8 @@ const CreatorImpl<WaveTableOsc> WaveTableOsc::creator("WaveTableOsc");
 WaveTableOsc::WaveTableOsc() {
     phasor = 0.0;
     phasorInc = 0.0;
-	parameters = new void*[1];
-	parameters[0] = &phasor;
+    parameters = new void*[1];
+    parameters[0] = &phasor;
     //todo make these constructor-dependent
     willInterpolate = false;
     tableLength = 4096;
@@ -27,7 +27,7 @@ void WaveTableOsc::Tick() {
         float s0 = sampleTable[truncPhase++];
         if (truncPhase >= tableLength) truncPhase = 0;
         float s1 = sampleTable[truncPhase];
-        output[O_WaveTableOsc::SAMPLE] = (s0 + (s1 - s0)*fracPhase) * UPSCALE;
+        output[O_WaveTableOsc::SAMPLE] = ( s0 + ( s1 - s0 )*fracPhase ) * UPSCALE;
     } else {
         output[O_WaveTableOsc::SAMPLE] = sampleTable[int(phasor*tableLength)] * UPSCALE;
     }
