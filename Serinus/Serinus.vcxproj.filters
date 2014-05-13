@@ -84,6 +84,12 @@
     <ClInclude Include="DirectDCO.h">
       <Filter>Header Files\Modules</Filter>
     </ClInclude>
+    <ClInclude Include="VCA.h">
+      <Filter>Header Files\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="ADSR.h">
+      <Filter>Header Files\Modules</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Serinus.cpp">
@@ -111,6 +117,12 @@
       <Filter>Source Files\Modules</Filter>
     </ClCompile>
     <ClCompile Include="DirectDCO.cpp">
+      <Filter>Source Files\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="VCA.cpp">
+      <Filter>Source Files\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="ADSR.cpp">
       <Filter>Source Files\Modules</Filter>
     </ClCompile>
   </ItemGroup>

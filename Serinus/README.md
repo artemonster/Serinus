@@ -8,7 +8,8 @@ https://github.com/thestk/rtaudio <br>
 
 Some interesting files to look up: <br>
 * Engine.cpp
-* PathModule.h
+* PathModule.h base class for each module
+* Serinus.h contains a work log
 
 TODO
 ===================

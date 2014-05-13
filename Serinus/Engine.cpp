@@ -9,7 +9,8 @@ Engine::Engine() {
         TODO initialize filesystem and load a patch from it.
         ^^^^ this all will be supplied by the OS as EngineParameters in the constructor.
         */
-    MidiHandler midiLookUp[] = { &Engine::HandleRunningCmd, &Engine::HandleRunningCmd, &Engine::HandleRunningCmd, &Engine::HandleRunningCmd,
+    MidiHandler midiLookUp[] = { 
+        &Engine::HandleRunningCmd, &Engine::HandleRunningCmd, &Engine::HandleRunningCmd, &Engine::HandleRunningCmd,
         &Engine::HandleRunningCmd, &Engine::HandleRunningCmd, &Engine::HandleRunningCmd, &Engine::HandleRunningCmd,
         &Engine::NoteOff, &Engine::NoteOn, &Engine::Aftertouch, &Engine::ControlChange,
         &Engine::PatchChange, &Engine::ChannelPressure, &Engine::PitchWheel, &Engine::Sysex };
@@ -29,7 +30,7 @@ Engine::Engine() {
     };
 
     ModuleValues KnobConfig2 {
-        std::make_pair(P_Knob::VALUE, "1")
+        std::make_pair(P_Knob::VALUE, "10")
     };
 
     ModuleValues KnobConfig3 {
@@ -44,12 +45,24 @@ Engine::Engine() {
         std::make_pair(P_DirectDCO::WF, "0")
     };
 
+    ModuleValues VCAconfig {
+        std::make_pair(P_VCA::MODE, "true")
+    };
+
     std::list<Module> patch = {
         { "Knob", KnobConfig1, { NO_INPUT } },//Frequency setting for OSC
         { "Knob", KnobConfig2, { NO_INPUT } },//LFO freq
         { "Knob", KnobConfig3, { NO_INPUT } },//LFO depth
-        { "DirectDCO", DirectDCOConfig, { { I_DirectDCO::PITCH, 1, O_Knob::VALUE }, { I_DirectDCO::AMP, 2, O_Knob::VALUE } } }, //LFO
-        { "DirectDCO", DirectDCOConfig2, { { I_DirectDCO::PITCH, 0, O_Knob::VALUE }, { I_DirectDCO::AMP, 3, O_DirectDCO::SAMPLE } } } //actual osc
+        //{ "DirectDCO", DirectDCOConfig, { { I_DirectDCO::PITCH, 1, O_Knob::VALUE }, 
+        //                                  { I_DirectDCO::AMP, 2, O_Knob::VALUE } } }, //LFO
+        //{ "DirectDCO", DirectDCOConfig2, { { I_DirectDCO::PITCH, 0, O_Knob::VALUE }, 
+        //                                   { I_DirectDCO::AMP, 3, O_DirectDCO::SAMPLE } } }
+        { "DirectDCO", DirectDCOConfig, { { I_DirectDCO::PITCH, 1, O_Knob::VALUE },
+                                            { I_DirectDCO::AMP, 2, O_Knob::VALUE } } }, //LFO
+        { "DirectDCO", DirectDCOConfig2, { { I_DirectDCO::PITCH, 0, O_Knob::VALUE },
+                                            { I_DirectDCO::AMP, 2, O_Knob::VALUE } } },
+        { "VCA", VCAconfig, { { I_VCA::INPUT, 4, O_DirectDCO::SAMPLE },
+                                            { I_VCA::GAIN, 3, O_DirectDCO::SAMPLE } } }
     };
     //<---------------------------------- TEST DATA END ---------------------------------->
 
@@ -63,8 +76,8 @@ Engine::Engine() {
     * A: Special input and output PatchModules will be instantiated at the beginning and end of the configuration
     * TODO register module as special message receiver
     *
-    * Alternative way to this idea is to call Tick(inSample) in a recursive way (pointed), so that every output lands on the stack
-    * (Can be problematic when multiple sinks are registered for the same source!)
+    * Alternative way to this idea is to call Tick(inSample) in a recursive way (pointed), so that every output 
+    * lands on the stack (Can be problematic when multiple sinks are registered for the same source!)
     */
     for (moduleIt = patch.begin(); moduleIt != patch.end(); ++moduleIt) {
         PatchModule* currentModule = Factory::create(moduleIt->name);
@@ -75,16 +88,17 @@ Engine::Engine() {
         for (inputsConfigIt = moduleConnections.begin(); inputsConfigIt != moduleConnections.end(); ++inputsConfigIt) {
             //TODO: check for inputsConfigIt->first (0:NULL, 1024: HW, 1...999 patchModules)
             PatchModule* source = currentPatch[inputsConfigIt->sourceModule];
-            if (currentModule->input != NULL) { //check, if module even has inputs :)
+            if (!currentModule->hasNoInputs()) { //check, if module even has inputs :)
                 //TODO: check for inputsConfigIt->second (0:NULL ....)
-                currentModule->input[inputsConfigIt->inputIndex] = &( source->output[inputsConfigIt->outputIndex] );
+                currentModule->setLink(inputsConfigIt->inputIndex, source->getOutput(inputsConfigIt->outputIndex));
             }
         }
         //this->registerReceiver(currentModule);      
     }
     //Map inputs on hardware properly (see previous comment on linking)
     PatchModule* exitModule = currentPatch.back();
-    lastSample = &( exitModule->output[0] );
+
+    lastSample = exitModule->getOutput(0);
     inSample = NULL;
 }
 

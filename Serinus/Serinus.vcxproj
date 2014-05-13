@@ -81,6 +81,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="ADSR.h" />
     <ClInclude Include="Creator.h" />
     <ClInclude Include="CreatorImpl.h" />
     <ClInclude Include="Engine.h" />
@@ -96,9 +97,11 @@
     <ClInclude Include="PatchModuleConfigs.h" />
     <ClInclude Include="DirectDCO.h" />
     <ClInclude Include="Serinus.h" />
+    <ClInclude Include="VCA.h" />
     <ClInclude Include="WaveTableOsc.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="ADSR.cpp" />
     <ClCompile Include="Creator.cpp" />
     <ClCompile Include="Engine.cpp" />
     <ClCompile Include="Factory.cpp" />
@@ -107,6 +110,7 @@
     <ClCompile Include="Knob.cpp" />
     <ClCompile Include="DirectDCO.cpp" />
     <ClCompile Include="Serinus.cpp" />
+    <ClCompile Include="VCA.cpp" />
     <ClCompile Include="WaveTableOsc.cpp" />
   </ItemGroup>
   <ItemGroup>

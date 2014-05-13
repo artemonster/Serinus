@@ -31,7 +31,7 @@ void DirectDCO::Tick() {
             }
             break;
         case SIN:
-            output[O_DirectDCO::SAMPLE] = sin(phasor*3.14159265)*UPSCALE;
+            output[O_DirectDCO::SAMPLE] = sin((phasor+1)*3.14159265)*UPSCALE;
             break;
         case SQR:
             if (phasor >= pwm) {

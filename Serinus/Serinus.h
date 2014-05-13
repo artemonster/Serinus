@@ -20,7 +20,12 @@ Today I've finally tweaked the module configuration system, so it will be as gen
 If everything goes wrong, then I always can revert to stupid switchcase implementation for every module.
 Also, the one and only SawDCO was renamed to DirectDCO (DDS), which now contains all 4 needed waveforms.
 
-
+13.05.2014: Little things.
+After some pause in the works I finally got back to the project. To get back to it I've started with liitle things,
+like hiding PathModule member vars under protected and giving some accesor methods to them.
+Also I've added simple VCA module, which has two modes: linear and logarithmic. Second one is a little funky though,
+I need an oscilloscope to see what actually happens there.
+Also, added simple ADSR, which should 
 */
 
 typedef int Sample; 					//this type is used for samples

@@ -7,13 +7,16 @@ Knob::Knob() {
     output = new Sample[O_Knob::MAX];
     input = NULL;
     parameters = new void*[P_Knob::MAX];
-    parameters[0] = &value;
+    parameters[P_Knob::VALUE] = &value;
 }
 
 inline void Knob::Tick() {
     output[O_Knob::VALUE] = value;
 };
 
-inline void Knob::setValue(Sample val) {
-    value = val;
-}
+ModuleTypes Knob::getParameterTypes() {
+    ModuleTypes map {
+        std::make_pair(P_Knob::VALUE, Types::INT),
+    };
+    return map;
+};
