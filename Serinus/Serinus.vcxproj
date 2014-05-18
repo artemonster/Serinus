@@ -82,10 +82,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="ADSR.h" />
-    <ClInclude Include="Creator.h" />
-    <ClInclude Include="CreatorImpl.h" />
+    <ClInclude Include="Util\Creator.h" />
+    <ClInclude Include="Util\CreatorImpl.h" />
     <ClInclude Include="Engine.h" />
-    <ClInclude Include="Factory.h" />
+    <ClInclude Include="Util\Factory.h" />
     <ClInclude Include="HAL\include\dsound.h" />
     <ClInclude Include="HAL\include\ginclude.h" />
     <ClInclude Include="HAL\include\soundcard.h" />
@@ -97,14 +97,18 @@
     <ClInclude Include="PatchModuleConfigs.h" />
     <ClInclude Include="DirectDCO.h" />
     <ClInclude Include="Serinus.h" />
+    <ClInclude Include="Util\rapidxml.hpp" />
+    <ClInclude Include="Util\rapidxml_iterators.hpp" />
+    <ClInclude Include="Util\rapidxml_print.hpp" />
+    <ClInclude Include="Util\rapidxml_utils.hpp" />
     <ClInclude Include="VCA.h" />
     <ClInclude Include="WaveTableOsc.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ADSR.cpp" />
-    <ClCompile Include="Creator.cpp" />
+    <ClCompile Include="Util\Creator.cpp" />
     <ClCompile Include="Engine.cpp" />
-    <ClCompile Include="Factory.cpp" />
+    <ClCompile Include="Util\Factory.cpp" />
     <ClCompile Include="HAL\RtAudio.cpp" />
     <ClCompile Include="HAL\RtMidi.cpp" />
     <ClCompile Include="Knob.cpp" />

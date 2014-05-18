@@ -2,7 +2,7 @@
 #define PATCHMODULE_H_
 
 #include "Serinus.h"
-#include "Factory.h"
+#include "Util\Factory.h"
 /**
 This is a base class for every patch module, used in the engine.
 Each module impementation should implement all virtual methods according to their specifications.
@@ -25,7 +25,7 @@ public:
     /**
     This method is called to deliver a map of all parameter types in the derived class.
     This mapping is mandatory for the parameters, which should be serialized for storing\loading the configuration.
-    */
+    */ 
     virtual ModuleTypes getParameterTypes() = 0;
     /**This method loads up the configuration map (internal state) for the parameters.*/
     inline void LoadConfiguration(const ModuleTypes &types, const ModuleValues &values) {

@@ -60,15 +60,6 @@
     <ClInclude Include="HAL\RtError.h">
       <Filter>Header Files\HAL</Filter>
     </ClInclude>
-    <ClInclude Include="Creator.h">
-      <Filter>Header Files\Util</Filter>
-    </ClInclude>
-    <ClInclude Include="CreatorImpl.h">
-      <Filter>Header Files\Util</Filter>
-    </ClInclude>
-    <ClInclude Include="Factory.h">
-      <Filter>Header Files\Util</Filter>
-    </ClInclude>
     <ClInclude Include="WaveTableOsc.h">
       <Filter>Header Files\Modules</Filter>
     </ClInclude>
@@ -90,6 +81,27 @@
     <ClInclude Include="ADSR.h">
       <Filter>Header Files\Modules</Filter>
     </ClInclude>
+    <ClInclude Include="Util\rapidxml.hpp">
+      <Filter>Header Files\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="Util\rapidxml_iterators.hpp">
+      <Filter>Header Files\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="Util\rapidxml_print.hpp">
+      <Filter>Header Files\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="Util\rapidxml_utils.hpp">
+      <Filter>Header Files\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="Util\Creator.h">
+      <Filter>Header Files\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="Util\CreatorImpl.h">
+      <Filter>Header Files\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="Util\Factory.h">
+      <Filter>Header Files\Util</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Serinus.cpp">
@@ -103,12 +115,6 @@
     </ClCompile>
     <ClCompile Include="HAL\RtMidi.cpp">
       <Filter>Source Files\HAL</Filter>
-    </ClCompile>
-    <ClCompile Include="Creator.cpp">
-      <Filter>Source Files\Util</Filter>
-    </ClCompile>
-    <ClCompile Include="Factory.cpp">
-      <Filter>Source Files\Util</Filter>
     </ClCompile>
     <ClCompile Include="WaveTableOsc.cpp">
       <Filter>Source Files\Modules</Filter>
@@ -124,6 +130,12 @@
     </ClCompile>
     <ClCompile Include="ADSR.cpp">
       <Filter>Source Files\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="Util\Creator.cpp">
+      <Filter>Source Files\Util</Filter>
+    </ClCompile>
+    <ClCompile Include="Util\Factory.cpp">
+      <Filter>Source Files\Util</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

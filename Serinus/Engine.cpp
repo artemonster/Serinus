@@ -30,7 +30,7 @@ Engine::Engine() {
     };
 
     ModuleValues KnobConfig2 {
-        std::make_pair(P_Knob::VALUE, "10")
+        std::make_pair(P_Knob::VALUE, "2")
     };
 
     ModuleValues KnobConfig3 {
