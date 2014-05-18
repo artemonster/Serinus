@@ -106,8 +106,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ADSR.cpp" />
-    <ClCompile Include="Util\Creator.cpp" />
     <ClCompile Include="Engine.cpp" />
+    <ClCompile Include="Util\Creator.cpp" />
     <ClCompile Include="Util\Factory.cpp" />
     <ClCompile Include="HAL\RtAudio.cpp" />
     <ClCompile Include="HAL\RtMidi.cpp" />
