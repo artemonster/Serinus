@@ -3,15 +3,15 @@
 const CreatorImpl<Knob> Knob::creator("Knob");
 
 Knob::Knob() {
-    value = 0;
-    output = new Sample[O_Knob::MAX];
-    input = NULL;
-    parameters = new void*[P_Knob::MAX];
-    parameters[P_Knob::VALUE] = &value;
+    value_ = 0;
+    output_ = new Sample[O_Knob::MAX];
+    input_ = NULL;
+    parameters_ = new void*[P_Knob::MAX];
+    parameters_[P_Knob::VALUE] = &value_;
 }
 
 inline void Knob::Tick() {
-    output[O_Knob::VALUE] = value;
+    output_[O_Knob::VALUE] = value_;
 };
 
 ModuleTypes Knob::getParameterTypes() {

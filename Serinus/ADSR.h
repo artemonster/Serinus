@@ -5,7 +5,7 @@
 /**
 This is a basic ADSR module, which can operate in both linear and exponential modes.
 TODO: decide on gate and trigger inputs (whether or not they should be controlled via event or patch samples)
-
+Float parameters are in milliseconds.
 Authored: AK
 Last revision: 13.05.2014
 */
@@ -18,6 +18,12 @@ public:
     void ProcessCommand(const int &commandType, const int &commandIndex, const int &inValue) {};
     ModuleTypes getParameterTypes();
 protected:
-    bool isLinear = true;
+    enum State { IDLE, ATTACK, DECAY, SUSTAIN, RELEASE };
+    State state_;
+    bool isLinear_;
+    float attack_;
+    float decay_;
+    float sustain_;
+    float release_;
 };
 #endif /* ADSR_H_ */

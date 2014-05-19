@@ -26,6 +26,14 @@ like hiding PathModule member vars under protected and giving some accesor metho
 Also I've added a simple VCA module, which has two modes: linear and logarithmic. Second one is a little funky though,
 I need an oscilloscope to see what actually happens there.
 ADSR is also there, but I haven't decided yet on CV signals (a part of datapath or events)
+19.05.2014: Events and stuff
+Once again I've tried to solve this event registry problem, routing internal setters/getters + MIDI commands properly
+through all voices, and I stumbled upon many problems. So we wait on that...
+Also, ADSR got implemented, but not tested yet. 
+DCO got CV mode, so sooner or later I will add proper midi handling.
+Now I've started to think about switching back to floats for signal representation, because SINT32 is bothering me with
+overflows (multiply two signals, which are "normalized" between -1..+1 will result in temporary long promotion.
+I've also renamed member values of patchmodules so that they have trailing underscore.
 */
 
 typedef int Sample; 					            //this type is used for samples

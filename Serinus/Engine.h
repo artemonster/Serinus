@@ -35,16 +35,19 @@ public:
     void PitchWheel(unsigned char voice, std::vector<unsigned char> cmd) {};
     void Sysex(unsigned char type, std::vector<unsigned char> cmd);
     void HandleRunningCmd(unsigned char wtf, std::vector<unsigned char> cmd);
-
 private:
     // Midi stuff:
+    enum MidiCmd {NOTEOFF,NOTEON,AFTERT,CC,PATCH,CPRESS,PITCHW,SYSEX};
     float midiNotes[128];
     unsigned char runningStatus = 0;
+    MidiHandler midiHndlTable[16];
+    //std::vector<void*( )> registry[8];
+    // Patch
     std::vector<PatchModule*> currentPatch;
     std::queue<std::vector<unsigned char>> cmds;
     Sample *inSample;
     Sample *lastSample;
-    MidiHandler midiHndlTable[16];
+    
     struct Module {
         std::string name;
         ModuleValues config;

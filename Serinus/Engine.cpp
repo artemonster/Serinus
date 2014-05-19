@@ -26,23 +26,27 @@ Engine::Engine() {
 
     //<---------------------------------- TEST DATA ---------------------------------->
     ModuleValues KnobConfig1 {
-        std::make_pair(P_Knob::VALUE, "220")
+        std::make_pair(P_Knob::VALUE, "0") // 0 V
     };
 
     ModuleValues KnobConfig2 {
-        std::make_pair(P_Knob::VALUE, "2")
+        std::make_pair(P_Knob::VALUE, "2") // 2 Hz
     };
 
     ModuleValues KnobConfig3 {
         std::make_pair(P_Knob::VALUE, "2147483647")
     };
 
-    ModuleValues DirectDCOConfig {
-        std::make_pair(P_DirectDCO::WF, "2")
+    ModuleValues LFO {
+        std::make_pair(P_DirectDCO::WF, "2"),
+        std::make_pair(P_DirectDCO::TUNE, "213.6"),
+        std::make_pair(P_DirectDCO::MODE, "0") //hz control
     };
 
-    ModuleValues DirectDCOConfig2 {
-        std::make_pair(P_DirectDCO::WF, "0")
+    ModuleValues MainOsc {
+        std::make_pair(P_DirectDCO::WF, "0"),
+        std::make_pair(P_DirectDCO::TUNE, "213.6"),
+        std::make_pair(P_DirectDCO::MODE, "1") //VC control
     };
 
     ModuleValues VCAconfig {
@@ -53,16 +57,12 @@ Engine::Engine() {
         { "Knob", KnobConfig1, { NO_INPUT } },//Frequency setting for OSC
         { "Knob", KnobConfig2, { NO_INPUT } },//LFO freq
         { "Knob", KnobConfig3, { NO_INPUT } },//LFO depth
-        //{ "DirectDCO", DirectDCOConfig, { { I_DirectDCO::PITCH, 1, O_Knob::VALUE }, 
-        //                                  { I_DirectDCO::AMP, 2, O_Knob::VALUE } } }, //LFO
-        //{ "DirectDCO", DirectDCOConfig2, { { I_DirectDCO::PITCH, 0, O_Knob::VALUE }, 
-        //                                   { I_DirectDCO::AMP, 3, O_DirectDCO::SAMPLE } } }
-        { "DirectDCO", DirectDCOConfig, { { I_DirectDCO::PITCH, 1, O_Knob::VALUE },
-                                            { I_DirectDCO::AMP, 2, O_Knob::VALUE } } }, //LFO
-        { "DirectDCO", DirectDCOConfig2, { { I_DirectDCO::PITCH, 0, O_Knob::VALUE },
-                                            { I_DirectDCO::AMP, 2, O_Knob::VALUE } } },
+        { "DirectDCO", LFO, { { I_DirectDCO::PITCH, 1, O_Knob::VALUE },
+                                { I_DirectDCO::AMP, 2, O_Knob::VALUE } } },
+        { "DirectDCO", MainOsc, { { I_DirectDCO::PITCH, 0, O_Knob::VALUE },
+                                { I_DirectDCO::AMP, 2, O_Knob::VALUE } } },
         { "VCA", VCAconfig, { { I_VCA::INPUT, 4, O_DirectDCO::SAMPLE },
-                                            { I_VCA::GAIN, 3, O_DirectDCO::SAMPLE } } }
+                                { I_VCA::GAIN, 3, O_DirectDCO::SAMPLE } } }
     };
     //<---------------------------------- TEST DATA END ---------------------------------->
 
@@ -139,7 +139,9 @@ void Engine::PushCommand(std::vector<unsigned char> cmd) {
 }
 
 void Engine::NoteOff(unsigned char voice, std::vector<unsigned char> cmd) {
-
+    // remove from active voices
+    // notify all receivers
+    
 };
 
 void Engine::NoteOn(unsigned char voice, std::vector<unsigned char> cmd) {
@@ -149,6 +151,13 @@ void Engine::NoteOn(unsigned char voice, std::vector<unsigned char> cmd) {
     if (velocity == 0) {
         //handle like NoteOff, but do not set runningStatus
     }
+    //std::vector<void*( )> registredHandlers = registry[MidiCmd::NOTEON];
+    //if (!registredHandlers.empty()) {
+    //    std::vector<void*( )>::iterator handlersIt;
+    //    for (handlersIt = registredHandlers.begin; handlersIt != registredHandlers.end(); ++handlersIt) {
+    //        (*handlersIt)();
+    //    }
+    //}
     //for all registered trigger destinations
 };
 

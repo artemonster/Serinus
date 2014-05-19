@@ -23,12 +23,12 @@ public:
     ModuleTypes getParameterTypes();
 private:
     enum WaveForm { SAW, TRI, SIN, SQR };
-    //Internal params
-    float tuneFreq;
-    float detune;
-    float phasor;
-    bool reTrigger;
-    int waveform;
+    float tuneFreq_;
+    float detune_;
+    float phasor_;
+    bool reTrigger_;
+    int waveform_;
+    int mode_;
 };
 
 #endif /* DIRECTDCO_H_ */

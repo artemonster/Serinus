@@ -19,6 +19,6 @@ public:
     void ProcessCommand(const int &commandType, const int &commandIndex, const int &inValue) {};
     ModuleTypes getParameterTypes();
 private:
-    bool isLinear = true;
+    bool isLinear_;
 };
 #endif /* VCA_H_ */

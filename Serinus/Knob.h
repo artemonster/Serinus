@@ -18,7 +18,7 @@ public:
     ModuleTypes getParameterTypes();
     void ProcessCommand(const int &commandType, const int &commandIndex, const int &inValue) {};
 private:
-    Sample value;
+    Sample value_;
 };
 
 #endif /* KNOB_H_ */

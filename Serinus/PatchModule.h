@@ -39,17 +39,17 @@ public:
             int type = typesIt->second;
             switch (type) {
                 case Types::INT: {
-                    int *ptr = static_cast<int*>( parameters[parameter] );
+                    int *ptr = static_cast<int*>( parameters_[parameter] );
                     *ptr = atoi(value.c_str());
                     break;
                 }
                 case Types::FLOAT: {
-                    float *ptr = static_cast<float*>( parameters[parameter] );
+                    float *ptr = static_cast<float*>( parameters_[parameter] );
                     *ptr = static_cast<float>( atof(value.c_str()) );
                     break;
                 }
                 case Types::BOOL: {
-                    bool *ptr = static_cast<bool*>( parameters[parameter] );
+                    bool *ptr = static_cast<bool*>( parameters_[parameter] );
                     if (value[0] == 'T' || value[0] == 't' || value[0] == '1') {
                         *ptr = true;
                     } else {
@@ -63,15 +63,15 @@ public:
     };
     /**This method returns the address of the output sample of a given index.*/
     inline Sample* getOutput(const int index) {
-        return &(output[index]);
+        return &(output_[index]);
     }
     /**This method is used to link input with the output of other module.*/
     inline void setLink(const int index, Sample* link) {
-        input[index] = link;
+        input_[index] = link;
     }
     /**This method checks, whether or not the module has some inputs.*/
     inline bool hasNoInputs() {
-        if (input == NULL) {
+        if (input_ == NULL) {
             return true;
         } else {
             return false;
@@ -79,16 +79,16 @@ public:
     }
     /**Virtual desctructor, so we can delete derived by deleting base class.*/
     virtual ~PatchModule() {
-        delete[] output;
-        delete[] input;
+        delete[] output_;
+        delete[] input_;
     };
 protected:
     /**Pointer to an array of output samples.*/
-    Sample *output;
+    Sample *output_;
     /**Pointer to an array of pointers to output samples of input modules.*/
-    Sample **input;
+    Sample **input_;
     /**Pointer to an array of pointers to internal parameters of the module.*/
-    void **parameters;
+    void **parameters_;
 };
 
 #endif /* PATCHMODULE_H_ */
