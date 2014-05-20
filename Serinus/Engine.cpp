@@ -4,6 +4,7 @@
 #include <list>
 
 Engine::Engine() {
+    maxPoly = 5;
     /*
         TODO register all available hardware (buttons, pots, lcd, io, etc) and assign proper handlers to it.
         TODO initialize filesystem and load a patch from it.
@@ -25,16 +26,24 @@ Engine::Engine() {
     }
 
     //<---------------------------------- TEST DATA ---------------------------------->
-    ModuleValues KnobConfig1 {
-        std::make_pair(P_Knob::VALUE, "0") // 0 V
+    ModuleValues DCOFreq {
+        std::make_pair(P_Knob::VALUE, "1") // 0 V
     };
 
-    ModuleValues KnobConfig2 {
-        std::make_pair(P_Knob::VALUE, "2") // 2 Hz
+    ModuleValues LFOFreq {
+        std::make_pair(P_Knob::VALUE, "8") // 2 Hz
     };
 
-    ModuleValues KnobConfig3 {
+    ModuleValues AMP {
         std::make_pair(P_Knob::VALUE, "2147483647")
+    };
+
+    ModuleValues TrigFreq {
+        std::make_pair(P_Knob::VALUE, "-1") //CV
+    };
+
+    ModuleValues PWM {
+        std::make_pair(P_Knob::VALUE, "1813265919") //PWM 25%
     };
 
     ModuleValues LFO {
@@ -44,9 +53,22 @@ Engine::Engine() {
     };
 
     ModuleValues MainOsc {
-        std::make_pair(P_DirectDCO::WF, "0"),
+        std::make_pair(P_DirectDCO::WF, "1"),
         std::make_pair(P_DirectDCO::TUNE, "213.6"),
         std::make_pair(P_DirectDCO::MODE, "1") //VC control
+    };
+
+    ModuleValues TrigOsc {
+        std::make_pair(P_DirectDCO::WF, "3"),
+        std::make_pair(P_DirectDCO::TUNE, "1"),
+        std::make_pair(P_DirectDCO::MODE, "1") //VC control
+    };
+
+    ModuleValues ADSRConf {
+        std::make_pair(P_ADSR::ATTACK, "250"),
+        std::make_pair(P_ADSR::DECAY, "90"),
+        std::make_pair(P_ADSR::SUSTAIN, "50"),
+        std::make_pair(P_ADSR::RELEASE, "1000")
     };
 
     ModuleValues VCAconfig {
@@ -54,15 +76,25 @@ Engine::Engine() {
     };
 
     std::list<Module> patch = {
-        { "Knob", KnobConfig1, { NO_INPUT } },//Frequency setting for OSC
-        { "Knob", KnobConfig2, { NO_INPUT } },//LFO freq
-        { "Knob", KnobConfig3, { NO_INPUT } },//LFO depth
-        { "DirectDCO", LFO, { { I_DirectDCO::PITCH, 1, O_Knob::VALUE },
-                                { I_DirectDCO::AMP, 2, O_Knob::VALUE } } },
-        { "DirectDCO", MainOsc, { { I_DirectDCO::PITCH, 0, O_Knob::VALUE },
-                                { I_DirectDCO::AMP, 2, O_Knob::VALUE } } },
-        { "VCA", VCAconfig, { { I_VCA::INPUT, 4, O_DirectDCO::SAMPLE },
-                                { I_VCA::GAIN, 3, O_DirectDCO::SAMPLE } } }
+        { "Knob", DCOFreq, { NO_INPUT } },
+        { "Knob", LFOFreq, { NO_INPUT } },
+        { "Knob", AMP, { NO_INPUT } },
+        { "Knob", TrigFreq, { NO_INPUT } },
+        { "Knob", PWM, { NO_INPUT } },
+
+        { "DirectDCO", LFO, { { I_DirectDCO::PITCH, 1, O_Knob::VALUE }, //5
+                              { I_DirectDCO::PWM, 4, O_Knob::VALUE },
+                              { I_DirectDCO::AMP, 2, O_Knob::VALUE } } },
+        { "DirectDCO", MainOsc, { { I_DirectDCO::PITCH, 0, O_Knob::VALUE }, //6
+                                  { I_DirectDCO::PWM, 4, O_Knob::VALUE },
+                                  { I_DirectDCO::AMP, 5, O_DirectDCO::SAMPLE } } },
+        { "DirectDCO", TrigOsc, { { I_DirectDCO::PITCH, 3, O_Knob::VALUE },//7
+                                  { I_DirectDCO::PWM, 4, O_Knob::VALUE },
+                                  { I_DirectDCO::AMP, 2, O_Knob::VALUE } } },
+
+        { "ADSR", ADSRConf, { { I_ADSR::GATE, 7, O_DirectDCO::SAMPLE } } },//8
+        { "VCA", VCAconfig, { { I_VCA::INPUT, 6, O_DirectDCO::SAMPLE },
+                                { I_VCA::GAIN, 8, O_ADSR::SAMPLE } } }
     };
     //<---------------------------------- TEST DATA END ---------------------------------->
 
@@ -95,6 +127,21 @@ Engine::Engine() {
         }
         //this->registerReceiver(currentModule);      
     }
+
+    //allocate voices
+    
+    //struct Voice {
+    //    int notePlayed;
+    //    int state;
+    //    PatchModule** config_;
+    //};
+    //int patchSize = patch.size();
+    //Voice* voices = new Voice[maxPoly];
+    //for (int i = 0; i < maxPoly; i++) {
+    //    PatchModule** clone = new PatchModule*[patchSize];
+
+    //    voices[i] = { 0, 0, clone };
+    //}
     //Map inputs on hardware properly (see previous comment on linking)
     PatchModule* exitModule = currentPatch.back();
 

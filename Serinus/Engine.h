@@ -10,11 +10,15 @@
  * Currently, only midi handling and patchmodule loading/configuration/connectivity is managed.
  * Additionally, there will be a hardware IO registry, filesystem handling and UI.
  * After bootloader is done checking/updating firmware, the main program will take over.
- * Main program will consist only of the engine instantiation, which will take over from this point, managing everything.
+ * Main program will consist only of the engine instantiation, which will take over from this point, 
+ * managing everything.
  *
+ * Mini ToDo:
+ *      add initializer method, which will load up default engine config from text/xml
+ *      add patch-reinitializer, so that patch can be reloaded by a command
+ *      
  * Authored: AK
- * Last revision: 04.05.2014
- *
+ * Last revision: 20.05.2014
  */
 class Engine {
 public:
@@ -44,6 +48,7 @@ private:
     //std::vector<void*( )> registry[8];
     // Patch
     std::vector<PatchModule*> currentPatch;
+    int maxPoly;
     std::queue<std::vector<unsigned char>> cmds;
     Sample *inSample;
     Sample *lastSample;

@@ -13,14 +13,14 @@ Some interesting files to look up: <br>
 
 TODO
 ===================
-1. Add some basic modules to play with
-2. Use basic XML parser to load configs
-3. Implement _simple_ voice allocation system
+1. Add some basic modules to play with - almost done
+2. Use basic XML parser to load configs - postponed
+3. Implement _simple_ voice allocation system - will be done together with 4+5
 4. Handle NoteOn and NoteOff events
 5. Implement command dispatch/handling system
 	* Message receiver registry 
 	* Message bus
-6. Module grouping (dynamic) e.g like a patch in a patch
+6. Module grouping/subpatches (dynamic) 
 7. Buffered tick calls (e.g 1 module fills a whole buffer instead of emitting 1 sample)
 
 

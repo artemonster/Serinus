@@ -17,9 +17,10 @@ DirectDCO::DirectDCO() {
 }
 
 void DirectDCO::Tick() {
-    float amplitude = static_cast<float>( *input_[I_DirectDCO::AMP] );
-    //float pwm = static_cast<float>(*input[I_DirectDCO::PWM]) / UPSCALE;
-    float pwm = 0;
+    // TODO fix this float to int shit again, because if amp is at UPSCALE value 
+    // then back cast produces negative value (I guess overflow occurs during conversion)
+    float amplitude = static_cast<float>( *input_[I_DirectDCO::AMP] )-1000;
+    float pwm = static_cast<float>(*input_[I_DirectDCO::PWM]) / UPSCALE;
     switch (waveform_) {
         case SAW:
             output_[O_DirectDCO::SAMPLE] = phasor_ * amplitude;
@@ -32,13 +33,13 @@ void DirectDCO::Tick() {
             }
             break;
         case SIN:
-            output_[O_DirectDCO::SAMPLE] = sin((phasor_+1)*3.14159265)*UPSCALE;
+            output_[O_DirectDCO::SAMPLE] = sin((phasor_)*3.14159265)*amplitude;
             break;
         case SQR:
-            if (phasor_ >= pwm) {
+            if ((phasor_+ 1) >= pwm*2) {
                 output_[O_DirectDCO::SAMPLE] = amplitude;
             } else {
-                output_[O_DirectDCO::SAMPLE] = -amplitude;
+                output_[O_DirectDCO::SAMPLE] = 0;
             }
             break;
         default:
