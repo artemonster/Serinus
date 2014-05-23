@@ -24,7 +24,7 @@ class Engine {
 public:
     Engine();
     ~Engine() {};
-    Sample Tick();
+    Sample Tick(int bufIndex);
     void PushCommand(std::vector<unsigned char> cmd);
     void HandleCommandQueue();
 
@@ -49,9 +49,10 @@ private:
     // Patch
     std::vector<PatchModule*> currentPatch;
     int maxPoly;
+    int bufferSize;
     std::queue<std::vector<unsigned char>> cmds;
     Sample *inSample;
-    Sample *lastSample;
+    Sample *outputSamples;
     
     struct Module {
         std::string name;

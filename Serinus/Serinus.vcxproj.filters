@@ -60,9 +60,6 @@
     <ClInclude Include="HAL\RtError.h">
       <Filter>Header Files\HAL</Filter>
     </ClInclude>
-    <ClInclude Include="WaveTableOsc.h">
-      <Filter>Header Files\Modules</Filter>
-    </ClInclude>
     <ClInclude Include="PatchModule.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -115,9 +112,6 @@
     </ClCompile>
     <ClCompile Include="HAL\RtMidi.cpp">
       <Filter>Source Files\HAL</Filter>
-    </ClCompile>
-    <ClCompile Include="WaveTableOsc.cpp">
-      <Filter>Source Files\Modules</Filter>
     </ClCompile>
     <ClCompile Include="Knob.cpp">
       <Filter>Source Files\Modules</Filter>

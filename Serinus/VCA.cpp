@@ -1,22 +1,23 @@
 #include "VCA.h"
 #include <math.h> 
 const CreatorImpl<VCA> VCA::creator("VCA");
-VCA::VCA() {
-    output_ = new Sample[O_VCA::MAX];
-    output_[O_VCA::SAMPLE] = 0;
-    input_ = new Sample*[I_VCA::MAX];
+VCA::VCA(int maxPoly, int bufferSize) : PatchModule (maxPoly, bufferSize) {
+    ItilializeVoices(O_VCA::MAX, I_VCA::MAX);
     parameters_ = new void*[P_VCA::MAX];
     parameters_[P_VCA::MODE] = &isLinear_;
 }
 
-void VCA::Tick() {
-    float gain = static_cast<float>( *input_[I_VCA::GAIN] )/ UPSCALE;
-    Sample in = *input_[I_VCA::INPUT];
+void VCA::Tick(int voice, int bufIndex) {
+    Sample* gainbuf = input_[voice][I_VCA::GAIN][0];
+    Sample* inbuf = input_[voice][I_VCA::INPUT][0];
+
+    float gain = static_cast<float>( *(gainbuf+bufIndex) )/ UPSCALE;
+    Sample* output = &output_[voice][O_VCA::SAMPLE][bufIndex];
     if (isLinear_) {
-        output_[O_VCA::SAMPLE] = in*gain;
+        *output = *(inbuf+bufIndex)*gain;
     } else {
         //TODO: fix log with RAMP input (produces some nasty clicks)
-        output_[O_VCA::SAMPLE] = in*log(gain);
+        *output = *(inbuf+bufIndex)*log(gain);
     }     
 }
 

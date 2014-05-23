@@ -18,7 +18,7 @@
 
 namespace I_DirectDCO { enum e { PITCH, PWM, PHASE, AMP, MAX }; }
 namespace O_DirectDCO { enum e { SAMPLE, MAX }; }
-namespace P_DirectDCO { enum e { TUNE, DETUNE, PHASOR, TRIG, WF, MODE, MAX }; }
+namespace P_DirectDCO { enum e { TUNE, DETUNE, TRIG, WF, MODE, MAX }; }
 
 namespace I_VCA { enum e { INPUT, GAIN, MAX }; }
 namespace O_VCA { enum e { SAMPLE, MAX }; }

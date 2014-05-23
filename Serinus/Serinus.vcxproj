@@ -102,7 +102,6 @@
     <ClInclude Include="Util\rapidxml_print.hpp" />
     <ClInclude Include="Util\rapidxml_utils.hpp" />
     <ClInclude Include="VCA.h" />
-    <ClInclude Include="WaveTableOsc.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ADSR.cpp" />
@@ -115,7 +114,6 @@
     <ClCompile Include="DirectDCO.cpp" />
     <ClCompile Include="Serinus.cpp" />
     <ClCompile Include="VCA.cpp" />
-    <ClCompile Include="WaveTableOsc.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="README.md" />

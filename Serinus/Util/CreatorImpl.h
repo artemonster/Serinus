@@ -12,7 +12,7 @@ public:
     CreatorImpl<T>(const std::string& classname) : Creator(classname) {}
     virtual ~CreatorImpl<T>() {}
 
-    virtual PatchModule* create() { return new T; }
+    virtual PatchModule* create(int maxPoly, int bufferSize) { return new T(maxPoly, bufferSize); }
 };
 
 #endif

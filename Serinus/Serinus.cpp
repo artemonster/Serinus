@@ -4,11 +4,11 @@
 static int audioCallback(void *outputBuffer, void *inputBuffer, unsigned int nBufferFrames,
                          double streamTime, RtAudioStreamStatus status, void *userData) {
 
-    Engine *engine = (Engine*)userData; //Do a proper type cast
-    int *outBuf = (int*)outputBuffer; //Do a proper type cast
+    Engine *engine = static_cast<Engine*>(userData);
+    int *outBuf = static_cast<int*>(outputBuffer);
     (void)inputBuffer; // Prevent unused variable warning.
     for (unsigned int i = 0; i < nBufferFrames; i++) {
-        *outBuf++ = engine->Tick();
+        *outBuf++ = engine->Tick(i);
     }
     return 0;
 }

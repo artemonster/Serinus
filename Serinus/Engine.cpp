@@ -4,7 +4,9 @@
 #include <list>
 
 Engine::Engine() {
+    //these initalizers are here just for fun
     maxPoly = 5;
+    bufferSize = BUFFER_SIZE;
     /*
         TODO register all available hardware (buttons, pots, lcd, io, etc) and assign proper handlers to it.
         TODO initialize filesystem and load a patch from it.
@@ -112,7 +114,7 @@ Engine::Engine() {
     * lands on the stack (Can be problematic when multiple sinks are registered for the same source!)
     */
     for (moduleIt = patch.begin(); moduleIt != patch.end(); ++moduleIt) {
-        PatchModule* currentModule = Factory::create(moduleIt->name);
+        PatchModule* currentModule = Factory::create(moduleIt->name, maxPoly, bufferSize);
         currentPatch.push_back(currentModule);
         currentModule->LoadConfiguration(currentModule->getParameterTypes(), moduleIt->config);
         ModuleInputs moduleConnections = moduleIt->connections;
@@ -122,7 +124,11 @@ Engine::Engine() {
             PatchModule* source = currentPatch[inputsConfigIt->sourceModule];
             if (!currentModule->hasNoInputs()) { //check, if module even has inputs :)
                 //TODO: check for inputsConfigIt->second (0:NULL ....)
-                currentModule->setLink(inputsConfigIt->inputIndex, source->getOutput(inputsConfigIt->outputIndex));
+                for (int j = 0; j < maxPoly; ++j) {
+                    currentModule->setLink(j, inputsConfigIt->inputIndex, 
+                                           source->getOutput(j, inputsConfigIt->outputIndex));
+                }
+                
             }
         }
         //this->registerReceiver(currentModule);      
@@ -145,19 +151,19 @@ Engine::Engine() {
     //Map inputs on hardware properly (see previous comment on linking)
     PatchModule* exitModule = currentPatch.back();
 
-    lastSample = exitModule->getOutput(0);
+    outputSamples = exitModule->getOutput(0,0);
     inSample = NULL;
 }
 
-Sample Engine::Tick() {
+Sample Engine::Tick(int bufIndex) {
     //for all active allocated voices
     //for all modules
     std::vector<PatchModule*>::iterator mod;
     for (mod = currentPatch.begin(); mod != currentPatch.end(); ++mod) {
-        ( *mod )->Tick();
+        ( *mod )->Tick(0,bufIndex);
     }
     //look up if a voice needs to be freed
-    return *lastSample;
+    return outputSamples[bufIndex];
 }
 
 void Engine::HandleCommandQueue() {

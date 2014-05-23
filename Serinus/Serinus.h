@@ -42,6 +42,12 @@ no exception to that. Well, I was wrong. They are seriously inseparable, so I gu
 bulk update soon.
 Today I've finished ADSR and default ahrd-wired patch is ok
 
+23.05.2014: Buffers and crazy pointers
+Today I've introduced polyphony and buffers to the PatchModule, which effectively made output sample buffer
+a 3d array :)) Which means, input buffer pointer is a 4-way pointer! Woohoo!
+The polyphonic patch is made in such way that only voice-related parameters (ADSR state, phasors of OSC, etc) are
+cloned. Everything else (global parameters, settings, the module itself) is not. This greatly saves the memory.
+Next time I will make a voice allocator and introduce fixed point.
 */
 
 typedef int Sample; 					            //this type is used for samples

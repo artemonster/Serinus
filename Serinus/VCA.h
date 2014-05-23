@@ -13,9 +13,10 @@ Last revision: 13.05.2014
 class VCA : public PatchModule {
 public:
     static const CreatorImpl<VCA> creator;
-    VCA();
+    VCA(int maxPoly, int bufferSize);
     ~VCA() {};
-    void Tick();
+    void FillBuffers(int voice, int bufferSize) {};
+    inline void Tick(int voice, int bufIndex);
     void ProcessCommand(const int &commandType, const int &commandIndex, const int &inValue) {};
     ModuleTypes getParameterTypes();
 private:

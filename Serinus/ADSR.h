@@ -12,15 +12,16 @@ Last revision: 13.05.2014
 class ADSR : public PatchModule {
 public:
     static const CreatorImpl<ADSR> creator;
-    ADSR();
+    ADSR(int maxPoly, int bufferSize);
     ~ADSR() {};
-    void Tick();
+    void FillBuffers(int voice, int bufferSize) {};
+    inline void Tick(int voice, int bufIndex);
     void ProcessCommand(const int &commandType, const int &commandIndex, const int &inValue) {};
     ModuleTypes getParameterTypes();
 protected:
     enum State { IDLE, ATTACK, DECAY, SUSTAIN, RELEASE };
-    float outputSample_;
-    State state_;
+    float* outputSample_;
+    State* state_;
     bool isLinear_;
     float attack_;
     float decay_;

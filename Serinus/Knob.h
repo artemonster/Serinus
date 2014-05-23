@@ -12,9 +12,10 @@ Last revision: 13.05.2014
 class Knob : public PatchModule {
 public:
     static const CreatorImpl<Knob> creator;
-    Knob();
+    Knob(int maxPoly, int bufferSize);
     ~Knob() {};
-    inline void Tick();
+    void FillBuffers(int voice, int bufferSize) {};
+    inline void Tick(int voice, int bufIndex);
     ModuleTypes getParameterTypes();
     void ProcessCommand(const int &commandType, const int &commandIndex, const int &inValue) {};
 private:

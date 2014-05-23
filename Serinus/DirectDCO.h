@@ -17,16 +17,17 @@ class DirectDCO : public PatchModule {
 public:
     static const CreatorImpl<DirectDCO> creator;
 
-    DirectDCO();
+    DirectDCO(int maxPoly, int bufferSize);
     ~DirectDCO() {};
-    void Tick();
+    inline void Tick(int voice, int bufIndex);
+    void FillBuffers(int voice, int bufferSize);
     void ProcessCommand(const int &commandType, const int &commandIndex, const int &inValue) {};
     ModuleTypes getParameterTypes();
 private:
     enum WaveForm { SAW, TRI, SIN, SQR };
     float tuneFreq_;
     float detune_;
-    float phasor_;
+    float *phasor_;
     bool reTrigger_;
     int waveform_;
     int mode_;
