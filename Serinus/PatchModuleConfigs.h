@@ -31,6 +31,8 @@ namespace P_ADSR { enum e { MODE, ATTACK, DECAY, SUSTAIN, RELEASE, MAX }; }
 namespace O_Knob { enum e { VALUE, MAX }; }
 namespace P_Knob { enum e { VALUE, MAX }; }
 
+namespace O_PolyKeys { enum e { CV, GATE, VELO, MAX }; }
+
 namespace O_WaveTableOsc { enum e { SAMPLE, MAX }; }
 namespace I_WaveTableOsc { enum e { FREQ, INTERPOLATE, MAX }; }
 

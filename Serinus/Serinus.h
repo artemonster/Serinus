@@ -48,18 +48,32 @@ a 3d array :)) Which means, input buffer pointer is a 4-way pointer! Woohoo!
 The polyphonic patch is made in such way that only voice-related parameters (ADSR state, phasors of OSC, etc) are
 cloned. Everything else (global parameters, settings, the module itself) is not. This greatly saves the memory.
 Next time I will make a voice allocator and introduce fixed point.
+
+24.05.2014: Polyphony and MIDI
+So, that is it! The synth accepts midi input and produces a polyphonic audio output. It is still buggy and I need to
+sort out a lot of things though. I've also addded a little MidiCommander project which will send different midi 
+commands to loopMIDI, so that I don't need to attach my keyboard each time I want to test something.
+Next stop: bug fixing, clean-up, shiny refactoring and fixed point!
 */
 
+#define SRS_DEBUG
 typedef int Sample; 					            //this type is used for samples
 typedef std::map<int, int> ModuleTypes;
 typedef std::map<int, std::string> ModuleValues;
+typedef std::vector<unsigned char> MidiCmd;
+enum ModuleCMD {NOTEOFF,NOTEON,GET,SET};
+typedef std::vector<ModuleCMD> RegisterTo;
+
 namespace Types { enum TypeMapping { INT, FLOAT, BOOL }; }
 struct InputConfig {
     int inputIndex;
     int sourceModule;
     int outputIndex;
 };
+
 const InputConfig NO_INPUT = { 0, 0, 0 };
+const ModuleValues NO_CONF;
+const RegisterTo NO_CMDS;
 typedef std::vector<InputConfig> ModuleInputs;
 
 const unsigned int SAMPLE_RATE = 44100;				//won't change (I guess)

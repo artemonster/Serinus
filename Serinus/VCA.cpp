@@ -5,6 +5,7 @@ VCA::VCA(int maxPoly, int bufferSize) : PatchModule (maxPoly, bufferSize) {
     ItilializeVoices(O_VCA::MAX, I_VCA::MAX);
     parameters_ = new void*[P_VCA::MAX];
     parameters_[P_VCA::MODE] = &isLinear_;
+    isLinear_ = true;
 }
 
 void VCA::Tick(int voice, int bufIndex) {

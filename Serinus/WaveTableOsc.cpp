@@ -2,7 +2,8 @@
 #include "PatchModuleConfigs.h"
 const CreatorImpl<WaveTableOsc> WaveTableOsc::creator("WaveTableOsc");
 
-WaveTableOsc::WaveTableOsc() {
+WaveTableOsc::WaveTableOsc(int maxPoly, int bufferSize) : PatchModule (maxPoly, bufferSize) {
+    ItilializeVoices(O_WaveTableOsc::MAX, I_WaveTableOsc::MAX);
     phasor = 0.0;
     phasorInc = 0.0;
     parameters_ = new void*[1];
@@ -11,7 +12,6 @@ WaveTableOsc::WaveTableOsc() {
     willInterpolate = false;
     tableLength = 4096;
     sampleTable = new float[tableLength];
-    output_ = new Sample[O_WaveTableOsc::MAX + 1];
     float inc = 2.0 / tableLength;
     for (int i = 0; i <= tableLength; i++) {
         sampleTable[i] = -1.0 + inc*i;
@@ -19,7 +19,8 @@ WaveTableOsc::WaveTableOsc() {
     this->setFrequency(220.0);
 }
 
-void WaveTableOsc::Tick() {
+void WaveTableOsc::Tick(int voice, int bufIndex) {
+    Sample* output = &output_[voice][O_WaveTableOsc::SAMPLE][bufIndex];
     if (willInterpolate) {
         float properPhase = phasor*tableLength;
         int truncPhase = properPhase;
@@ -27,9 +28,9 @@ void WaveTableOsc::Tick() {
         float s0 = sampleTable[truncPhase++];
         if (truncPhase >= tableLength) truncPhase = 0;
         float s1 = sampleTable[truncPhase];
-        output_[O_WaveTableOsc::SAMPLE] = ( s0 + ( s1 - s0 )*fracPhase ) * UPSCALE;
+        *output = ( s0 + ( s1 - s0 )*fracPhase ) * UPSCALE;
     } else {
-        output_[O_WaveTableOsc::SAMPLE] = sampleTable[int(phasor*tableLength)] * UPSCALE;
+        *output = sampleTable[int(phasor*tableLength)] * UPSCALE;
     }
     //Update phase
     phasor += phasorInc;

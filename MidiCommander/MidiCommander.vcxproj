@@ -11,9 +11,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{9A51F565-F91D-4D48-8905-A018816B9679}</ProjectGuid>
+    <ProjectGuid>{2C09971D-F36D-446A-9F9B-712E1F2F4A6A}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>Serinus</RootNamespace>
+    <RootNamespace>MidiCommander</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -41,7 +41,6 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>C:\Users\akoso_000\Documents\Visual Studio 2013\Projects\Serinus\Serinus\HAL\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -52,16 +51,13 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;__WINDOWS_DS__;__WINDOWS_MM__;_DEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;__WINDOWS_MM__;_DEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>C:\Users\akoso_000\Documents\Visual Studio 2013\Projects\Serinus\Serinus;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>dsound.lib;winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>winmm.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -83,44 +79,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="ADSR.h" />
-    <ClInclude Include="PolyKeys.h" />
-    <ClInclude Include="Util\Creator.h" />
-    <ClInclude Include="Util\CreatorImpl.h" />
-    <ClInclude Include="Engine.h" />
-    <ClInclude Include="Util\Factory.h" />
-    <ClInclude Include="HAL\include\dsound.h" />
-    <ClInclude Include="HAL\include\ginclude.h" />
-    <ClInclude Include="HAL\include\soundcard.h" />
-    <ClInclude Include="HAL\RtAudio.h" />
-    <ClInclude Include="HAL\RtError.h" />
-    <ClInclude Include="HAL\RtMidi.h" />
-    <ClInclude Include="Knob.h" />
-    <ClInclude Include="PatchModule.h" />
-    <ClInclude Include="PatchModuleConfigs.h" />
-    <ClInclude Include="DirectDCO.h" />
-    <ClInclude Include="Serinus.h" />
-    <ClInclude Include="Util\rapidxml.hpp" />
-    <ClInclude Include="Util\rapidxml_iterators.hpp" />
-    <ClInclude Include="Util\rapidxml_print.hpp" />
-    <ClInclude Include="Util\rapidxml_utils.hpp" />
-    <ClInclude Include="VCA.h" />
+    <ClCompile Include="MidiCommander.cpp" />
+    <ClCompile Include="RtMidi.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="ADSR.cpp" />
-    <ClCompile Include="Engine.cpp" />
-    <ClCompile Include="PolyKeys.cpp" />
-    <ClCompile Include="Util\Creator.cpp" />
-    <ClCompile Include="Util\Factory.cpp" />
-    <ClCompile Include="HAL\RtAudio.cpp" />
-    <ClCompile Include="HAL\RtMidi.cpp" />
-    <ClCompile Include="Knob.cpp" />
-    <ClCompile Include="DirectDCO.cpp" />
-    <ClCompile Include="Serinus.cpp" />
-    <ClCompile Include="VCA.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="README.md" />
+    <ClInclude Include="RtMidi.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

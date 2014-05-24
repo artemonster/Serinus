@@ -1,5 +1,6 @@
 #include "Engine.h"
 #include "PatchModule.h"
+#include "DirectDCO.h"
 #include "PatchModuleConfigs.h"
 #include <list>
 
@@ -28,12 +29,8 @@ Engine::Engine() {
     }
 
     //<---------------------------------- TEST DATA ---------------------------------->
-    ModuleValues DCOFreq {
-        std::make_pair(P_Knob::VALUE, "1") // 0 V
-    };
-
     ModuleValues LFOFreq {
-        std::make_pair(P_Knob::VALUE, "8") // 2 Hz
+        std::make_pair(P_Knob::VALUE, "8") // 8 Hz
     };
 
     ModuleValues AMP {
@@ -41,7 +38,7 @@ Engine::Engine() {
     };
 
     ModuleValues TrigFreq {
-        std::make_pair(P_Knob::VALUE, "-1") //CV
+        std::make_pair(P_Knob::VALUE, "1") //CV
     };
 
     ModuleValues PWM {
@@ -50,20 +47,14 @@ Engine::Engine() {
 
     ModuleValues LFO {
         std::make_pair(P_DirectDCO::WF, "2"),
-        std::make_pair(P_DirectDCO::TUNE, "213.6"),
+        std::make_pair(P_DirectDCO::TUNE, "213.63"),
         std::make_pair(P_DirectDCO::MODE, "0") //hz control
     };
 
     ModuleValues MainOsc {
         std::make_pair(P_DirectDCO::WF, "1"),
         std::make_pair(P_DirectDCO::TUNE, "213.6"),
-        std::make_pair(P_DirectDCO::MODE, "1") //VC control
-    };
-
-    ModuleValues TrigOsc {
-        std::make_pair(P_DirectDCO::WF, "3"),
-        std::make_pair(P_DirectDCO::TUNE, "1"),
-        std::make_pair(P_DirectDCO::MODE, "1") //VC control
+        std::make_pair(P_DirectDCO::MODE, "1") //CV control
     };
 
     ModuleValues ADSRConf {
@@ -73,30 +64,21 @@ Engine::Engine() {
         std::make_pair(P_ADSR::RELEASE, "1000")
     };
 
-    ModuleValues VCAconfig {
-        std::make_pair(P_VCA::MODE, "true")
-    };
-
     std::list<Module> patch = {
-        { "Knob", DCOFreq, { NO_INPUT } },
-        { "Knob", LFOFreq, { NO_INPUT } },
-        { "Knob", AMP, { NO_INPUT } },
-        { "Knob", TrigFreq, { NO_INPUT } },
-        { "Knob", PWM, { NO_INPUT } },
-
-        { "DirectDCO", LFO, { { I_DirectDCO::PITCH, 1, O_Knob::VALUE }, //5
-                              { I_DirectDCO::PWM, 4, O_Knob::VALUE },
-                              { I_DirectDCO::AMP, 2, O_Knob::VALUE } } },
-        { "DirectDCO", MainOsc, { { I_DirectDCO::PITCH, 0, O_Knob::VALUE }, //6
-                                  { I_DirectDCO::PWM, 4, O_Knob::VALUE },
-                                  { I_DirectDCO::AMP, 5, O_DirectDCO::SAMPLE } } },
-        { "DirectDCO", TrigOsc, { { I_DirectDCO::PITCH, 3, O_Knob::VALUE },//7
-                                  { I_DirectDCO::PWM, 4, O_Knob::VALUE },
-                                  { I_DirectDCO::AMP, 2, O_Knob::VALUE } } },
-
-        { "ADSR", ADSRConf, { { I_ADSR::GATE, 7, O_DirectDCO::SAMPLE } } },//8
-        { "VCA", VCAconfig, { { I_VCA::INPUT, 6, O_DirectDCO::SAMPLE },
-                                { I_VCA::GAIN, 8, O_ADSR::SAMPLE } } }
+        { "Knob", LFOFreq, { NO_INPUT }, NO_CMDS },
+        { "Knob", AMP, { NO_INPUT }, NO_CMDS },
+        { "Knob", TrigFreq, { NO_INPUT }, NO_CMDS },
+        { "Knob", PWM, { NO_INPUT }, NO_CMDS },
+        { "PolyKeys", NO_CONF, { NO_INPUT }, { ModuleCMD::NOTEOFF,ModuleCMD::NOTEON } }, //4
+        { "DirectDCO", LFO, { { I_DirectDCO::PITCH, 0, O_Knob::VALUE }, //5
+                              { I_DirectDCO::PWM, 3, O_Knob::VALUE },
+                              { I_DirectDCO::AMP, 1, O_Knob::VALUE } }, NO_CMDS },
+        { "DirectDCO", MainOsc, { { I_DirectDCO::PITCH, 4, O_PolyKeys::CV }, //6
+                                  { I_DirectDCO::PWM, 3, O_Knob::VALUE },
+                                  { I_DirectDCO::AMP, 5, O_DirectDCO::SAMPLE } }, NO_CMDS },
+        { "ADSR", ADSRConf, { { I_ADSR::GATE, 4, O_PolyKeys::GATE } }, NO_CMDS },//7
+        { "VCA", NO_CONF, { { I_VCA::INPUT, 6, O_DirectDCO::SAMPLE },
+                                { I_VCA::GAIN, 7, O_ADSR::SAMPLE } }, NO_CMDS }
     };
     //<---------------------------------- TEST DATA END ---------------------------------->
 
@@ -116,7 +98,9 @@ Engine::Engine() {
     for (moduleIt = patch.begin(); moduleIt != patch.end(); ++moduleIt) {
         PatchModule* currentModule = Factory::create(moduleIt->name, maxPoly, bufferSize);
         currentPatch.push_back(currentModule);
+        currentModule->setId(currentPatch.size());
         currentModule->LoadConfiguration(currentModule->getParameterTypes(), moduleIt->config);
+         
         ModuleInputs moduleConnections = moduleIt->connections;
         ModuleInputs::iterator inputsConfigIt;
         for (inputsConfigIt = moduleConnections.begin(); inputsConfigIt != moduleConnections.end(); ++inputsConfigIt) {
@@ -130,29 +114,23 @@ Engine::Engine() {
                 }
                 
             }
-        }
-        //this->registerReceiver(currentModule);      
+        }   
+        RegisterTo commandSources = moduleIt->commands;
+        RegisterTo::iterator cmdIt;
+        for (cmdIt = commandSources.begin(); cmdIt != commandSources.end(); ++cmdIt) {
+            eventRegistry[( *cmdIt )].push_back(currentModule);
+        }        
     }
 
-    //allocate voices
-    
-    //struct Voice {
-    //    int notePlayed;
-    //    int state;
-    //    PatchModule** config_;
-    //};
-    //int patchSize = patch.size();
-    //Voice* voices = new Voice[maxPoly];
-    //for (int i = 0; i < maxPoly; i++) {
-    //    PatchModule** clone = new PatchModule*[patchSize];
-
-    //    voices[i] = { 0, 0, clone };
-    //}
     //Map inputs on hardware properly (see previous comment on linking)
+    //Initialize voices
     PatchModule* exitModule = currentPatch.back();
-
-    outputSamples = exitModule->getOutput(0,0);
+    outputSamples = new Sample*[maxPoly];
     inSample = NULL;
+    for (int i = 0; i < maxPoly; i++) {
+        availableVoices.push_back(new Voice { i, 0 });
+        outputSamples[i] = exitModule->getOutput(i,0);
+    }  
 }
 
 Sample Engine::Tick(int bufIndex) {
@@ -160,61 +138,110 @@ Sample Engine::Tick(int bufIndex) {
     //for all modules
     std::vector<PatchModule*>::iterator mod;
     for (mod = currentPatch.begin(); mod != currentPatch.end(); ++mod) {
-        ( *mod )->Tick(0,bufIndex);
+        for (int i = 0; i < maxPoly; ++i) {
+            ( *mod )->Tick(i,bufIndex);
+        }
     }
-    //look up if a voice needs to be freed
-    return outputSamples[bufIndex];
+    //mix all buffer samples properly!
+    //http://www.vttoth.com/CMS/index.php/technical-notes/68
+    // z= a + b - ab, or Z = 2 (a+b) - 2ab -1
+    Sample outSample = 0;
+    for (int i = 0; i < maxPoly; ++i) {
+        outSample += *( outputSamples[i] + bufIndex ) / maxPoly;
+    }
+    return outSample;
 }
 
 void Engine::HandleCommandQueue() {
     while (!cmds.empty()) {
-        std::vector<unsigned char> command = cmds.front();
-
-        //TODO make this a debug output
+        MidiCmd command = cmds.front();
+#ifdef SRS_DEBUG
         unsigned int nBytes = command.size();
         for (unsigned int i = 0; i < nBytes; i++) {
             std::cout << "Byte " << i << " = " << (int)command.at(i) << ", ";
         }
         std::cout << std::endl;
-
+#endif // SRS_DEBUG
         unsigned char comamndByte = command.front();
         unsigned char lowNibble = comamndByte & 0x0F;
         unsigned char frontNibble = comamndByte >> 4;
         Engine::MidiHandler handler = midiHndlTable[frontNibble];
         ( this->*( handler ) )( lowNibble, command );
-
         cmds.pop(); //remove handled command from queue.
     }
 }
 
-void Engine::PushCommand(std::vector<unsigned char> cmd) {
+void Engine::PushCommand(MidiCmd cmd) {
     cmds.push(cmd);
 }
 
-void Engine::NoteOff(unsigned char voice, std::vector<unsigned char> cmd) {
-    // remove from active voices
-    // notify all receivers
-    
+void Engine::NoteOff(unsigned char voice, MidiCmd cmd) {
+    runningStatus = 0x80 | voice;
+    unsigned char note = cmd.at(1);
+    unsigned char velocity = cmd.at(2);
+    std::list<Voice*>::iterator voiceIt;
+    Voice* toFind = new Voice { 99, note };
+    voiceIt = std::find(activeVoices.begin(), activeVoices.end(), toFind);
+    if (voiceIt != activeVoices.end()) {
+        availableVoices.push_front(*voiceIt);
+        for (receiverIt = eventRegistry[NOTEOFF].begin(); receiverIt != eventRegistry[NOTEOFF].end(); ++receiverIt) {
+            (*receiverIt)->ProcessCommand( ModuleCMD::NOTEOFF, (*voiceIt)->voiceNum, cmd, retCode );
+        }
+        activeVoices.erase(voiceIt);
+    } else {
+         //Played note not found? WTF? raise error! 
+    }
 };
 
-void Engine::NoteOn(unsigned char voice, std::vector<unsigned char> cmd) {
+void Engine::NoteOn(unsigned char voice, MidiCmd cmd) {
     runningStatus = 0x90 | voice;
     unsigned char note = cmd.at(1);
     unsigned char velocity = cmd.at(2);
+    std::list<Voice*>::iterator voiceIt;
+    Voice* toFind = new Voice { 99, note };
+    voiceIt = std::find(activeVoices.begin(), activeVoices.end(), toFind);
     if (velocity == 0) {
         //handle like NoteOff, but do not set runningStatus
+        if (voiceIt != activeVoices.end()) {
+            availableVoices.push_front(*voiceIt);       
+            for (receiverIt = eventRegistry[NOTEOFF].begin(); 
+                 receiverIt != eventRegistry[NOTEOFF].end(); ++receiverIt) {
+                (*receiverIt)->ProcessCommand( ModuleCMD::NOTEOFF, (*voiceIt)->voiceNum, cmd, retCode );
+            }
+            activeVoices.erase(voiceIt);
+        } else {
+            //Played note not found? WTF? raise error! 
+        }
+    } else {
+        // here we have the possibility either to re-trigger same decaying note, or just allocate new one
+        if (availableVoices.size() != 0) {
+            Voice* newVoice = availableVoices.back();
+            newVoice->notePlayed = note;
+            for (receiverIt = eventRegistry[NOTEON].begin(); 
+                 receiverIt != eventRegistry[NOTEON].end(); ++receiverIt) {
+                PatchModule* registeredReceiver = ( *receiverIt );
+                int voice = newVoice->voiceNum;
+                registeredReceiver->ProcessCommand( ModuleCMD::NOTEON, voice, cmd, retCode );
+            }
+            activeVoices.push_front(newVoice);
+            availableVoices.pop_back();
+        } else {
+            //override the oldest note!
+            Voice* newVoice = activeVoices.back();
+            newVoice->notePlayed = note;
+            for (receiverIt = eventRegistry[NOTEON].begin(); 
+                 receiverIt != eventRegistry[NOTEON].end(); ++receiverIt) {
+                PatchModule* registeredReceiver = ( *receiverIt );
+                int voice = newVoice->voiceNum;
+                registeredReceiver->ProcessCommand( ModuleCMD::NOTEON, voice, cmd, retCode );
+            }
+            activeVoices.pop_back();
+            activeVoices.push_front(newVoice);
+        }
     }
-    //std::vector<void*( )> registredHandlers = registry[MidiCmd::NOTEON];
-    //if (!registredHandlers.empty()) {
-    //    std::vector<void*( )>::iterator handlersIt;
-    //    for (handlersIt = registredHandlers.begin; handlersIt != registredHandlers.end(); ++handlersIt) {
-    //        (*handlersIt)();
-    //    }
-    //}
-    //for all registered trigger destinations
 };
 
-void Engine::HandleRunningCmd(unsigned char wtf, std::vector<unsigned char> cmd) {
+void Engine::HandleRunningCmd(unsigned char wtf, MidiCmd cmd) {
     if (runningStatus != 0) {
         Engine::MidiHandler handler = midiHndlTable[runningStatus];
         ( this->*( handler ) )( wtf, cmd );
@@ -223,7 +250,7 @@ void Engine::HandleRunningCmd(unsigned char wtf, std::vector<unsigned char> cmd)
     }
 };
 
-void Engine::Sysex(unsigned char type, std::vector<unsigned char> cmd) {
+void Engine::Sysex(unsigned char type, MidiCmd cmd) {
     if (type >= 0 && type <= 7) {
         //System Common Category
         runningStatus = 0;

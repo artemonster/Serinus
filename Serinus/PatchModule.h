@@ -47,13 +47,14 @@ public:
     /**This method fills output buffer for the specified voice and buffer size.
     Implementation is always the same, but it is not implemented in this class only for the sake
     of inlining (then the call can be statically resolved and properly inlined).
-    When implementing, use inlined Tick of a derived class, like ClassName::Tick(voice);*/
+    When implementing, use inlined Tick of a derived class, like ClassName::Tick(voice);
+    Works only with -O2 optimizazion.*/
     virtual void FillBuffers(int voice, int bufferSize) = 0;
     /**This method updates all outputs of the module for specified voice by an internal algorithm.
     When implementing, inline this function, as it will be inlined by FillBuffer method.*/
     virtual void Tick(int voice, int bufIndex) = 0;
     /**This method updates all outputs and internal states of the module by an external command.*/
-    virtual void ProcessCommand(const int &commandType, const int &commandIndex, const int &inValue) = 0;
+    virtual void ProcessCommand(const int &cmdType, int polyVoiceNr, const MidiCmd &inValue, int &retVal) = 0;
     /**
     This method is called to deliver a map of all parameter types in the derived class.
     This mapping is mandatory for the parameters, which should be serialized for storing\loading the configuration.
@@ -121,7 +122,11 @@ public:
         delete[] input_;
         delete[] parameters_;
     };
+    void setId(int id) {
+        id_ = id;
+    }
 protected:
+    int id_;
     int maxPoly_;
     int bufferSize_;
     /**Pointer to an array of output buffer samples (multiple voices).*/

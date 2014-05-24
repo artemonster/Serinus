@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <queue>
+#include <list>
 #include <string>
 #include "PatchModule.h"
 /**
@@ -24,40 +25,54 @@ class Engine {
 public:
     Engine();
     ~Engine() {};
+    
+    typedef void( Engine::*MidiHandler )( unsigned char, MidiCmd );
     Sample Tick(int bufIndex);
-    void PushCommand(std::vector<unsigned char> cmd);
+    void PushCommand(MidiCmd cmd);
     void HandleCommandQueue();
 
     //MIDI stuff
-    typedef void( Engine::*MidiHandler )( unsigned char, std::vector<unsigned char> );
-    void NoteOff(unsigned char voice, std::vector<unsigned char> cmd);
-    void NoteOn(unsigned char voice, std::vector<unsigned char> cmd);
-    void Aftertouch(unsigned char voice, std::vector<unsigned char> cmd) {};
-    void ControlChange(unsigned char voice, std::vector<unsigned char> cmd) {};
-    void PatchChange(unsigned char voice, std::vector<unsigned char> cmd) {};
-    void ChannelPressure(unsigned char voice, std::vector<unsigned char> cmd) {};
-    void PitchWheel(unsigned char voice, std::vector<unsigned char> cmd) {};
-    void Sysex(unsigned char type, std::vector<unsigned char> cmd);
-    void HandleRunningCmd(unsigned char wtf, std::vector<unsigned char> cmd);
+    void NoteOff(unsigned char voice, MidiCmd cmd);
+    void NoteOn(unsigned char voice, MidiCmd cmd);
+    void Aftertouch(unsigned char voice, MidiCmd cmd) {};
+    void ControlChange(unsigned char voice, MidiCmd cmd) {};
+    void PatchChange(unsigned char voice, MidiCmd cmd) {};
+    void ChannelPressure(unsigned char voice, MidiCmd cmd) {};
+    void PitchWheel(unsigned char voice, MidiCmd cmd) {};
+    void Sysex(unsigned char type, MidiCmd cmd);
+    void HandleRunningCmd(unsigned char wtf, MidiCmd cmd);
 private:
     // Midi stuff:
-    enum MidiCmd {NOTEOFF,NOTEON,AFTERT,CC,PATCH,CPRESS,PITCHW,SYSEX};
+    void registerReceiver(PatchModule* toRegister);
+    enum MidiEvent {NOTEOFF,NOTEON,AFTERT,CC,PATCH,CPRESS,PITCHW,SYSEX};
     float midiNotes[128];
     unsigned char runningStatus = 0;
+    int retCode;
     MidiHandler midiHndlTable[16];
-    //std::vector<void*( )> registry[8];
+    std::vector<PatchModule*> eventRegistry[8];
+    std::vector<PatchModule*>::iterator receiverIt;
+    struct Voice {
+        int voiceNum;
+        int notePlayed;
+        bool operator ==(Engine::Voice& rhs) const {
+            return (notePlayed == rhs.notePlayed);
+        }
+    }; 
+    std::list<Voice*> activeVoices;
+    std::list<Voice*> availableVoices;
     // Patch
     std::vector<PatchModule*> currentPatch;
     int maxPoly;
     int bufferSize;
-    std::queue<std::vector<unsigned char>> cmds;
+    std::queue<MidiCmd> cmds;
     Sample *inSample;
-    Sample *outputSamples;
+    Sample **outputSamples;
     
     struct Module {
         std::string name;
         ModuleValues config;
         ModuleInputs connections;
+        RegisterTo commands;
     };
 };
 

@@ -22,6 +22,7 @@ void DirectDCO::FillBuffers(int voice, int bufferSize) {
         DirectDCO::Tick(voice, i);
     }
 }
+
 inline void DirectDCO::Tick(int voice, int bufIndex) {
     // TODO fix this float to int shit again, because if amp is at UPSCALE value 
     // then back cast produces negative value (I guess overflow occurs during conversion)

@@ -13,7 +13,7 @@ Some interesting files to look up: <br>
 
 TODO
 ===================
-1. Add some basic modules to play with - almost done
+1. Add some basic modules to play with - done
 2. Use basic XML parser to load configs - postponed
 3. Implement _simple_ voice allocation system - will be done together with 4+5
 4. Handle NoteOn and NoteOff events
@@ -21,8 +21,13 @@ TODO
 	* Message receiver registry 
 	* Message bus
 6. Module grouping/subpatches (dynamic) 
-7. Buffered tick calls (e.g 1 module fills a whole buffer instead of emitting 1 sample)
 
+Local todo:
+===================
+1. tick -> fillbuffers
+2. add proper buffer mixing
+3. add polykey and polyout modules
+4. switch to fixed point
 
 Big Goals
 ===================

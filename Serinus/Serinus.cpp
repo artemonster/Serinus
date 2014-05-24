@@ -1,6 +1,7 @@
 #include "Serinus.h"
 #include "Engine.h"
-
+#include <chrono>
+#include <thread>
 static int audioCallback(void *outputBuffer, void *inputBuffer, unsigned int nBufferFrames,
                          double streamTime, RtAudioStreamStatus status, void *userData) {
 
@@ -24,7 +25,6 @@ void siginthandler(int param) { isDone = true; }
 int main(int argc, char* args[]) {
     std::cout << "Testing..." << std::endl;
     signal(SIGINT, siginthandler);
-
     Engine engine;
     RtAudio dac;
     RtAudio::StreamParameters parameters;
@@ -50,6 +50,7 @@ int main(int argc, char* args[]) {
 
     while (!isDone) {
         engine.HandleCommandQueue();
+        std::this_thread::sleep_for(std::chrono::milliseconds(800));
     }
 
     dac.stopStream();

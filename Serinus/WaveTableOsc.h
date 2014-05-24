@@ -6,9 +6,10 @@
 class WaveTableOsc : public PatchModule {
 public:
     static const CreatorImpl<WaveTableOsc> creator;
-    WaveTableOsc();
+    WaveTableOsc(int maxPoly, int bufferSize);
     ~WaveTableOsc() {};
-    void Tick();
+    void FillBuffers(int voice, int bufferSize) {};
+    inline void Tick(int voice, int bufIndex);
     void ProcessCommand(const int &commandType, const int &commandIndex, const int &inValue) {};
     ModuleTypes getParameterTypes() {
         ModuleTypes map {
