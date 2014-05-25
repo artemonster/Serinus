@@ -26,18 +26,25 @@ int main() {
     std::cout <<"\n Press Ctrl+C to exit";
     signal(SIGINT, siginthandler);
     while (!isDone) {
-        // Note On: 144, 64, 40
-        message.push_back(144);
-        message.push_back(64);
-        message.push_back(90);
-        midiout->sendMessage( &message );
+        std::cout <<"\n Press n to send note on, press f to send note off\n";
+        char in;
+        std::cin >> in;
+        if (in == 'n') {
+            message.push_back(144);
+            message.push_back(64);
+            message.push_back(90);
+            midiout->sendMessage( &message );
+            message.clear();
+        } else if (in == 'f') {
+            message.push_back(128);
+            message.push_back(64);
+            message.push_back(40);
+            midiout->sendMessage( &message );
+            message.clear();
+        } else {
+            std::cout <<"Unrecognized input\n";
+        }
         std::this_thread::sleep_for(std::chrono::milliseconds(800));
-        // Note Off: 128, 64, 40
-        message[0] = 128;
-        message[1] = 64;
-        message[2] = 40;
-        midiout->sendMessage( &message );
-        message.clear();
     }
     delete midiout;
     return 0;

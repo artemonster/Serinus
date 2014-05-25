@@ -38,9 +38,9 @@ int main(int argc, char* args[]) {
                    SAMPLE_RATE, &bufferFrames, &audioCallback, (void *)&engine);
     dac.startStream();
 
-    RtMidiIn* midiin;
+    RtMidiIn* midiin = new RtMidiIn();
+
     try {
-        midiin = new RtMidiIn();
         midiin->openPort(0);
         midiin->ignoreTypes(false, false, false);
         midiin->setCallback(&midiMonitor, &engine);
@@ -50,9 +50,10 @@ int main(int argc, char* args[]) {
 
     while (!isDone) {
         engine.HandleCommandQueue();
-        std::this_thread::sleep_for(std::chrono::milliseconds(800));
     }
 
+    midiin->cancelCallback();
+    midiin->closePort();  
     dac.stopStream();
     std::cout << "Finished!";
     return 0;

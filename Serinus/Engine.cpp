@@ -61,7 +61,7 @@ Engine::Engine() {
         std::make_pair(P_ADSR::ATTACK, "250"),
         std::make_pair(P_ADSR::DECAY, "90"),
         std::make_pair(P_ADSR::SUSTAIN, "50"),
-        std::make_pair(P_ADSR::RELEASE, "1000")
+        std::make_pair(P_ADSR::RELEASE, "100")
     };
 
     std::list<Module> patch = {
@@ -128,18 +128,16 @@ Engine::Engine() {
     outputSamples = new Sample*[maxPoly];
     inSample = NULL;
     for (int i = 0; i < maxPoly; i++) {
-        availableVoices.push_back(new Voice { i, 0 });
+        availableVoices.push_back(Voice { i, 0 });
         outputSamples[i] = exitModule->getOutput(i,0);
-    }  
+    } 
 }
 
 Sample Engine::Tick(int bufIndex) {
-    //for all active allocated voices
-    //for all modules
-    std::vector<PatchModule*>::iterator mod;
-    for (mod = currentPatch.begin(); mod != currentPatch.end(); ++mod) {
+    std::vector<PatchModule*>::iterator module;
+    for (module = currentPatch.begin(); module != currentPatch.end(); ++module) {
         for (int i = 0; i < maxPoly; ++i) {
-            ( *mod )->Tick(i,bufIndex);
+            ( *module )->Tick(i,bufIndex);
         }
     }
     //mix all buffer samples properly!
@@ -179,13 +177,11 @@ void Engine::NoteOff(unsigned char voice, MidiCmd cmd) {
     runningStatus = 0x80 | voice;
     unsigned char note = cmd.at(1);
     unsigned char velocity = cmd.at(2);
-    std::list<Voice*>::iterator voiceIt;
-    Voice* toFind = new Voice { 99, note };
-    voiceIt = std::find(activeVoices.begin(), activeVoices.end(), toFind);
+    voiceIt = std::find(activeVoices.begin(), activeVoices.end(), Voice { 99, note });
     if (voiceIt != activeVoices.end()) {
         availableVoices.push_front(*voiceIt);
         for (receiverIt = eventRegistry[NOTEOFF].begin(); receiverIt != eventRegistry[NOTEOFF].end(); ++receiverIt) {
-            (*receiverIt)->ProcessCommand( ModuleCMD::NOTEOFF, (*voiceIt)->voiceNum, cmd, retCode );
+            (*receiverIt)->ProcessCommand( ModuleCMD::NOTEOFF, (*voiceIt).voiceNum, cmd, retCode );
         }
         activeVoices.erase(voiceIt);
     } else {
@@ -197,16 +193,14 @@ void Engine::NoteOn(unsigned char voice, MidiCmd cmd) {
     runningStatus = 0x90 | voice;
     unsigned char note = cmd.at(1);
     unsigned char velocity = cmd.at(2);
-    std::list<Voice*>::iterator voiceIt;
-    Voice* toFind = new Voice { 99, note };
-    voiceIt = std::find(activeVoices.begin(), activeVoices.end(), toFind);
+    voiceIt = std::find(activeVoices.begin(), activeVoices.end(), Voice { 99, note });
     if (velocity == 0) {
         //handle like NoteOff, but do not set runningStatus
         if (voiceIt != activeVoices.end()) {
             availableVoices.push_front(*voiceIt);       
             for (receiverIt = eventRegistry[NOTEOFF].begin(); 
                  receiverIt != eventRegistry[NOTEOFF].end(); ++receiverIt) {
-                (*receiverIt)->ProcessCommand( ModuleCMD::NOTEOFF, (*voiceIt)->voiceNum, cmd, retCode );
+                (*receiverIt)->ProcessCommand( ModuleCMD::NOTEOFF, (*voiceIt).voiceNum, cmd, retCode );
             }
             activeVoices.erase(voiceIt);
         } else {
@@ -215,25 +209,23 @@ void Engine::NoteOn(unsigned char voice, MidiCmd cmd) {
     } else {
         // here we have the possibility either to re-trigger same decaying note, or just allocate new one
         if (availableVoices.size() != 0) {
-            Voice* newVoice = availableVoices.back();
-            newVoice->notePlayed = note;
+            Voice newVoice = availableVoices.back();
+            newVoice.notePlayed = note;
             for (receiverIt = eventRegistry[NOTEON].begin(); 
                  receiverIt != eventRegistry[NOTEON].end(); ++receiverIt) {
                 PatchModule* registeredReceiver = ( *receiverIt );
-                int voice = newVoice->voiceNum;
-                registeredReceiver->ProcessCommand( ModuleCMD::NOTEON, voice, cmd, retCode );
+                registeredReceiver->ProcessCommand( ModuleCMD::NOTEON, newVoice.voiceNum, cmd, retCode );
             }
             activeVoices.push_front(newVoice);
             availableVoices.pop_back();
         } else {
             //override the oldest note!
-            Voice* newVoice = activeVoices.back();
-            newVoice->notePlayed = note;
+            Voice newVoice = activeVoices.back();
+            newVoice.notePlayed = note;
             for (receiverIt = eventRegistry[NOTEON].begin(); 
                  receiverIt != eventRegistry[NOTEON].end(); ++receiverIt) {
                 PatchModule* registeredReceiver = ( *receiverIt );
-                int voice = newVoice->voiceNum;
-                registeredReceiver->ProcessCommand( ModuleCMD::NOTEON, voice, cmd, retCode );
+                registeredReceiver->ProcessCommand( ModuleCMD::NOTEON, newVoice.voiceNum, cmd, retCode );
             }
             activeVoices.pop_back();
             activeVoices.push_front(newVoice);

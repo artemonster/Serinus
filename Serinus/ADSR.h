@@ -22,13 +22,14 @@ protected:
     enum State { IDLE, ATTACK, DECAY, SUSTAIN, RELEASE };
     float* outputSample_;
     State* state_;
+    bool* keyPressed_;
+
     bool isLinear_;
     float attack_;
     float decay_;
     float sustain_;
     float release_;
 
-    bool keyPressed;
     float attackRate_;
     float sustainLevel_;
     float decayRate_;

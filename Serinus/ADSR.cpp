@@ -6,9 +6,11 @@ ADSR::ADSR(int maxPoly, int bufferSize) : PatchModule (maxPoly, bufferSize) {
     ItilializeVoices(O_ADSR::MAX, I_ADSR::MAX);
     outputSample_ = new float[maxPoly];
     state_ = new State[maxPoly];
+    keyPressed_ = new bool[maxPoly];
     for (int i = 0; i < maxPoly; ++i) {
-        *outputSample_ = 0;
-        *state_ = IDLE;
+        outputSample_[i] = 0;
+        state_[i] = IDLE;
+        keyPressed_[i] = false;
     }
     parameters_ = new void*[P_ADSR::MAX];
     parameters_[P_ADSR::MODE] = &isLinear_;
@@ -16,22 +18,22 @@ ADSR::ADSR(int maxPoly, int bufferSize) : PatchModule (maxPoly, bufferSize) {
     parameters_[P_ADSR::DECAY] = &decay_;
     parameters_[P_ADSR::SUSTAIN] = &sustain_;
     parameters_[P_ADSR::RELEASE] = &release_;
-    keyPressed = false;
+    
     isLinear_ = true;
 }
 
 void ADSR::Tick(int voice, int bufIndex) {
     Sample* gatebuf = input_[voice][I_ADSR::GATE][0];
-    if (*(gatebuf+bufIndex) >= 0.5*UPSCALE && keyPressed==false) {
-        keyPressed = true;
+    if (*(gatebuf+bufIndex) >= 0.5*UPSCALE && keyPressed_[voice]==false) {
+        keyPressed_[voice] = true;
         state_[voice] = ATTACK;
         sustainLevel_ = sustain_ / 100;
         attackRate_ = 1.0 / (SAMPLE_RATE * (attack_ / 1000));
         decayRate_ =  (1.0 - sustainLevel_ ) / (SAMPLE_RATE * (decay_ / 1000));
         releaseRate_ =  sustainLevel_ / (SAMPLE_RATE * (release_ / 1000));
     } 
-    if (*(gatebuf+bufIndex) <= 0.5*UPSCALE && keyPressed==true) {
-        keyPressed = false;
+    if (*(gatebuf+bufIndex) <= 0.5*UPSCALE && keyPressed_[voice]==true) {
+        keyPressed_[voice] = false;
         state_[voice] = RELEASE;
         releaseRate_ =  outputSample_[voice] / (SAMPLE_RATE * (release_ / 1000));
     }

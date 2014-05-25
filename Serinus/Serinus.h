@@ -54,6 +54,10 @@ So, that is it! The synth accepts midi input and produces a polyphonic audio out
 sort out a lot of things though. I've also addded a little MidiCommander project which will send different midi 
 commands to loopMIDI, so that I don't need to attach my keyboard each time I want to test something.
 Next stop: bug fixing, clean-up, shiny refactoring and fixed point!
+
+25.05.2014: Historical moment
+Polyphony works great! All bugs are sorted out, so I can finally start working on "looks" of the code and 
+optimizations. Woohoo!
 */
 
 #define SRS_DEBUG

@@ -18,9 +18,11 @@ inline void PolyKeys::Tick(int voice, int bufIndex) {
     Sample* cvOut = &output_[voice][O_PolyKeys::CV][bufIndex];
     Sample* veloOut = &output_[voice][O_PolyKeys::VELO][bufIndex];
     if (gate_[voice] == 1) {
-        *gateOut = static_cast<int>(UPSCALE-100);
+        *gateOut = static_cast<int>( UPSCALE - 100 );
+    } else {
+        *gateOut = 0;
     }
-    *cvOut = static_cast<float>(*note_-60)/12; //Centered around C4
+    *cvOut = static_cast<float>((note_[voice]-60)*100000)/12.0; //Centered around C4
     *veloOut = 0; //TODO fix this!
 }
 

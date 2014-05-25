@@ -61,6 +61,7 @@ inline void DirectDCO::Tick(int voice, int bufIndex) {
     if (mode_ == 0) {   //Hz
         phasor_[voice] += pitch * 2 / SAMPLE_RATE;
     } else {            //CV
+        pitch /= 100000; //Scale down
         phasor_[voice] += tuneFreq_ * pow(2, pitch) * 2 / SAMPLE_RATE;
     }  
     if (phasor_[voice] >= 1) phasor_[voice] -= 2;

@@ -54,12 +54,14 @@ private:
     struct Voice {
         int voiceNum;
         int notePlayed;
-        bool operator ==(Engine::Voice& rhs) const {
-            return (notePlayed == rhs.notePlayed);
+        bool operator ==(Engine::Voice rhs) {
+            if (notePlayed == rhs.notePlayed) return true;
+            else return false;
         }
     }; 
-    std::list<Voice*> activeVoices;
-    std::list<Voice*> availableVoices;
+    std::list<Voice> activeVoices;
+    std::list<Voice> availableVoices;
+    std::list<Voice>::iterator voiceIt;
     // Patch
     std::vector<PatchModule*> currentPatch;
     int maxPoly;
