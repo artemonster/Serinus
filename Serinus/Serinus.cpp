@@ -2,14 +2,16 @@
 #include "Engine.h"
 #include <chrono>
 #include <thread>
+
 static int audioCallback(void *outputBuffer, void *inputBuffer, unsigned int nBufferFrames,
                          double streamTime, RtAudioStreamStatus status, void *userData) {
 
     Engine *engine = static_cast<Engine*>(userData);
     int *outBuf = static_cast<int*>(outputBuffer);
     (void)inputBuffer; // Prevent unused variable warning.
-    for (unsigned int i = 0; i < nBufferFrames; i++) {
-        *outBuf++ = engine->Tick(i);
+    engine->FillAudioBuffers();
+    for (int i = 0; i < nBufferFrames; i++) {
+        *outBuf++ = engine->MixAllVoices(i);
     }
     return 0;
 }
@@ -23,7 +25,7 @@ static bool isDone = false;
 void siginthandler(int param) { isDone = true; }
 
 int main(int argc, char* args[]) {
-    std::cout << "Testing..." << std::endl;
+    std::cout << "Testing... Hit Ctrl+C to quit. \n" << std::endl;
     signal(SIGINT, siginthandler);
     Engine engine;
     RtAudio dac;

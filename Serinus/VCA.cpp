@@ -1,6 +1,8 @@
 #include "VCA.h"
 #include <math.h> 
+
 const CreatorImpl<VCA> VCA::creator("VCA");
+
 VCA::VCA(int maxPoly, int bufferSize) : PatchModule (maxPoly, bufferSize) {
     ItilializeVoices(O_VCA::MAX, I_VCA::MAX);
     parameters_ = new void*[P_VCA::MAX];
@@ -8,7 +10,13 @@ VCA::VCA(int maxPoly, int bufferSize) : PatchModule (maxPoly, bufferSize) {
     isLinear_ = true;
 }
 
-void VCA::Tick(int voice, int bufIndex) {
+void VCA::FillBuffers(int voice, int bufferSize) {
+    for (int i = 0; i < bufferSize; ++i) {
+        VCA::Tick(voice, i);
+    }
+}
+
+inline void VCA::Tick(int voice, int bufIndex) {
     Sample* gainbuf = input_[voice][I_VCA::GAIN][0];
     Sample* inbuf = input_[voice][I_VCA::INPUT][0];
 

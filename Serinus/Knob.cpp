@@ -9,6 +9,12 @@ Knob::Knob(int maxPoly, int bufferSize) : PatchModule (maxPoly, bufferSize) {
     parameters_[P_Knob::VALUE] = &value_;
 }
 
+void Knob::FillBuffers(int voice, int bufferSize) {
+    for (int i = 0; i < bufferSize; ++i) {
+        Knob::Tick(voice, i);
+    }
+}
+
 inline void Knob::Tick(int voice, int bufIndex) {
     output_[voice][O_Knob::VALUE][bufIndex] = value_;
 };

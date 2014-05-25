@@ -15,7 +15,7 @@ public:
     static const CreatorImpl<VCA> creator;
     VCA(int maxPoly, int bufferSize);
     ~VCA() {};
-    void FillBuffers(int voice, int bufferSize) {};
+    void FillBuffers(int voice, int bufferSize);
     inline void Tick(int voice, int bufIndex);
     void ProcessCommand(const int &cmdType, int polyVoiceNr, const MidiCmd &inValue, int &retVal) {};
     ModuleTypes getParameterTypes();

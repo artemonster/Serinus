@@ -7,7 +7,7 @@ public:
     static const CreatorImpl<PolyKeys> creator;
     PolyKeys(int maxPoly, int bufferSize);
     ~PolyKeys() {};
-    void FillBuffers(int voice, int bufferSize) {};
+    void FillBuffers(int voice, int bufferSize);
     inline void Tick(int voice, int bufIndex);
     void ProcessCommand(const int &cmdType, int polyVoiceNr, const MidiCmd &inValue, int &retVal);
     ModuleTypes getParameterTypes();

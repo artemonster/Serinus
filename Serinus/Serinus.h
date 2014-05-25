@@ -55,33 +55,38 @@ sort out a lot of things though. I've also addded a little MidiCommander project
 commands to loopMIDI, so that I don't need to attach my keyboard each time I want to test something.
 Next stop: bug fixing, clean-up, shiny refactoring and fixed point!
 
-25.05.2014: Historical moment
+25.05.2014: === A Historical Moment ===
 Polyphony works great! All bugs are sorted out, so I can finally start working on "looks" of the code and 
 optimizations. Woohoo!
+Today I've also reduced bazillion of tick calls by inlined methods to fill buffers. This should speed things up.
+
+
 */
 
-#define SRS_DEBUG
+#define SRS_DEBUG                                   //Define this, if you want debug output
 typedef int Sample; 					            //this type is used for samples
 typedef std::map<int, int> ModuleTypes;
 typedef std::map<int, std::string> ModuleValues;
+
 typedef std::vector<unsigned char> MidiCmd;
 enum ModuleCMD {NOTEOFF,NOTEON,GET,SET};
 typedef std::vector<ModuleCMD> RegisterTo;
 
 namespace Types { enum TypeMapping { INT, FLOAT, BOOL }; }
+
 struct InputConfig {
     int inputIndex;
     int sourceModule;
     int outputIndex;
 };
 
+typedef std::vector<InputConfig> ModuleInputs;
 const InputConfig NO_INPUT = { 0, 0, 0 };
 const ModuleValues NO_CONF;
 const RegisterTo NO_CMDS;
-typedef std::vector<InputConfig> ModuleInputs;
 
 const unsigned int SAMPLE_RATE = 44100;				//won't change (I guess)
-const unsigned int BUFFER_SIZE = 1024; 				//specify min max
+const unsigned int BUFFER_SIZE = 512; 				//specify min max
 const unsigned int MAX_VOICES = 16; 				//just for fun
 const unsigned int SINT32_UPSCALE = 2147483647LL;	//scaling factor to transform normalised float -1...+1 to SInt32
 const unsigned int SINT16_UPSCALE = 32767;

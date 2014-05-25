@@ -8,26 +8,15 @@ https://github.com/thestk/rtaudio <br>
 
 Some interesting files to look up: <br>
 * Engine.cpp
-* PathModule.h base class for each module
-* Serinus.h contains a work log
+* PathModule.h - a base class for each module
+* Serinus.h - contains a work log of the project
 
 TODO
 ===================
-1. Add some basic modules to play with - done
-2. Use basic XML parser to load configs - postponed
-3. Implement _simple_ voice allocation system - will be done together with 4+5
-4. Handle NoteOn and NoteOff events
-5. Implement command dispatch/handling system
-	* Message receiver registry 
-	* Message bus
-6. Module grouping/subpatches (dynamic) 
-
-Local todo:
-===================
-1. tick -> fillbuffers
-2. add proper buffer mixing
-3. add polykey and polyout modules
-4. switch to fixed point
+1. Switch to fixed point <8,24>
+2. Rework serialization
+3. Add xml import/export
+4. Add sub-patches to the modules
 
 Big Goals
 ===================

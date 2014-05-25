@@ -22,7 +22,13 @@ ADSR::ADSR(int maxPoly, int bufferSize) : PatchModule (maxPoly, bufferSize) {
     isLinear_ = true;
 }
 
-void ADSR::Tick(int voice, int bufIndex) {
+void ADSR::FillBuffers(int voice, int bufferSize) {
+    for (int i = 0; i < bufferSize; ++i) {
+        ADSR::Tick(voice, i);
+    }
+}
+
+inline void ADSR::Tick(int voice, int bufIndex) {
     Sample* gatebuf = input_[voice][I_ADSR::GATE][0];
     if (*(gatebuf+bufIndex) >= 0.5*UPSCALE && keyPressed_[voice]==false) {
         keyPressed_[voice] = true;

@@ -27,10 +27,17 @@ public:
     ~Engine() {};
     
     typedef void( Engine::*MidiHandler )( unsigned char, MidiCmd );
-    Sample Tick(int bufIndex);
+    
     void PushCommand(MidiCmd cmd);
     void HandleCommandQueue();
-
+    void FillAudioBuffers();
+    inline Sample MixAllVoices(int bufIndex) {
+        Sample outSample = 0;
+        for (int i = 0; i < maxPoly; ++i) {
+            outSample += *( outputSamples[i] + bufIndex ) / maxPoly;
+        }
+        return outSample;
+    }
     //MIDI stuff
     void NoteOff(unsigned char voice, MidiCmd cmd);
     void NoteOn(unsigned char voice, MidiCmd cmd);

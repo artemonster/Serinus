@@ -13,6 +13,12 @@ PolyKeys::PolyKeys(int maxPoly, int bufferSize) : PatchModule (maxPoly, bufferSi
     }
 }
 
+void PolyKeys::FillBuffers(int voice, int bufferSize) {
+    for (int i = 0; i < bufferSize; ++i) {
+        PolyKeys::Tick(voice, i);
+    }
+}
+
 inline void PolyKeys::Tick(int voice, int bufIndex) {
     Sample* gateOut = &output_[voice][O_PolyKeys::GATE][bufIndex];
     Sample* cvOut = &output_[voice][O_PolyKeys::CV][bufIndex];

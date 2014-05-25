@@ -133,21 +133,13 @@ Engine::Engine() {
     } 
 }
 
-Sample Engine::Tick(int bufIndex) {
+void Engine::FillAudioBuffers() {
     std::vector<PatchModule*>::iterator module;
     for (module = currentPatch.begin(); module != currentPatch.end(); ++module) {
         for (int i = 0; i < maxPoly; ++i) {
-            ( *module )->Tick(i,bufIndex);
+            ( *module )->FillBuffers(i,bufferSize);
         }
     }
-    //mix all buffer samples properly!
-    //http://www.vttoth.com/CMS/index.php/technical-notes/68
-    // z= a + b - ab, or Z = 2 (a+b) - 2ab -1
-    Sample outSample = 0;
-    for (int i = 0; i < maxPoly; ++i) {
-        outSample += *( outputSamples[i] + bufIndex ) / maxPoly;
-    }
-    return outSample;
 }
 
 void Engine::HandleCommandQueue() {
@@ -185,7 +177,8 @@ void Engine::NoteOff(unsigned char voice, MidiCmd cmd) {
         }
         activeVoices.erase(voiceIt);
     } else {
-         //Played note not found? WTF? raise error! 
+         //Played note not found?
+         //it might have been replaced if more keys were pressed than voices available.
     }
 };
 
@@ -204,7 +197,8 @@ void Engine::NoteOn(unsigned char voice, MidiCmd cmd) {
             }
             activeVoices.erase(voiceIt);
         } else {
-            //Played note not found? WTF? raise error! 
+            //Played note not found?
+            //it might have been replaced if more keys were pressed than voices available.
         }
     } else {
         // here we have the possibility either to re-trigger same decaying note, or just allocate new one
