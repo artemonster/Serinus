@@ -15,7 +15,6 @@ public:
     Knob(int maxPoly, int bufferSize);
     ~Knob() {};
     void FillBuffers(int voice, int bufferSize);
-    inline void Tick(int voice, int bufIndex);
     ModuleTypes getParameterTypes();
     void ProcessCommand(const int &cmdType, int polyVoiceNr, const MidiCmd &inValue, int &retVal) {};
 private:

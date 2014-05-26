@@ -15,21 +15,17 @@ PolyKeys::PolyKeys(int maxPoly, int bufferSize) : PatchModule (maxPoly, bufferSi
 
 void PolyKeys::FillBuffers(int voice, int bufferSize) {
     for (int i = 0; i < bufferSize; ++i) {
-        PolyKeys::Tick(voice, i);
+        Sample* gateOut = &output_[voice][O_PolyKeys::GATE][i];
+        Sample* cvOut   = &output_[voice][O_PolyKeys::CV][i];
+        Sample* veloOut = &output_[voice][O_PolyKeys::VELO][i];
+        if (gate_[voice] == 1) {
+            *gateOut = 1.0f;
+        } else {
+            *gateOut = 0.0f;
+        }
+        *cvOut = static_cast<float>((note_[voice]-60))/12.0f; //Centered around C4
+        *veloOut = 0; //TODO fix this!
     }
-}
-
-inline void PolyKeys::Tick(int voice, int bufIndex) {
-    Sample* gateOut = &output_[voice][O_PolyKeys::GATE][bufIndex];
-    Sample* cvOut = &output_[voice][O_PolyKeys::CV][bufIndex];
-    Sample* veloOut = &output_[voice][O_PolyKeys::VELO][bufIndex];
-    if (gate_[voice] == 1) {
-        *gateOut = static_cast<int>( UPSCALE - 100 );
-    } else {
-        *gateOut = 0;
-    }
-    *cvOut = static_cast<float>((note_[voice]-60)*100000)/12.0; //Centered around C4
-    *veloOut = 0; //TODO fix this!
 }
 
 void PolyKeys::ProcessCommand(const int &cmdType, int polyVoiceNr, const MidiCmd &inValue, int &retVal) {

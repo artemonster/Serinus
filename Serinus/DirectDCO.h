@@ -19,7 +19,6 @@ public:
 
     DirectDCO(int maxPoly, int bufferSize);
     ~DirectDCO() {};
-    inline void Tick(int voice, int bufIndex);
     void FillBuffers(int voice, int bufferSize);
     void ProcessCommand(const int &cmdType, int polyVoiceNr, const MidiCmd &inValue, int &retVal) {};
     ModuleTypes getParameterTypes();

@@ -12,9 +12,10 @@ Each module has it's own set of inputs (pointers to other module's outputs) and 
 Inputs can be treated as sample inputs, as well as modulating inputs for the parameters.
 All parameters internal parameters pointers should be mapped to their respective members,
 and do not forget to map all types in getParameterTypes() method.
+Always call parent constructor and ItilializeVoices() directly in your derived constructor.
 
 Authored: AK
-Last revision: 05.05.2014
+Last revision: 26.05.2014
 */
 class PatchModule {
 public:
@@ -44,15 +45,8 @@ public:
             }
         }
     }
-    /**This method fills output buffer for the specified voice and buffer size.
-    Implementation is always the same, but it is not implemented in this class only for the sake
-    of inlining (then the call can be statically resolved and properly inlined).
-    When implementing, use inlined Tick of a derived class, like ClassName::Tick(voice);
-    Works only with -O2 optimizazion.*/
+    /**This method fills output buffer for the specified voice and buffer size.*/
     virtual void FillBuffers(int voice, int bufferSize) = 0;
-    /**This method updates all outputs of the module for specified voice by an internal algorithm.
-    When implementing, inline this function, as it will be inlined by FillBuffer method.*/
-    virtual void Tick(int voice, int bufIndex) = 0;
     /**This method updates all outputs and internal states of the module by an external command.*/
     virtual void ProcessCommand(const int &cmdType, int polyVoiceNr, const MidiCmd &inValue, int &retVal) = 0;
     /**
@@ -79,6 +73,11 @@ public:
                 case Types::FLOAT: {
                     float *ptr = static_cast<float*>( parameters_[parameter] );
                     *ptr = static_cast<float>( atof(value.c_str()) );
+                    break;
+                }
+                case Types::SAMPLE: {
+                    float *ptr = static_cast<Sample*>( parameters_[parameter] );
+                    *ptr = static_cast<Sample>( atof(value.c_str()) );
                     break;
                 }
                 case Types::BOOL: {

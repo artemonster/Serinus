@@ -11,23 +11,19 @@ VCA::VCA(int maxPoly, int bufferSize) : PatchModule (maxPoly, bufferSize) {
 }
 
 void VCA::FillBuffers(int voice, int bufferSize) {
-    for (int i = 0; i < bufferSize; ++i) {
-        VCA::Tick(voice, i);
-    }
-}
-
-inline void VCA::Tick(int voice, int bufIndex) {
     Sample* gainbuf = input_[voice][I_VCA::GAIN][0];
     Sample* inbuf = input_[voice][I_VCA::INPUT][0];
-
-    float gain = static_cast<float>( *(gainbuf+bufIndex) )/ UPSCALE;
-    Sample* output = &output_[voice][O_VCA::SAMPLE][bufIndex];
-    if (isLinear_) {
-        *output = *(inbuf+bufIndex)*gain;
-    } else {
-        //TODO: fix log with RAMP input (produces some nasty clicks)
-        *output = *(inbuf+bufIndex)*log(gain);
-    }     
+    for (int i = 0; i < bufferSize; ++i) {
+        Sample  gain    = *(gainbuf+i);
+        Sample  input   = *(inbuf+i);
+        Sample* output  = &output_[voice][O_VCA::SAMPLE][i];
+        if (isLinear_) {
+            *output = input*gain;
+        } else {
+            //TODO: fix log with RAMP input (produces some nasty clicks)
+            *output = input*log(gain);
+        }   
+    }
 }
 
 ModuleTypes VCA::getParameterTypes() {

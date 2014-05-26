@@ -10,6 +10,8 @@
 #include "signal.h"
 #include "HAL\RtAudio.h"
 #include "HAL\RtMidi.h"
+#include "Util\fixed_point.h"
+
 /**
 ================= WORK LOG =================
 ...prehistoric times:
@@ -60,11 +62,14 @@ Polyphony works great! All bugs are sorted out, so I can finally start working o
 optimizations. Woohoo!
 Today I've also reduced bazillion of tick calls by inlined methods to fill buffers. This should speed things up.
 
-
+26.05.2014: floats everywhere
+Despite the initial idea of using fixed point arithmetics I've decided to drop it and go with 32 bit floats.
+I am not sure whether I will implement this synth in hardware, so there is no need to think about such things ahead 
+of the time.
 */
 
 #define SRS_DEBUG                                   //Define this, if you want debug output
-typedef int Sample; 					            //this type is used for samples
+typedef float Sample; 				//this type is used for samples
 typedef std::map<int, int> ModuleTypes;
 typedef std::map<int, std::string> ModuleValues;
 
@@ -72,7 +77,7 @@ typedef std::vector<unsigned char> MidiCmd;
 enum ModuleCMD {NOTEOFF,NOTEON,GET,SET};
 typedef std::vector<ModuleCMD> RegisterTo;
 
-namespace Types { enum TypeMapping { INT, FLOAT, BOOL }; }
+namespace Types { enum TypeMapping { INT, FLOAT, SAMPLE, BOOL }; }
 
 struct InputConfig {
     int inputIndex;
@@ -88,9 +93,4 @@ const RegisterTo NO_CMDS;
 const unsigned int SAMPLE_RATE = 44100;				//won't change (I guess)
 const unsigned int BUFFER_SIZE = 512; 				//specify min max
 const unsigned int MAX_VOICES = 16; 				//just for fun
-const unsigned int SINT32_UPSCALE = 2147483647LL;	//scaling factor to transform normalised float -1...+1 to SInt32
-const unsigned int SINT16_UPSCALE = 32767;
-
-const unsigned int UPSCALE = SINT32_UPSCALE;
-const float NORM = 1.0 / UPSCALE;
 #endif /* SERINUS_H_ */

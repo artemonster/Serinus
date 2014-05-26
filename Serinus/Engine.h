@@ -31,13 +31,25 @@ public:
     void PushCommand(MidiCmd cmd);
     void HandleCommandQueue();
     void FillAudioBuffers();
+
     inline Sample MixAllVoices(int bufIndex) {
         Sample outSample = 0;
-        for (int i = 0; i < maxPoly; ++i) {
-            outSample += *( outputSamples[i] + bufIndex ) / maxPoly;
+        if (clampMix) {
+            for (int i = 0; i < maxPoly; ++i) {
+                outSample += *( outputSamples[i] + bufIndex );
+            }
+            outSample *= 0.707946f; //-3dB
+            if (outSample >= 1.0) outSample = 1.0;
+            if (outSample <= -1.0) outSample = -1.0;
+        } else {
+            Sample scaleFactor = static_cast<Sample>( 1.0/maxPoly );
+            for (int i = 0; i < maxPoly; ++i) {
+                outSample += *( outputSamples[i] + bufIndex )*scaleFactor;
+            }
         }
         return outSample;
     }
+
     //MIDI stuff
     void NoteOff(unsigned char voice, MidiCmd cmd);
     void NoteOn(unsigned char voice, MidiCmd cmd);
@@ -49,6 +61,7 @@ public:
     void Sysex(unsigned char type, MidiCmd cmd);
     void HandleRunningCmd(unsigned char wtf, MidiCmd cmd);
 private:
+    bool clampMix = true;
     // Midi stuff:
     void registerReceiver(PatchModule* toRegister);
     enum MidiEvent {NOTEOFF,NOTEON,AFTERT,CC,PATCH,CPRESS,PITCHW,SYSEX};

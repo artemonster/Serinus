@@ -6,7 +6,7 @@
 
 Engine::Engine() {
     //these initalizers are here just for fun
-    maxPoly = 5;
+    maxPoly = 10;
     bufferSize = BUFFER_SIZE;
     /*
         TODO register all available hardware (buttons, pots, lcd, io, etc) and assign proper handlers to it.
@@ -30,19 +30,19 @@ Engine::Engine() {
 
     //<---------------------------------- TEST DATA ---------------------------------->
     ModuleValues LFOFreq {
-        std::make_pair(P_Knob::VALUE, "8") // 8 Hz
+        std::make_pair(P_Knob::VALUE, "8.0") // 8 Hz
     };
 
     ModuleValues AMP {
-        std::make_pair(P_Knob::VALUE, "2147483647")
+        std::make_pair(P_Knob::VALUE, "1.0")
     };
 
     ModuleValues TrigFreq {
-        std::make_pair(P_Knob::VALUE, "1") //CV
+        std::make_pair(P_Knob::VALUE, "1.0") //CV
     };
 
     ModuleValues PWM {
-        std::make_pair(P_Knob::VALUE, "1813265919") //PWM 25%
+        std::make_pair(P_Knob::VALUE, "0.50") //PWM 25%
     };
 
     ModuleValues LFO {
@@ -58,10 +58,10 @@ Engine::Engine() {
     };
 
     ModuleValues ADSRConf {
-        std::make_pair(P_ADSR::ATTACK, "250"),
+        std::make_pair(P_ADSR::ATTACK, "150"),
         std::make_pair(P_ADSR::DECAY, "90"),
         std::make_pair(P_ADSR::SUSTAIN, "50"),
-        std::make_pair(P_ADSR::RELEASE, "100")
+        std::make_pair(P_ADSR::RELEASE, "200")
     };
 
     std::list<Module> patch = {

@@ -11,17 +11,13 @@ Knob::Knob(int maxPoly, int bufferSize) : PatchModule (maxPoly, bufferSize) {
 
 void Knob::FillBuffers(int voice, int bufferSize) {
     for (int i = 0; i < bufferSize; ++i) {
-        Knob::Tick(voice, i);
+        output_[voice][O_Knob::VALUE][i] = value_;
     }
 }
 
-inline void Knob::Tick(int voice, int bufIndex) {
-    output_[voice][O_Knob::VALUE][bufIndex] = value_;
-};
-
 ModuleTypes Knob::getParameterTypes() {
     ModuleTypes map {
-        std::make_pair(P_Knob::VALUE, Types::INT),
+        std::make_pair(P_Knob::VALUE, Types::FLOAT),
     };
     return map;
 };

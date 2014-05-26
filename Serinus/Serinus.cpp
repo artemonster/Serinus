@@ -7,10 +7,10 @@ static int audioCallback(void *outputBuffer, void *inputBuffer, unsigned int nBu
                          double streamTime, RtAudioStreamStatus status, void *userData) {
 
     Engine *engine = static_cast<Engine*>(userData);
-    int *outBuf = static_cast<int*>(outputBuffer);
+    float *outBuf = static_cast<float*>(outputBuffer);
     (void)inputBuffer; // Prevent unused variable warning.
     engine->FillAudioBuffers();
-    for (int i = 0; i < nBufferFrames; i++) {
+    for (unsigned int i = 0; i < nBufferFrames; i++) {
         *outBuf++ = engine->MixAllVoices(i);
     }
     return 0;
@@ -34,9 +34,14 @@ int main(int argc, char* args[]) {
     parameters.nChannels = 1;
     parameters.firstChannel = 0;
 
+    //RtAudio::StreamOptions* options = new RtAudio::StreamOptions();
+    //options->flags |= RTAUDIO_SCHEDULE_REALTIME | RTAUDIO_MINIMIZE_LATENCY;
+    //options->numberOfBuffers = 4;
+    //options->priority = 0;
+
     unsigned int bufferFrames = BUFFER_SIZE; //cannot be const, a hack for RtAudio
 
-    dac.openStream(&parameters, NULL, RTAUDIO_SINT32,
+    dac.openStream(&parameters, NULL, RTAUDIO_FLOAT32,
                    SAMPLE_RATE, &bufferFrames, &audioCallback, (void *)&engine);
     dac.startStream();
 
