@@ -49,20 +49,15 @@ public:
     virtual void FillBuffers(int voice, int bufferSize) = 0;
     /**This method updates all outputs and internal states of the module by an external command.*/
     virtual void ProcessCommand(const int &cmdType, int polyVoiceNr, const MidiCmd &inValue, int &retVal) = 0;
-    /**
-    This method is called to deliver a map of all parameter types in the derived class.
-    This mapping is mandatory for the parameters, which should be serialized for storing\loading the configuration.
-    */ 
-    virtual ModuleTypes getParameterTypes() = 0;
     /**This method loads up the configuration map (internal state) for the parameters.*/
-    inline void LoadConfiguration(const ModuleTypes &types, const ModuleValues &values) {
-        if (types.empty() || values.empty()) return;
+    inline void LoadConfiguration(const ModuleValues &values) {
+        if (parameterInfo_.empty() || values.empty()) return;
         ModuleTypes::const_iterator typesIt;
         ModuleValues::const_iterator valuesIt;
         for (valuesIt = values.begin(); valuesIt != values.end(); valuesIt++) {
             int parameter = valuesIt->first;
             std::string value = valuesIt->second;
-            typesIt = types.find(parameter);
+            typesIt = parameterInfo_.find(parameter);
             int type = typesIt->second;
             switch (type) {
                 case Types::INT: {
@@ -76,7 +71,7 @@ public:
                     break;
                 }
                 case Types::SAMPLE: {
-                    float *ptr = static_cast<Sample*>( parameters_[parameter] );
+                    Sample *ptr = static_cast<Sample*>( parameters_[parameter] );
                     *ptr = static_cast<Sample>( atof(value.c_str()) );
                     break;
                 }
@@ -134,6 +129,8 @@ protected:
     Sample ****input_;
     /**Pointer to an array of pointers to internal parameters of the module.*/
     void **parameters_;
+    /**Map with string name of the parameter, index to the look-up table and type.*/
+    ModuleTypes parameterInfo_;
 };
 
 #endif /* PATCHMODULE_H_ */

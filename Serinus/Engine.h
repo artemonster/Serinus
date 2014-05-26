@@ -39,8 +39,8 @@ public:
                 outSample += *( outputSamples[i] + bufIndex );
             }
             outSample *= 0.707946f; //-3dB
-            if (outSample >= 1.0) outSample = 1.0;
-            if (outSample <= -1.0) outSample = -1.0;
+            if (outSample >= 1.0f) outSample = 1.0f;
+            if (outSample <= -1.0f) outSample = -1.0f;
         } else {
             Sample scaleFactor = static_cast<Sample>( 1.0/maxPoly );
             for (int i = 0; i < maxPoly; ++i) {

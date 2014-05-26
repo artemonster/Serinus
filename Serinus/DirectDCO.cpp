@@ -14,6 +14,15 @@ DirectDCO::DirectDCO(int maxPoly, int bufferSize) : PatchModule (maxPoly, buffer
     parameters_[2] = &reTrigger_;
     parameters_[3] = &waveform_;
     parameters_[4] = &mode_;
+
+    ModuleTypes map {
+        std::make_pair(P_DirectDCO::TUNE, Types::FLOAT),
+        std::make_pair(P_DirectDCO::DETUNE, Types::FLOAT),
+        std::make_pair(P_DirectDCO::TRIG, Types::BOOL),
+        std::make_pair(P_DirectDCO::WF, Types::INT),
+        std::make_pair(P_DirectDCO::MODE, Types::INT)
+    };
+    parameterInfo_ = map;
     mode_ = 0;
 }
 
@@ -58,14 +67,3 @@ void DirectDCO::FillBuffers(int voice, int bufferSize) {
         if (phasor_[voice] >= 1.0f) phasor_[voice] -= 2.0f;       
     }
 }
-
-ModuleTypes DirectDCO::getParameterTypes() {
-    ModuleTypes map {
-        std::make_pair(P_DirectDCO::TUNE, Types::FLOAT),
-        std::make_pair(P_DirectDCO::DETUNE, Types::FLOAT),
-        std::make_pair(P_DirectDCO::TRIG, Types::BOOL),
-        std::make_pair(P_DirectDCO::WF, Types::INT),
-        std::make_pair(P_DirectDCO::MODE, Types::INT)
-    };
-    return map;
-};

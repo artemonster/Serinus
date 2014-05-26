@@ -9,7 +9,6 @@ public:
     ~PolyKeys() {};
     void FillBuffers(int voice, int bufferSize);
     void ProcessCommand(const int &cmdType, int polyVoiceNr, const MidiCmd &inValue, int &retVal);
-    ModuleTypes getParameterTypes();
 protected:
     int* gate_;
     int* note_;

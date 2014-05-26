@@ -42,8 +42,3 @@ void PolyKeys::ProcessCommand(const int &cmdType, int polyVoiceNr, const MidiCmd
         default: break;
     }
 }
-
-ModuleTypes PolyKeys::getParameterTypes() {
-    ModuleTypes map;
-    return map;
-};

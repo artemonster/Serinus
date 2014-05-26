@@ -18,7 +18,15 @@ ADSR::ADSR(int maxPoly, int bufferSize) : PatchModule (maxPoly, bufferSize) {
     parameters_[P_ADSR::DECAY] = &decay_;
     parameters_[P_ADSR::SUSTAIN] = &sustain_;
     parameters_[P_ADSR::RELEASE] = &release_;
-    
+
+    ModuleTypes map {
+        std::make_pair(P_ADSR::MODE, Types::BOOL),
+        std::make_pair(P_ADSR::ATTACK, Types::FLOAT),
+        std::make_pair(P_ADSR::DECAY, Types::FLOAT),
+        std::make_pair(P_ADSR::SUSTAIN, Types::FLOAT),
+        std::make_pair(P_ADSR::RELEASE, Types::FLOAT)
+    };   
+    parameterInfo_ = map;
     isLinear_ = true;
 }
 
@@ -72,15 +80,4 @@ void ADSR::FillBuffers(int voice, int bufferSize) {
         }
         output_[voice][O_ADSR::SAMPLE][i] = outputSample_[voice];  
     }
-}
-
-ModuleTypes ADSR::getParameterTypes() {
-    ModuleTypes map {
-        std::make_pair(P_ADSR::MODE, Types::BOOL),
-        std::make_pair(P_ADSR::ATTACK, Types::FLOAT),
-        std::make_pair(P_ADSR::DECAY, Types::FLOAT),
-        std::make_pair(P_ADSR::SUSTAIN, Types::FLOAT),
-        std::make_pair(P_ADSR::RELEASE, Types::FLOAT)
-    };
-    return map;
 }

@@ -21,7 +21,6 @@ public:
     ~DirectDCO() {};
     void FillBuffers(int voice, int bufferSize);
     void ProcessCommand(const int &cmdType, int polyVoiceNr, const MidiCmd &inValue, int &retVal) {};
-    ModuleTypes getParameterTypes();
 private:
     enum WaveForm { SAW, TRI, SIN, SQR };
     float tuneFreq_;

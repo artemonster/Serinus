@@ -7,6 +7,10 @@ Knob::Knob(int maxPoly, int bufferSize) : PatchModule (maxPoly, bufferSize) {
     value_ = 0;
     parameters_ = new void*[P_Knob::MAX];
     parameters_[P_Knob::VALUE] = &value_;
+    ModuleTypes map {
+        std::make_pair(P_Knob::VALUE, Types::FLOAT),
+    };
+    parameterInfo_ = map;
 }
 
 void Knob::FillBuffers(int voice, int bufferSize) {
@@ -14,10 +18,3 @@ void Knob::FillBuffers(int voice, int bufferSize) {
         output_[voice][O_Knob::VALUE][i] = value_;
     }
 }
-
-ModuleTypes Knob::getParameterTypes() {
-    ModuleTypes map {
-        std::make_pair(P_Knob::VALUE, Types::FLOAT),
-    };
-    return map;
-};

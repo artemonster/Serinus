@@ -7,6 +7,10 @@ VCA::VCA(int maxPoly, int bufferSize) : PatchModule (maxPoly, bufferSize) {
     ItilializeVoices(O_VCA::MAX, I_VCA::MAX);
     parameters_ = new void*[P_VCA::MAX];
     parameters_[P_VCA::MODE] = &isLinear_;
+    ModuleTypes map {
+        std::make_pair(P_VCA::MODE, Types::BOOL)
+    };
+    parameterInfo_ = map;
     isLinear_ = true;
 }
 
@@ -24,11 +28,4 @@ void VCA::FillBuffers(int voice, int bufferSize) {
             *output = input*log(gain);
         }   
     }
-}
-
-ModuleTypes VCA::getParameterTypes() {
-    ModuleTypes map {
-        std::make_pair(P_VCA::MODE, Types::BOOL),
-    };
-    return map;
 }

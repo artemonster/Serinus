@@ -16,7 +16,6 @@ public:
     ~ADSR() {};
     void FillBuffers(int voice, int bufferSize);
     void ProcessCommand(const int &cmdType, int polyVoiceNr, const MidiCmd &inValue, int &retVal) {};
-    ModuleTypes getParameterTypes();
 protected:
     enum State { IDLE, ATTACK, DECAY, SUSTAIN, RELEASE };
     float* outputSample_;

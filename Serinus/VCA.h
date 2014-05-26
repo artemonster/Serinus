@@ -17,7 +17,6 @@ public:
     ~VCA() {};
     void FillBuffers(int voice, int bufferSize);
     void ProcessCommand(const int &cmdType, int polyVoiceNr, const MidiCmd &inValue, int &retVal) {};
-    ModuleTypes getParameterTypes();
 private:
     bool isLinear_;
 };

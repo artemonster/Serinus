@@ -99,8 +99,7 @@ Engine::Engine() {
         PatchModule* currentModule = Factory::create(moduleIt->name, maxPoly, bufferSize);
         currentPatch.push_back(currentModule);
         currentModule->setId(currentPatch.size());
-        currentModule->LoadConfiguration(currentModule->getParameterTypes(), moduleIt->config);
-         
+        currentModule->LoadConfiguration(moduleIt->config);     
         ModuleInputs moduleConnections = moduleIt->connections;
         ModuleInputs::iterator inputsConfigIt;
         for (inputsConfigIt = moduleConnections.begin(); inputsConfigIt != moduleConnections.end(); ++inputsConfigIt) {
