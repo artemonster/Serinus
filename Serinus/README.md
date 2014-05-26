@@ -18,6 +18,17 @@ TODO
 3. Add xml import/export
 4. Add sub-patches to the modules
 
+Array of void serialization:
+
++ generic load and store
+- manual linkage of parameter array to member vars
+- manual map of parameter names, indices and types
+
+Switch case:
+
+- manual list of parameters
+- switch/case implementations for load and store
+
 Big Goals
 ===================
 

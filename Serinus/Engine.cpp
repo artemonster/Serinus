@@ -7,7 +7,7 @@
 Engine::Engine() {
     //these initalizers are here just for fun
     maxPoly = 10;
-    bufferSize = BUFFER_SIZE;
+    bufferSize = kBufferSize;
     /*
         TODO register all available hardware (buttons, pots, lcd, io, etc) and assign proper handlers to it.
         TODO initialize filesystem and load a patch from it.
@@ -61,6 +61,7 @@ Engine::Engine() {
         std::make_pair(P_ADSR::ATTACK, "150"),
         std::make_pair(P_ADSR::DECAY, "90"),
         std::make_pair(P_ADSR::SUSTAIN, "50"),
+
         std::make_pair(P_ADSR::RELEASE, "200")
     };
 

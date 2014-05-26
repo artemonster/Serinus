@@ -38,14 +38,14 @@ void ADSR::FillBuffers(int voice, int bufferSize) {
             keyPressed_[voice] = true;
             state_[voice]      = ATTACK;
             sustainLevel_      = sustain_ / 100;
-            attackRate_        = 1.0f / (SAMPLE_RATE * (attack_ / 1000));
-            decayRate_         = (1.0f - sustainLevel_ ) / (SAMPLE_RATE * (decay_ / 1000));
-            releaseRate_       = sustainLevel_ / (SAMPLE_RATE * (release_ / 1000));
+            attackRate_        = 1.0f / (kSampleRate * (attack_ / 1000));
+            decayRate_         = (1.0f - sustainLevel_ ) / (kSampleRate * (decay_ / 1000));
+            releaseRate_       = sustainLevel_ / (kSampleRate * (release_ / 1000));
         } 
         if (gate <= 0.5f && keyPressed_[voice]==true) {
             keyPressed_[voice] = false;
             state_[voice]      = RELEASE;
-            releaseRate_       = outputSample_[voice] / (SAMPLE_RATE * (release_ / 1000));
+            releaseRate_       = outputSample_[voice] / (kSampleRate * (release_ / 1000));
         }
 
         switch (state_[voice]) {

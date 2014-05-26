@@ -60,9 +60,9 @@ void DirectDCO::FillBuffers(int voice, int bufferSize) {
                 break;
         }
         if (mode_ == 0) {   //Hz
-            phasor_[voice] += pitch * 2.0f / SAMPLE_RATE;
+            phasor_[voice] += pitch * 2.0f / kSampleRate;
         } else {            //CV
-            phasor_[voice] += tuneFreq_ * static_cast<float>(pow(2, pitch)) * 2.0f / SAMPLE_RATE;
+            phasor_[voice] += tuneFreq_ * static_cast<float>(pow(2, pitch)) * 2.0f / kSampleRate;
         }  
         if (phasor_[voice] >= 1.0f) phasor_[voice] -= 2.0f;       
     }

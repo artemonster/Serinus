@@ -8,7 +8,7 @@ Knob::Knob(int maxPoly, int bufferSize) : PatchModule (maxPoly, bufferSize) {
     parameters_ = new void*[P_Knob::MAX];
     parameters_[P_Knob::VALUE] = &value_;
     ModuleTypes map {
-        std::make_pair(P_Knob::VALUE, Types::FLOAT),
+        std::make_pair(P_Knob::VALUE, Types::SAMPLE),
     };
     parameterInfo_ = map;
 }

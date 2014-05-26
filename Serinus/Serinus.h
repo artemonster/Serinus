@@ -10,7 +10,6 @@
 #include "signal.h"
 #include "HAL\RtAudio.h"
 #include "HAL\RtMidi.h"
-#include "Util\fixed_point.h"
 
 /**
 ================= WORK LOG =================
@@ -62,16 +61,19 @@ Polyphony works great! All bugs are sorted out, so I can finally start working o
 optimizations. Woohoo!
 Today I've also reduced bazillion of tick calls by inlined methods to fill buffers. This should speed things up.
 
-26.05.2014: floats everywhere
+26.05.2014: Floats everywhere!!11one
 Despite the initial idea of using fixed point arithmetics I've decided to drop it and go with 32 bit floats.
 I am not sure whether I will implement this synth in hardware, so there is no need to think about such things ahead 
 of the time.
+I've also moved ModuleTypes initialization to the module constructor, where it belongs.
+Now I am considering how to implement the xml serialization.
+Also, I try harder to follow common c++ code style conventions :) soon, major refactoring will occur.
 */
 
 #define SRS_DEBUG                                   //Define this, if you want debug output
-typedef float Sample; 				//this type is used for samples
-typedef std::map<int, int> ModuleTypes;
-typedef std::map<int, std::string> ModuleValues;
+typedef float Sample; 				                //this type is used for samples
+typedef std::map<int, int> ModuleTypes;             //this type is used to map module types to indeces
+typedef std::map<int, std::string> ModuleValues;    //this type is used to load module parameters
 
 typedef std::vector<unsigned char> MidiCmd;
 enum ModuleCMD {NOTEOFF,NOTEON,GET,SET};
@@ -90,7 +92,6 @@ const InputConfig NO_INPUT = { 0, 0, 0 };
 const ModuleValues NO_CONF;
 const RegisterTo NO_CMDS;
 
-const unsigned int SAMPLE_RATE = 44100;				//won't change (I guess)
-const unsigned int BUFFER_SIZE = 512; 				//specify min max
-const unsigned int MAX_VOICES = 16; 				//just for fun
+const unsigned int kSampleRate = 44100;				//won't change (I guess)
+const unsigned int kBufferSize = 512; 				//specify min max
 #endif /* SERINUS_H_ */

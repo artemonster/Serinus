@@ -24,7 +24,7 @@ void PolyKeys::FillBuffers(int voice, int bufferSize) {
             *gateOut = 0.0f;
         }
         *cvOut = static_cast<float>((note_[voice]-60))/12.0f; //Centered around C4
-        *veloOut = 0; //TODO fix this!
+        *veloOut = static_cast<float>(velocity_[voice])/127.0f; //Normalized to 0...1
     }
 }
 
@@ -37,6 +37,7 @@ void PolyKeys::ProcessCommand(const int &cmdType, int polyVoiceNr, const MidiCmd
             break;
         case NOTEOFF:
             gate_[polyVoiceNr] = 0;
+            note_[polyVoiceNr] = inValue.at(1); //unnecessary, actually
             velocity_[polyVoiceNr] = inValue.at(2);
             break;
         default: break;

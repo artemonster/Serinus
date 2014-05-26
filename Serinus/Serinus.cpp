@@ -39,10 +39,10 @@ int main(int argc, char* args[]) {
     //options->numberOfBuffers = 4;
     //options->priority = 0;
 
-    unsigned int bufferFrames = BUFFER_SIZE; //cannot be const, a hack for RtAudio
+    unsigned int bufferFrames = kBufferSize; //cannot be const, a hack for RtAudio
 
     dac.openStream(&parameters, NULL, RTAUDIO_FLOAT32,
-                   SAMPLE_RATE, &bufferFrames, &audioCallback, (void *)&engine);
+                   kSampleRate, &bufferFrames, &audioCallback, (void *)&engine);
     dac.startStream();
 
     RtMidiIn* midiin = new RtMidiIn();
