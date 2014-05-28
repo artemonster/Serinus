@@ -68,29 +68,32 @@ of the time.
 I've also moved ModuleTypes initialization to the module constructor, where it belongs.
 Now I am considering how to implement the xml serialization.
 Also, I try harder to follow common c++ code style conventions :) soon, major refactoring will occur.
+
+28.05.2014: Serialization <--------- important!
+So, xml patch loading is underway, which raised a lot of problems. In order to achieve "human-readable" serialization
+each module needs to "carry" some metadata. This information is unique per class and I wanted to spare some memory,
+so meta data is static for each class, but in order to access it from base class, you need some virtual getters,
+which is a downside. 
+Alternatively, you could declare this metadata protected and assign it at module instantiation by copying from this
+static data, but again, then each object will carry a "dead weight" with it, which is effectively used only once.
+There is another way: make a global meta-data registry, so that serialization module fetches all needed data from it.
+Moreover, it can be made "self-registering", like I did with class names.
+--
+The bad thing is that there is too much copy-paste involved, and I like somewhat elegant solutions :)
+Now I need for inputs and outputs their string names and enums, because I need compile-time look-up for better tick 
+performance.
 */
 
 #define SRS_DEBUG                                   //Define this, if you want debug output
 typedef float Sample; 				                //this type is used for samples
-typedef std::map<int, int> ModuleTypes;             //this type is used to map module types to indeces
-typedef std::map<int, std::string> ModuleValues;    //this type is used to load module parameters
+namespace Types { enum TypeMapping { INT, FLOAT, SAMPLE, BOOL }; }
+typedef std::map<std::string, std::pair<int,Types::TypeMapping>> ParameterTypes;   
+typedef std::vector<std::string> PortNames;
+
 
 typedef std::vector<unsigned char> MidiCmd;
 enum ModuleCMD {NOTEOFF,NOTEON,GET,SET};
 typedef std::vector<ModuleCMD> RegisterTo;
-
-namespace Types { enum TypeMapping { INT, FLOAT, SAMPLE, BOOL }; }
-
-struct InputConfig {
-    int inputIndex;
-    int sourceModule;
-    int outputIndex;
-};
-
-typedef std::vector<InputConfig> ModuleInputs;
-const InputConfig NO_INPUT = { 0, 0, 0 };
-const ModuleValues NO_CONF;
-const RegisterTo NO_CMDS;
 
 const unsigned int kSampleRate = 44100;				//won't change (I guess)
 const unsigned int kBufferSize = 512; 				//specify min max

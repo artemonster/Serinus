@@ -1,20 +1,18 @@
 #include "Knob.h"
 
 const CreatorImpl<Knob> Knob::creator("Knob");
-
+const ParameterTypes Knob::parameterInfo_ = { { "value", { 0, Types::SAMPLE } } };
+const PortNames Knob::outputInfo_ = {"value"};
+const PortNames Knob::inputInfo_ = {};
 Knob::Knob(int maxPoly, int bufferSize) : PatchModule (maxPoly, bufferSize) {
-    ItilializeVoices(O_Knob::MAX, 0);
+    ItilializeVoices(O::OMAX, 0);
     value_ = 0;
-    parameters_ = new void*[P_Knob::MAX];
-    parameters_[P_Knob::VALUE] = &value_;
-    ModuleTypes map {
-        std::make_pair(P_Knob::VALUE, Types::SAMPLE),
-    };
-    parameterInfo_ = map;
+    parameters_ = new void*[parameterInfo_.size()];
+    parameters_[0] = &value_;
 }
 
 void Knob::FillBuffers(int voice, int bufferSize) {
     for (int i = 0; i < bufferSize; ++i) {
-        output_[voice][O_Knob::VALUE][i] = value_;
+        output_[voice][O::VALUE][i] = value_;
     }
 }

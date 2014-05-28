@@ -1,7 +1,6 @@
 #ifndef VCA_H_
 #define VCA_H_
 #include "PatchModule.h"
-#include "PatchModuleConfigs.h"
 /**
 This is a basic VCA module, which can operate in both linear and logarithmic modes.
 Gain input is a standard sample, which is then normalized to -1...1 value
@@ -17,7 +16,15 @@ public:
     ~VCA() {};
     void FillBuffers(int voice, int bufferSize);
     void ProcessCommand(const int &cmdType, int polyVoiceNr, const MidiCmd &inValue, int &retVal) {};
+    ParameterTypes getParameterInfo() { return parameterInfo_; }
+    PortNames getOutputsInfo() { return outputInfo_; }
+    PortNames getInputsInfo() { return inputInfo_; }
 private:
+    static const ParameterTypes parameterInfo_;
+    static const PortNames outputInfo_;
+    static const PortNames inputInfo_;
+    enum I { INPUT, GAIN, IMAX };
+    enum O { SAMPLE, OMAX };
     bool isLinear_;
 };
 #endif /* VCA_H_ */

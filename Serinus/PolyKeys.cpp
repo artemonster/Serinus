@@ -1,9 +1,11 @@
 #include "PolyKeys.h"
 
 const CreatorImpl<PolyKeys> PolyKeys::creator("PolyKeys");
-
+const ParameterTypes PolyKeys::parameterInfo_ = {};
+const PortNames PolyKeys::outputInfo_ = {"cv","gate","velo"};
+const PortNames PolyKeys::inputInfo_ = {};
 PolyKeys::PolyKeys(int maxPoly, int bufferSize) : PatchModule (maxPoly, bufferSize) {
-    ItilializeVoices(O_PolyKeys::MAX, 0);
+    ItilializeVoices(O::OMAX, 0);
     gate_ = new int[maxPoly];
     note_ = new int[maxPoly];
     velocity_ = new int[maxPoly];
@@ -15,9 +17,9 @@ PolyKeys::PolyKeys(int maxPoly, int bufferSize) : PatchModule (maxPoly, bufferSi
 
 void PolyKeys::FillBuffers(int voice, int bufferSize) {
     for (int i = 0; i < bufferSize; ++i) {
-        Sample* gateOut = &output_[voice][O_PolyKeys::GATE][i];
-        Sample* cvOut   = &output_[voice][O_PolyKeys::CV][i];
-        Sample* veloOut = &output_[voice][O_PolyKeys::VELO][i];
+        Sample* gateOut = &output_[voice][O::GATE][i];
+        Sample* cvOut   = &output_[voice][O::CV][i];
+        Sample* veloOut = &output_[voice][O::VELO][i];
         if (gate_[voice] == 1) {
             *gateOut = 1.0f;
         } else {

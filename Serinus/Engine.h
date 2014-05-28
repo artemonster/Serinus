@@ -6,6 +6,7 @@
 #include <list>
 #include <string>
 #include "PatchModule.h"
+#include "Util/rapidxml.hpp"
 /**
  * This is the engine class, which handles everything in the system.
  * Currently, only midi handling and patchmodule loading/configuration/connectivity is managed.
@@ -31,6 +32,7 @@ public:
     void PushCommand(MidiCmd cmd);
     void HandleCommandQueue();
     void FillAudioBuffers();
+    void LoadPatch(rapidxml::xml_node<>* patch_node);
 
     inline Sample MixAllVoices(int bufIndex) {
         Sample outSample = 0;
@@ -65,6 +67,7 @@ private:
     // Midi stuff:
     void registerReceiver(PatchModule* toRegister);
     enum MidiEvent {NOTEOFF,NOTEON,AFTERT,CC,PATCH,CPRESS,PITCHW,SYSEX};
+    static std::map<std::string, int> eventLookUp;
     float midiNotes[128];
     unsigned char runningStatus = 0;
     int retCode;
@@ -83,19 +86,19 @@ private:
     std::list<Voice> availableVoices;
     std::list<Voice>::iterator voiceIt;
     // Patch
-    std::vector<PatchModule*> currentPatch;
+    std::vector<PatchModule*> loadedPatch;
     int maxPoly;
     int bufferSize;
     std::queue<MidiCmd> cmds;
     Sample *inSample;
     Sample **outputSamples;
     
-    struct Module {
-        std::string name;
-        ModuleValues config;
-        ModuleInputs connections;
-        RegisterTo commands;
-    };
+    //struct Module {
+    //    std::string name;
+    //    ModuleValues config;
+    //    ModuleInputs connections;
+    //    RegisterTo commands;
+    //};
 };
 
 #endif /* ENGINE_H_ */

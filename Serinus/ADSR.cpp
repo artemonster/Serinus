@@ -1,9 +1,17 @@
 #include "ADSR.h"
 
 const CreatorImpl<ADSR> ADSR::creator("ADSR");
+const ParameterTypes ADSR::parameterInfo_ = {
+            { "mode", { 0,Types::BOOL } },
+            { "attack", { 1,Types::FLOAT } },
+            { "decay", { 2,Types::FLOAT } },
+            { "sustain", { 3,Types::FLOAT } },
+            { "release", { 4,Types::FLOAT } } };
+const PortNames ADSR::outputInfo_ = {"sample"};
+const PortNames ADSR::inputInfo_ = {"gate"};
 
 ADSR::ADSR(int maxPoly, int bufferSize) : PatchModule (maxPoly, bufferSize) {
-    ItilializeVoices(O_ADSR::MAX, I_ADSR::MAX);
+    ItilializeVoices(O::OMAX, I::IMAX);
     outputSample_ = new float[maxPoly];
     state_ = new State[maxPoly];
     keyPressed_ = new bool[maxPoly];
@@ -11,33 +19,25 @@ ADSR::ADSR(int maxPoly, int bufferSize) : PatchModule (maxPoly, bufferSize) {
         outputSample_[i] = 0;
         state_[i] = IDLE;
         keyPressed_[i] = false;
-    }
-    parameters_ = new void*[P_ADSR::MAX];
-    parameters_[P_ADSR::MODE] = &isLinear_;
-    parameters_[P_ADSR::ATTACK] = &attack_;
-    parameters_[P_ADSR::DECAY] = &decay_;
-    parameters_[P_ADSR::SUSTAIN] = &sustain_;
-    parameters_[P_ADSR::RELEASE] = &release_;
-
-    ModuleTypes map {
-        std::make_pair(P_ADSR::MODE, Types::BOOL),
-        std::make_pair(P_ADSR::ATTACK, Types::FLOAT),
-        std::make_pair(P_ADSR::DECAY, Types::FLOAT),
-        std::make_pair(P_ADSR::SUSTAIN, Types::FLOAT),
-        std::make_pair(P_ADSR::RELEASE, Types::FLOAT)
-    };   
-    parameterInfo_ = map;
+    } 
+    parameters_ = new void*[parameterInfo_.size()];
+    parameters_[0] = &isLinear_;
+    parameters_[1] = &attack_;
+    parameters_[2] = &decay_;
+    parameters_[3] = &sustain_;
+    parameters_[4] = &release_;
+    
     isLinear_ = true;
 }
 
 void ADSR::FillBuffers(int voice, int bufferSize) {
-    Sample* gatebuf = input_[voice][I_ADSR::GATE][0];
+    Sample* gatebuf = input_[voice][0][0];
     for (int i = 0; i < bufferSize; ++i) {
         Sample gate = *(gatebuf + i);
         if (gate >= 0.5f && keyPressed_[voice]==false) {
             keyPressed_[voice] = true;
             state_[voice]      = ATTACK;
-            sustainLevel_      = sustain_ / 100;
+            sustainLevel_      = sustain_;
             attackRate_        = 1.0f / (kSampleRate * (attack_ / 1000));
             decayRate_         = (1.0f - sustainLevel_ ) / (kSampleRate * (decay_ / 1000));
             releaseRate_       = sustainLevel_ / (kSampleRate * (release_ / 1000));
@@ -78,6 +78,6 @@ void ADSR::FillBuffers(int voice, int bufferSize) {
                 break;
             default: break;
         }
-        output_[voice][O_ADSR::SAMPLE][i] = outputSample_[voice];  
+        output_[voice][0][i] = outputSample_[voice];  
     }
 }

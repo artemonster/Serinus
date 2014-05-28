@@ -13,7 +13,7 @@ Some interesting files to look up: <br>
 
 TODO
 ===================
-1. Switch to fixed point <8,24> and add constant, non-buffered signals (generator and controller devision)
+1. Move type map to static 
 2. Rework serialization
 3. Add xml import/export
 4. Add sub-patches to the modules

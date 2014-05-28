@@ -1,40 +1,39 @@
 #include "DirectDCO.h"
 #include <cmath>
 const CreatorImpl<DirectDCO> DirectDCO::creator("DirectDCO");
+const ParameterTypes DirectDCO::parameterInfo_ = {
+        { "tune", { 0,Types::FLOAT } },
+        { "detune", { 1,Types::FLOAT } },
+        { "trig", { 2,Types::BOOL } },
+        { "waveform", { 3,Types::INT } },
+        { "mode", { 4,Types::INT } } };
+const PortNames DirectDCO::outputInfo_ = {"sample"};
+const PortNames DirectDCO::inputInfo_ = {"pitch","pwm","phase","amp"};
 
 DirectDCO::DirectDCO(int maxPoly, int bufferSize) : PatchModule (maxPoly, bufferSize) {
-    ItilializeVoices(O_DirectDCO::MAX, I_DirectDCO::MAX);
+    ItilializeVoices(O::OMAX, I::IMAX);
     phasor_ = new float[maxPoly];
     for (int i = 0; i < maxPoly; ++i) {
         phasor_[i] = 0.0;
     }
-    parameters_ = new void*[P_DirectDCO::MAX];
+    parameters_ = new void*[parameterInfo_.size()];
     parameters_[0] = &tuneFreq_;
     parameters_[1] = &detune_;
     parameters_[2] = &reTrigger_;
     parameters_[3] = &waveform_;
     parameters_[4] = &mode_;
-
-    ModuleTypes map {
-        std::make_pair(P_DirectDCO::TUNE, Types::FLOAT),
-        std::make_pair(P_DirectDCO::DETUNE, Types::FLOAT),
-        std::make_pair(P_DirectDCO::TRIG, Types::BOOL),
-        std::make_pair(P_DirectDCO::WF, Types::INT),
-        std::make_pair(P_DirectDCO::MODE, Types::INT)
-    };
-    parameterInfo_ = map;
     mode_ = 0;
 }
 
 void DirectDCO::FillBuffers(int voice, int bufferSize) {
-    Sample* ampbuf   = input_[voice][I_DirectDCO::AMP][0];
-    Sample* pwmbuf   = input_[voice][I_DirectDCO::PWM][0];
-    Sample* pitchbuf = input_[voice][I_DirectDCO::PITCH][0];
+    Sample* ampbuf   = input_[voice][I::AMP][0];
+    Sample* pwmbuf   = input_[voice][I::PWM][0];
+    Sample* pitchbuf = input_[voice][I::PITCH][0];
     for (int i = 0; i < bufferSize; ++i) {
         Sample  amplitude = *(ampbuf+i);
         Sample  pwm       = *(pwmbuf+i);
         Sample  pitch     = *(pitchbuf+i);
-        Sample* output    = &output_[voice][O_DirectDCO::SAMPLE][i];
+        Sample* output    = &output_[voice][O::SAMPLE][i];
         switch (waveform_) {
             case SAW:
                 *output = phasor_[voice] * amplitude;

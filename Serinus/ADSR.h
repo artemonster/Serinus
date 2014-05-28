@@ -1,7 +1,6 @@
 #ifndef ADSR_H_
 #define ADSR_H_
 #include "PatchModule.h"
-#include "PatchModuleConfigs.h"
 /**
 This is a basic ADSR module, which can operate in both linear and exponential modes.
 TODO: decide on gate and trigger inputs (whether or not they should be controlled via event or patch samples)
@@ -9,14 +8,23 @@ Float parameters are in milliseconds, Release in percent (0-100)
 Authored: AK
 Last revision: 13.05.2014
 */
+
 class ADSR : public PatchModule {
 public:
-    static const CreatorImpl<ADSR> creator;
+    static const CreatorImpl<ADSR> creator;    
     ADSR(int maxPoly, int bufferSize);
     ~ADSR() {};
     void FillBuffers(int voice, int bufferSize);
     void ProcessCommand(const int &cmdType, int polyVoiceNr, const MidiCmd &inValue, int &retVal) {};
-protected:
+    ParameterTypes getParameterInfo() { return parameterInfo_; }
+    PortNames getOutputsInfo() { return outputInfo_; }
+    PortNames getInputsInfo() { return inputInfo_; }
+private:
+    static const ParameterTypes parameterInfo_;
+    static const PortNames outputInfo_;
+    static const PortNames inputInfo_;
+    enum I { GATE, IMAX };
+    enum O { SAMPLE, OMAX };
     enum State { IDLE, ATTACK, DECAY, SUSTAIN, RELEASE };
     float* outputSample_;
     State* state_;

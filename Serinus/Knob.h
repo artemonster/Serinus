@@ -1,7 +1,6 @@
 #ifndef KNOB_H_
 #define KNOB_H_
 #include "PatchModule.h"
-#include "PatchModuleConfigs.h"
 /**
 This is a most basic knob, which holds a sample value and sends it out each tick.
 TODO: think on scaling, and event processing (eventual hw mapping)
@@ -16,7 +15,14 @@ public:
     ~Knob() {};
     void FillBuffers(int voice, int bufferSize);
     void ProcessCommand(const int &cmdType, int polyVoiceNr, const MidiCmd &inValue, int &retVal) {};
+    ParameterTypes getParameterInfo() { return parameterInfo_; }
+    PortNames getOutputsInfo() { return outputInfo_; }
+    PortNames getInputsInfo() { return inputInfo_; }
 private:
+    static const ParameterTypes parameterInfo_;
+    static const PortNames outputInfo_;
+    static const PortNames inputInfo_;
+    enum O { VALUE, OMAX };
     Sample value_;
 };
 

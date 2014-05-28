@@ -1,0 +1,64 @@
+<Patch>
+    <Knob id="LFOFrequency">
+        <Config>
+            <value>8</value>
+        </Config>
+    </Knob>	
+    <Knob id="LFOAmp">
+        <Config>
+            <value>1</value>
+        </Config>
+    </Knob>	
+    <Knob id="PWMValue">
+        <Config>
+            <value>0.5</value>
+        </Config>
+    </Knob>	
+    <PolyKeys id="PolyKeys">
+        <Events>
+            <Event>NoteOn</Event>
+            <Event>NoteOff</Event>
+        </Events>
+    </PolyKeys>
+    <DirectDCO id="LFO">
+        <Config>
+            <waveform>2</waveform>
+            <tune>213.63</tune>
+            <mode>0</mode>
+        </Config>
+        <Connections>
+            <Connection to="pitch" from="value" of="LFOFrequency"/>
+            <Connection to="pwm" from="value" of="PWMValue"/>
+            <Connection to="amp" from="value" of="LFOAmp"/>			
+        </Connections>
+    </DirectDCO>
+    <DirectDCO id="MainOsc">
+        <Config>
+            <waveform>1</waveform>
+            <tune>213.63</tune>
+            <mode>1</mode>
+        </Config>
+        <Connections>
+            <Connection to="pitch" from="cv" of="PolyKeys"/>
+            <Connection to="pwm" from="value" of="PWMValue"/>
+            <Connection to="amp" from="sample" of="LFO"/>
+        </Connections>
+    </DirectDCO>	
+    <ADSR id="ADSR">
+        <Config>
+            <attack>150</attack>
+            <decay>90</decay>
+            <sustain>0.5</sustain>
+            <release>200</release>
+        </Config>
+        <Connections>
+            <Connection to="gate" from="gate" of="PolyKeys"/>
+        </Connections>
+    </ADSR>
+    <VCA id="VCA">
+        <Connections>
+            <Connection to="in" from="sample" of="MainOsc"/>
+            <Connection to="gain" from="sample" of="ADSR"/>			
+        </Connections>
+    </VCA>	
+</Patch>
