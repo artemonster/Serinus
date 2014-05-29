@@ -10,17 +10,9 @@
 /**
  * This is the engine class, which handles everything in the system.
  * Currently, only midi handling and patchmodule loading/configuration/connectivity is managed.
- * Additionally, there will be a hardware IO registry, filesystem handling and UI.
- * After bootloader is done checking/updating firmware, the main program will take over.
- * Main program will consist only of the engine instantiation, which will take over from this point, 
- * managing everything.
- *
- * Mini ToDo:
- *      add initializer method, which will load up default engine config from text/xml
- *      add patch-reinitializer, so that patch can be reloaded by a command
- *      
+ *  
  * Authored: AK
- * Last revision: 20.05.2014
+ * Last revision: 29.05.2014
  */
 class Engine {
 public:
@@ -63,17 +55,17 @@ public:
     void Sysex(unsigned char type, MidiCmd cmd);
     void HandleRunningCmd(unsigned char wtf, MidiCmd cmd);
 private:
-    bool clampMix = true;
-    // Midi stuff:
-    void registerReceiver(PatchModule* toRegister);
-    enum MidiEvent {NOTEOFF,NOTEON,AFTERT,CC,PATCH,CPRESS,PITCHW,SYSEX};
-    static std::map<std::string, int> eventLookUp;
+    int retCode;
+    
+    // MIDI
+    std::queue<MidiCmd> cmds;
+    enum MidiEvent {NOTEOFF,NOTEON,AFTERT,CC,PATCH,CPRESS,PITCHW,SYSEX,MAX};
+    static std::map<std::string, int> eventLookUp; //same as MidiEvent, but string->index map
     float midiNotes[128];
     unsigned char runningStatus = 0;
-    int retCode;
     MidiHandler midiHndlTable[16];
-    std::vector<PatchModule*> eventRegistry[8];
-    std::vector<PatchModule*>::iterator receiverIt;
+
+    // Polyphony
     struct Voice {
         int voiceNum;
         int notePlayed;
@@ -81,24 +73,21 @@ private:
             if (notePlayed == rhs.notePlayed) return true;
             else return false;
         }
-    }; 
+    };
     std::list<Voice> activeVoices;
     std::list<Voice> availableVoices;
-    std::list<Voice>::iterator voiceIt;
+    
     // Patch
     std::vector<PatchModule*> loadedPatch;
+    std::vector<PatchModule*> eventRegistry[MidiEvent::MAX];
+    void registerReceiver(PatchModule* toRegister);
+   
+    // Settings
+    bool clampMix = true;
     int maxPoly;
     int bufferSize;
-    std::queue<MidiCmd> cmds;
     Sample *inSample;
     Sample **outputSamples;
-    
-    //struct Module {
-    //    std::string name;
-    //    ModuleValues config;
-    //    ModuleInputs connections;
-    //    RegisterTo commands;
-    //};
 };
 
 #endif /* ENGINE_H_ */

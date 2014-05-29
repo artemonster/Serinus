@@ -1,4 +1,4 @@
-<Patch>
+<Patch name="Basic test sine with tremolo" category="0">
     <Knob id="LFOFrequency">
         <Config>
             <value>8</value>

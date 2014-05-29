@@ -31,7 +31,7 @@ ADSR::ADSR(int maxPoly, int bufferSize) : PatchModule (maxPoly, bufferSize) {
 }
 
 void ADSR::FillBuffers(int voice, int bufferSize) {
-    Sample* gatebuf = input_[voice][0][0];
+    Sample* gatebuf = input_[voice][I::GATE];
     for (int i = 0; i < bufferSize; ++i) {
         Sample gate = *(gatebuf + i);
         if (gate >= 0.5f && keyPressed_[voice]==false) {
@@ -78,6 +78,6 @@ void ADSR::FillBuffers(int voice, int bufferSize) {
                 break;
             default: break;
         }
-        output_[voice][0][i] = outputSample_[voice];  
+        output_[voice][O::SAMPLE][i] = outputSample_[voice];  
     }
 }

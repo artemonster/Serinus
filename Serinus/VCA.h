@@ -3,11 +3,12 @@
 #include "PatchModule.h"
 /**
 This is a basic VCA module, which can operate in both linear and logarithmic modes.
-Gain input is a standard sample, which is then normalized to -1...1 value
-TODO: check the output sample spikes when using log mode and ramp DCO
+Gain input should be inside 0...1 boundaries (negative gain is clipped)
+
+TODO: fix log. mode
 
 Authored: AK
-Last revision: 13.05.2014
+Last revision: 29.05.2014
 */
 class VCA : public PatchModule {
 public:

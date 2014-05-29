@@ -17,7 +17,7 @@ std::map<std::string, int> Engine::eventLookUp = {
 
 Engine::Engine() {
     //these initalizers are here just for fun
-    maxPoly = 10;
+    maxPoly = 5;
     bufferSize = kBufferSize;
     /*
         TODO register all available hardware (buttons, pots, lcd, io, etc) and assign proper handlers to it.
@@ -35,7 +35,7 @@ Engine::Engine() {
     for (int i = 0; i < 16; i++) {
         midiHndlTable[i] = midiLookUp[i];
     }
-    //Initialize midi note table
+    //Initialize midi note table - may be obsolete, who knows.
     float tune = 440.0;
     for (int x = 0; x <= 127; ++x) {
         midiNotes[x] = tune * (float)pow(2, ( ( (float)x - 69 ) / 12 ));
@@ -147,10 +147,9 @@ void Engine::LoadPatch(rapidxml::xml_node<>* patch_node) {
 }
 
 void Engine::FillAudioBuffers() {
-    std::vector<PatchModule*>::iterator module;
-    for (module = loadedPatch.begin(); module != loadedPatch.end(); ++module) {
+    for (auto module : loadedPatch) {
         for (int i = 0; i < maxPoly; ++i) {
-            ( *module )->FillBuffers(i,bufferSize);
+            module->FillBuffers(i,bufferSize);
         }
     }
 }
@@ -165,12 +164,21 @@ void Engine::HandleCommandQueue() {
         }
         std::cout << std::endl;
 #endif // SRS_DEBUG
+
+        //Faulty commands are a result of really nasty synchronization bug
+        //when you hit a lot of keys simultaneously.
+        //this will only be fixed when introducing VST
+        if (command.size() == 0) {
+            std::cout << "Faulty command!\n";
+            //TODO raiseerror
+            goto pop;
+        }
         unsigned char comamndByte = command.front();
         unsigned char lowNibble = comamndByte & 0x0F;
         unsigned char frontNibble = comamndByte >> 4;
         Engine::MidiHandler handler = midiHndlTable[frontNibble];
         ( this->*( handler ) )( lowNibble, command );
-        cmds.pop(); //remove handled command from queue.
+pop:        cmds.pop(); //remove handled command from queue.
     }
 }
 
@@ -182,11 +190,11 @@ void Engine::NoteOff(unsigned char voice, MidiCmd cmd) {
     runningStatus = 0x80 | voice;
     unsigned char note = cmd.at(1);
     unsigned char velocity = cmd.at(2);
-    voiceIt = std::find(activeVoices.begin(), activeVoices.end(), Voice { 99, note });
+    auto voiceIt = std::find(activeVoices.begin(), activeVoices.end(), Voice { 99, note });
     if (voiceIt != activeVoices.end()) {
         availableVoices.push_front(*voiceIt);
-        for (receiverIt = eventRegistry[NOTEOFF].begin(); receiverIt != eventRegistry[NOTEOFF].end(); ++receiverIt) {
-            (*receiverIt)->ProcessCommand( ModuleCMD::NOTEOFF, (*voiceIt).voiceNum, cmd, retCode );
+        for (auto receiver : eventRegistry[NOTEOFF]) {
+            receiver->ProcessCommand( ModuleCMD::NOTEOFF, (*voiceIt).voiceNum, cmd, retCode );
         }
         activeVoices.erase(voiceIt);
     } else {
@@ -199,14 +207,13 @@ void Engine::NoteOn(unsigned char voice, MidiCmd cmd) {
     runningStatus = 0x90 | voice;
     unsigned char note = cmd.at(1);
     unsigned char velocity = cmd.at(2);
-    voiceIt = std::find(activeVoices.begin(), activeVoices.end(), Voice { 99, note });
+    auto voiceIt = std::find(activeVoices.begin(), activeVoices.end(), Voice { 99, note });
     if (velocity == 0) {
         //handle like NoteOff, but do not set runningStatus
         if (voiceIt != activeVoices.end()) {
-            availableVoices.push_front(*voiceIt);       
-            for (receiverIt = eventRegistry[NOTEOFF].begin(); 
-                 receiverIt != eventRegistry[NOTEOFF].end(); ++receiverIt) {
-                (*receiverIt)->ProcessCommand( ModuleCMD::NOTEOFF, (*voiceIt).voiceNum, cmd, retCode );
+            availableVoices.push_front(*voiceIt);  
+            for (auto receiver : eventRegistry[NOTEOFF]) {
+                receiver->ProcessCommand( ModuleCMD::NOTEOFF, (*voiceIt).voiceNum, cmd, retCode );
             }
             activeVoices.erase(voiceIt);
         } else {
@@ -214,14 +221,12 @@ void Engine::NoteOn(unsigned char voice, MidiCmd cmd) {
             //it might have been replaced if more keys were pressed than voices available.
         }
     } else {
-        // here we have the possibility either to re-trigger same decaying note, or just allocate new one
         if (availableVoices.size() != 0) {
-            Voice newVoice = availableVoices.back();
+            //TODO search for already triggered note and make this option tunable.
+            Voice newVoice = availableVoices.back(); //just allocate a new one
             newVoice.notePlayed = note;
-            for (receiverIt = eventRegistry[NOTEON].begin(); 
-                 receiverIt != eventRegistry[NOTEON].end(); ++receiverIt) {
-                PatchModule* registeredReceiver = ( *receiverIt );
-                registeredReceiver->ProcessCommand( ModuleCMD::NOTEON, newVoice.voiceNum, cmd, retCode );
+            for (auto receiver : eventRegistry[NOTEON]) {
+                receiver->ProcessCommand( ModuleCMD::NOTEON, newVoice.voiceNum, cmd, retCode );
             }
             activeVoices.push_front(newVoice);
             availableVoices.pop_back();
@@ -229,10 +234,8 @@ void Engine::NoteOn(unsigned char voice, MidiCmd cmd) {
             //override the oldest note!
             Voice newVoice = activeVoices.back();
             newVoice.notePlayed = note;
-            for (receiverIt = eventRegistry[NOTEON].begin(); 
-                 receiverIt != eventRegistry[NOTEON].end(); ++receiverIt) {
-                PatchModule* registeredReceiver = ( *receiverIt );
-                registeredReceiver->ProcessCommand( ModuleCMD::NOTEON, newVoice.voiceNum, cmd, retCode );
+            for (auto receiver : eventRegistry[NOTEON]) {
+                receiver->ProcessCommand( ModuleCMD::NOTEON, newVoice.voiceNum, cmd, retCode );
             }
             activeVoices.pop_back();
             activeVoices.push_front(newVoice);

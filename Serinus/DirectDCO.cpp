@@ -26,9 +26,9 @@ DirectDCO::DirectDCO(int maxPoly, int bufferSize) : PatchModule (maxPoly, buffer
 }
 
 void DirectDCO::FillBuffers(int voice, int bufferSize) {
-    Sample* ampbuf   = input_[voice][I::AMP][0];
-    Sample* pwmbuf   = input_[voice][I::PWM][0];
-    Sample* pitchbuf = input_[voice][I::PITCH][0];
+    Sample* ampbuf   = input_[voice][I::AMP];
+    Sample* pwmbuf   = input_[voice][I::PWM];
+    Sample* pitchbuf = input_[voice][I::PITCH];
     for (int i = 0; i < bufferSize; ++i) {
         Sample  amplitude = *(ampbuf+i);
         Sample  pwm       = *(pwmbuf+i);

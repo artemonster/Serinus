@@ -1,6 +1,13 @@
 #ifndef POLYKEYS_H_
 #define POLYKEYS_H_
 #include "PatchModule.h"
+/**
+PolyKeys module receives midi NoteOn and NoteOff events and translates them to control voltage, gate and velocity
+samples.
+
+Authored: AK
+Last revision: 29.05.2014
+*/
 class PolyKeys : public PatchModule {
 public:
     static const CreatorImpl<PolyKeys> creator;

@@ -4,9 +4,9 @@
 /**
 This is a basic ADSR module, which can operate in both linear and exponential modes.
 TODO: decide on gate and trigger inputs (whether or not they should be controlled via event or patch samples)
-Float parameters are in milliseconds, Release in percent (0-100)
+Float parameters are in milliseconds, aside from release (normalized value between 0 and 1).
 Authored: AK
-Last revision: 13.05.2014
+Last revision: 29.05.2014
 */
 
 class ADSR : public PatchModule {

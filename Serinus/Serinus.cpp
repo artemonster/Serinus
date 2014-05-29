@@ -24,18 +24,7 @@ static void midiMonitor(double deltatime, std::vector<unsigned char> *message, v
 static bool isDone = false;
 void siginthandler(int param) { isDone = true; }
 
-//constexpr bool same(char const *x, char const *y) {
-//  return !*x && !*y ? true : (*x == *y && same(x+1, y+1));
-//}
-//
-//constexpr int find(char const *name, const char* const* entries, const int index) {
-//  return same(entries[index], name) ? index : find(name, entries, index+1);
-//}
-
 int main(int argc, char* args[]) {
-    //constexpr test:
-    //constexpr char* input[2] = { "bla", "test" };
-    //int a = find("test", input, 0);
     std::cout << "Testing... Hit Ctrl+C to quit. \n" << std::endl;
     signal(SIGINT, siginthandler);
     Engine engine;

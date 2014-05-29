@@ -46,12 +46,9 @@ public:
         if (maxInputs == 0) {
             input_ = NULL;
         } else {
-            input_ = new Sample***[maxPoly_];
+            input_ = new Sample**[maxPoly_];
             for (int i = 0; i < maxPoly_; ++i) {
-                input_[i] = new Sample**[maxInputs];
-                for (int j = 0; j < maxInputs; ++j) {
-                    input_[i][j] = new Sample*[bufferSize_];
-                }
+                input_[i] = new Sample*[maxInputs];
             }
         }
     }   
@@ -118,7 +115,7 @@ public:
     }
     /**This method is used to link input with the output of other module.*/
     inline void setLink(const int voiceNum, const int index, Sample* link) {
-        input_[voiceNum][index][0] = link;
+        input_[voiceNum][index] = link;
     }
     /**This method sets the id (label) to the module.*/
     void setId(std::string id) {
@@ -150,8 +147,8 @@ protected:
     int bufferSize_;
     /**Pointer to an array of output buffer samples (multiple voices).*/
     Sample ***output_;
-    /**Pointer to an array of pointers to output buffer of input module at specified index (multiple voices).*/
-    Sample ****input_;
+    /**Pointer to an output buffer array of some module at specified index (multiple voices).*/
+    Sample ***input_;
     /**Pointer to an array of pointers to internal parameters of the module.*/
     void **parameters_;
     /**Map with string name of the parameter, index to the look-up table and type.*/

@@ -3,11 +3,7 @@
 #include "PatchModule.h"
 /**
 This is a basic oscillator. It can provide 4 waveforms (saw, triangle, sine and square wave).
-Many features are undecided yet.
-PWM is in UPSCALE*percentage
-TODO: decide, whether to provide 4 outputs simulatenously or use a switch-case.
-Introduce noise, maybe? 
-How detune will be handled? Phase modulation?
+Many features are undecided yet (inputs of the module).
 
 Authored: AK
 Last revision: 13.05.2014

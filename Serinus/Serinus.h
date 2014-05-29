@@ -82,6 +82,11 @@ Moreover, it can be made "self-registering", like I did with class names.
 The bad thing is that there is too much copy-paste involved, and I like somewhat elegant solutions :)
 Now I need for inputs and outputs their string names and enums, because I need compile-time look-up for better tick 
 performance.
+
+29.05.2014: C++11 feautres
+Today I've started replacing these horrible iterators with auto and moster for loops with "for all" construct.
+Also, when I was writing documentation yesterday I've noticed that input pointer shouldn't be buffered at all :)
+
 */
 
 #define SRS_DEBUG                                   //Define this, if you want debug output

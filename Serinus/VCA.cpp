@@ -14,10 +14,11 @@ VCA::VCA(int maxPoly, int bufferSize) : PatchModule (maxPoly, bufferSize) {
 }
 
 void VCA::FillBuffers(int voice, int bufferSize) {
-    Sample* gainbuf = input_[voice][I::GAIN][0];
-    Sample* inbuf = input_[voice][I::INPUT][0];
+    Sample* gainbuf = input_[voice][I::GAIN];
+    Sample* inbuf = input_[voice][I::INPUT];
     for (int i = 0; i < bufferSize; ++i) {
         Sample  gain    = *(gainbuf+i);
+        if (gain < 0.0f) gain = 0.0f;
         Sample  input   = *(inbuf+i);
         Sample* output  = &output_[voice][O::SAMPLE][i];
         if (isLinear_) {
