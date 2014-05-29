@@ -1,20 +1,11 @@
-#ifndef VCA_H_
-#define VCA_H_
+#ifndef POLYMIXER_H_
+#define POLYMIXER_H_
 #include "PatchModule.h"
-/**
-This is a basic VCA module, which can operate in both linear and logarithmic modes.
-Gain input should be inside 0...1 boundaries (negative gain is clipped)
-
-TODO: fix log. mode
-
-Authored: AK
-Last revision: 29.05.2014
-*/
-class VCA : public PatchModule {
+class PolyMixer : public PatchModule {
 public:
-    static const CreatorImpl<VCA> creator;
-    VCA(int maxPoly, int bufferSize);
-    ~VCA() {};
+    static const CreatorImpl<PolyMixer> creator;    
+    PolyMixer(int maxPoly, int bufferSize);
+    ~PolyMixer() {};
     void FillBuffers();
     void ProcessCommand(const int &cmdType, int polyVoiceNr, const MidiCmd &inValue, int &retVal) {};
     ParameterTypes getParameterInfo() { return parameterInfo_; }
@@ -24,8 +15,9 @@ private:
     static const ParameterTypes parameterInfo_;
     static const PortNames outputInfo_;
     static const PortNames inputInfo_;
-    enum I { INPUT, GAIN, IMAX };
+    enum I { POLYSAMPLE, IMAX };
     enum O { SAMPLE, OMAX };
-    bool isLinear_;
+    bool clampedMix_;
+    Sample* outputSample_;
 };
-#endif /* VCA_H_ */
+#endif /* POLYMIXER_H_ */

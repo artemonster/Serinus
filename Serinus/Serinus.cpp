@@ -11,7 +11,7 @@ static int audioCallback(void *outputBuffer, void *inputBuffer, unsigned int nBu
     (void)inputBuffer; // Prevent unused variable warning.
     engine->FillAudioBuffers();
     for (unsigned int i = 0; i < nBufferFrames; i++) {
-        *outBuf++ = engine->MixAllVoices(i);
+        *outBuf++ = engine->getSample(i);
     }
     return 0;
 }

@@ -13,7 +13,7 @@ public:
     static const CreatorImpl<DirectDCO> creator;
     DirectDCO(int maxPoly, int bufferSize);
     ~DirectDCO() {};
-    void FillBuffers(int voice, int bufferSize);
+    void FillBuffers();
     void ProcessCommand(const int &cmdType, int polyVoiceNr, const MidiCmd &inValue, int &retVal) {};
     ParameterTypes getParameterInfo() { return parameterInfo_; }
     PortNames getOutputsInfo() { return outputInfo_; }

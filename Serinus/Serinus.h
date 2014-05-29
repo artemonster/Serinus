@@ -86,7 +86,10 @@ performance.
 29.05.2014: C++11 feautres
 Today I've started replacing these horrible iterators with auto and moster for loops with "for all" construct.
 Also, when I was writing documentation yesterday I've noticed that input pointer shouldn't be buffered at all :)
-
+Also, the polyphony is only forced between polykeys and polymixer. The amount of polyphonic clones for each module is
+then derived from its receivers (max value) - NOT DONE YET.
+Controller+Generator model will be implemented soon enough.
+Laid fondation for SubPatch module and 
 */
 
 #define SRS_DEBUG                                   //Define this, if you want debug output
@@ -102,4 +105,5 @@ typedef std::vector<ModuleCMD> RegisterTo;
 
 const unsigned int kSampleRate = 44100;				//won't change (I guess)
 const unsigned int kBufferSize = 512; 				//specify min max
+const unsigned int kMaxPoly = 16;
 #endif /* SERINUS_H_ */

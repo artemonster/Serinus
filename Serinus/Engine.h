@@ -24,24 +24,10 @@ public:
     void PushCommand(MidiCmd cmd);
     void HandleCommandQueue();
     void FillAudioBuffers();
-    void LoadPatch(rapidxml::xml_node<>* patch_node);
+    void LoadPatch(std::vector<PatchModule*> &container, rapidxml::xml_node<>* patch_node);
 
-    inline Sample MixAllVoices(int bufIndex) {
-        Sample outSample = 0;
-        if (clampMix) {
-            for (int i = 0; i < maxPoly; ++i) {
-                outSample += *( outputSamples[i] + bufIndex );
-            }
-            outSample *= 0.707946f; //-3dB
-            if (outSample >= 1.0f) outSample = 1.0f;
-            if (outSample <= -1.0f) outSample = -1.0f;
-        } else {
-            Sample scaleFactor = static_cast<Sample>( 1.0/maxPoly );
-            for (int i = 0; i < maxPoly; ++i) {
-                outSample += *( outputSamples[i] + bufIndex )*scaleFactor;
-            }
-        }
-        return outSample;
+    inline Sample getSample(int bufIndex) {
+        return *( outputSamples + bufIndex );
     }
 
     //MIDI stuff
@@ -84,10 +70,9 @@ private:
    
     // Settings
     bool clampMix = true;
-    int maxPoly;
-    int bufferSize;
+    int voices;
     Sample *inSample;
-    Sample **outputSamples;
+    Sample *outputSamples;
 };
 
 #endif /* ENGINE_H_ */

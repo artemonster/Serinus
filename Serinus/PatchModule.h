@@ -20,7 +20,7 @@ Last revision: 26.05.2014
 class PatchModule {
 public:
     /**This method fills output buffer for the specified voice and buffer size.*/
-    virtual void FillBuffers(int voice, int bufferSize) = 0;
+    virtual void FillBuffers() = 0;
     /**This method updates all outputs and internal states of the module by an external command.*/
     virtual void ProcessCommand(const int &cmdType, int polyVoiceNr, const MidiCmd &inValue, int &retVal) = 0;
     /**This method is used to determine parameter types info (class meta data).*/
@@ -34,8 +34,8 @@ public:
         if (maxOutputs == 0) {
             output_ = NULL;
         } else {
-            output_ = new Sample**[maxPoly_];
-            for (int i = 0; i < maxPoly_; ++i) {
+            output_ = new Sample**[kMaxPoly];
+            for (int i = 0; i < kMaxPoly; ++i) {
                 output_[i] = new Sample*[maxOutputs];
                 for (int j = 0; j < maxOutputs; ++j) {
                     output_[i][j] = new Sample[bufferSize_];
@@ -46,8 +46,8 @@ public:
         if (maxInputs == 0) {
             input_ = NULL;
         } else {
-            input_ = new Sample**[maxPoly_];
-            for (int i = 0; i < maxPoly_; ++i) {
+            input_ = new Sample**[kMaxPoly];
+            for (int i = 0; i < kMaxPoly; ++i) {
                 input_[i] = new Sample*[maxInputs];
             }
         }
@@ -130,9 +130,9 @@ public:
         }
     }
     /**Default constructor to be called from all derived classes.*/
-    PatchModule(int maxPoly, int bufferSize) {
+    PatchModule(int maxPoly, int maxBufferSize) {
         maxPoly_ = maxPoly;
-        bufferSize_ = bufferSize;
+        bufferSize_ = maxBufferSize;
     }
     /**Virtual desctructor, so we can delete derived by deleting base class.*/
     virtual ~PatchModule() {

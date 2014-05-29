@@ -25,44 +25,46 @@ DirectDCO::DirectDCO(int maxPoly, int bufferSize) : PatchModule (maxPoly, buffer
     mode_ = 0;
 }
 
-void DirectDCO::FillBuffers(int voice, int bufferSize) {
-    Sample* ampbuf   = input_[voice][I::AMP];
-    Sample* pwmbuf   = input_[voice][I::PWM];
-    Sample* pitchbuf = input_[voice][I::PITCH];
-    for (int i = 0; i < bufferSize; ++i) {
-        Sample  amplitude = *(ampbuf+i);
-        Sample  pwm       = *(pwmbuf+i);
-        Sample  pitch     = *(pitchbuf+i);
-        Sample* output    = &output_[voice][O::SAMPLE][i];
-        switch (waveform_) {
-            case SAW:
-                *output = phasor_[voice] * amplitude;
-                break;
-            case TRI:
-                if (phasor_[voice] <= 0.0f) {
-                    *output = ( 2 * phasor_[voice] + 1.0f ) * amplitude;
-                } else {
-                    *output = ( -2 * phasor_[voice] + 1.0f ) * amplitude;
-                }
-                break;
-            case SIN:
-                *output = sin((phasor_[voice])*3.14159265f)*amplitude;
-                break;
-            case SQR:
-                if ((phasor_[voice] + 1.0f) >= pwm*2) {
-                    *output = amplitude;
-                } else {
-                    *output = 0;
-                }
-                break;
-            default:
-                break;
+void DirectDCO::FillBuffers() {
+    for (int voice = 0; voice < maxPoly_; ++voice) {
+        Sample* ampbuf   = input_[voice][I::AMP];
+        Sample* pwmbuf   = input_[voice][I::PWM];
+        Sample* pitchbuf = input_[voice][I::PITCH];
+        for (int i = 0; i < bufferSize_; ++i) {
+            Sample  amplitude = *(ampbuf+i);
+            Sample  pwm       = *(pwmbuf+i);
+            Sample  pitch     = *(pitchbuf+i);
+            Sample* output    = &output_[voice][O::SAMPLE][i];
+            switch (waveform_) {
+                case SAW:
+                    *output = phasor_[voice] * amplitude;
+                    break;
+                case TRI:
+                    if (phasor_[voice] <= 0.0f) {
+                        *output = ( 2 * phasor_[voice] + 1.0f ) * amplitude;
+                    } else {
+                        *output = ( -2 * phasor_[voice] + 1.0f ) * amplitude;
+                    }
+                    break;
+                case SIN:
+                    *output = sin((phasor_[voice])*3.14159265f)*amplitude;
+                    break;
+                case SQR:
+                    if ((phasor_[voice] + 1.0f) >= pwm*2) {
+                        *output = amplitude;
+                    } else {
+                        *output = 0;
+                    }
+                    break;
+                default:
+                    break;
+            }
+            if (mode_ == 0) {   //Hz
+                phasor_[voice] += pitch * 2.0f / kSampleRate;
+            } else {            //CV
+                phasor_[voice] += tuneFreq_ * static_cast<float>(pow(2, pitch)) * 2.0f / kSampleRate;
+            }  
+            if (phasor_[voice] >= 1.0f) phasor_[voice] -= 2.0f;       
         }
-        if (mode_ == 0) {   //Hz
-            phasor_[voice] += pitch * 2.0f / kSampleRate;
-        } else {            //CV
-            phasor_[voice] += tuneFreq_ * static_cast<float>(pow(2, pitch)) * 2.0f / kSampleRate;
-        }  
-        if (phasor_[voice] >= 1.0f) phasor_[voice] -= 2.0f;       
     }
 }

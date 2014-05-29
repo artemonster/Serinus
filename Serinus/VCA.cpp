@@ -13,19 +13,21 @@ VCA::VCA(int maxPoly, int bufferSize) : PatchModule (maxPoly, bufferSize) {
     isLinear_ = true;
 }
 
-void VCA::FillBuffers(int voice, int bufferSize) {
-    Sample* gainbuf = input_[voice][I::GAIN];
-    Sample* inbuf = input_[voice][I::INPUT];
-    for (int i = 0; i < bufferSize; ++i) {
-        Sample  gain    = *(gainbuf+i);
-        if (gain < 0.0f) gain = 0.0f;
-        Sample  input   = *(inbuf+i);
-        Sample* output  = &output_[voice][O::SAMPLE][i];
-        if (isLinear_) {
-            *output = input*gain;
-        } else {
-            //TODO: fix log with RAMP input (produces some nasty clicks)
-            *output = input*log(gain);
-        }   
+void VCA::FillBuffers() {
+    for (int voice = 0; voice < maxPoly_; ++voice) {
+        Sample* gainbuf = input_[voice][I::GAIN];
+        Sample* inbuf = input_[voice][I::INPUT];
+        for (int i = 0; i < bufferSize_; ++i) {
+            Sample  gain    = *(gainbuf+i);
+            Sample  input   = *(inbuf+i);
+            Sample* output  = &output_[voice][O::SAMPLE][i];
+            if (gain < 0.0f) gain = 0.0f;
+            if (isLinear_) {
+                *output = input*gain;
+            } else {
+                //TODO: fix log with RAMP input (produces some nasty clicks)
+                *output = input*log(gain);
+            }   
+        }
     }
 }

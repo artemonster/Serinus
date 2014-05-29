@@ -85,6 +85,8 @@
   <ItemGroup>
     <ClInclude Include="ADSR.h" />
     <ClInclude Include="PolyKeys.h" />
+    <ClInclude Include="PolyMixer.h" />
+    <ClInclude Include="SubPatch.h" />
     <ClInclude Include="Util\Creator.h" />
     <ClInclude Include="Util\CreatorImpl.h" />
     <ClInclude Include="Engine.h" />
@@ -109,6 +111,8 @@
     <ClCompile Include="ADSR.cpp" />
     <ClCompile Include="Engine.cpp" />
     <ClCompile Include="PolyKeys.cpp" />
+    <ClCompile Include="PolyMixer.cpp" />
+    <ClCompile Include="SubPatch.cpp" />
     <ClCompile Include="Util\Creator.cpp" />
     <ClCompile Include="Util\Factory.cpp" />
     <ClCompile Include="HAL\RtAudio.cpp" />

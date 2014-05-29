@@ -99,6 +99,12 @@
     <ClInclude Include="PolyKeys.h">
       <Filter>Header Files\Modules</Filter>
     </ClInclude>
+    <ClInclude Include="SubPatch.h">
+      <Filter>Header Files\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="PolyMixer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Serinus.cpp">
@@ -132,6 +138,12 @@
       <Filter>Source Files\Util</Filter>
     </ClCompile>
     <ClCompile Include="PolyKeys.cpp">
+      <Filter>Source Files\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="SubPatch.cpp">
+      <Filter>Source Files\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="PolyMixer.cpp">
       <Filter>Source Files\Modules</Filter>
     </ClCompile>
   </ItemGroup>

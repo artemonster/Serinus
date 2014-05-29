@@ -12,7 +12,7 @@ public:
     static const CreatorImpl<Knob> creator;
     Knob(int maxPoly, int bufferSize);
     ~Knob() {};
-    void FillBuffers(int voice, int bufferSize);
+    void FillBuffers();
     void ProcessCommand(const int &cmdType, int polyVoiceNr, const MidiCmd &inValue, int &retVal) {};
     ParameterTypes getParameterInfo() { return parameterInfo_; }
     PortNames getOutputsInfo() { return outputInfo_; }

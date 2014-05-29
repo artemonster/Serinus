@@ -60,5 +60,10 @@
             <Connection to="in" from="sample" of="MainOsc"/>
             <Connection to="gain" from="sample" of="ADSR"/>			
         </Connections>
-    </VCA>	
+    </VCA>
+    <PolyMixer id="polymix">
+        <Connections>
+            <Connection to="in" from="sample" of="VCA"/>
+        </Connections>
+    </PolyMixer>   
 </Patch>
