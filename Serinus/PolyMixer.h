@@ -4,9 +4,10 @@
 class PolyMixer : public PatchModule {
 public:
     static const CreatorImpl<PolyMixer> creator;    
-    PolyMixer(int maxPoly, int bufferSize);
+    PolyMixer(int maxPoly);
     ~PolyMixer() {};
     void FillBuffers();
+    bool isMonophonic() { return true; }
     void ProcessCommand(const int &cmdType, int polyVoiceNr, const MidiCmd &inValue, int &retVal) {};
     ParameterTypes getParameterInfo() { return parameterInfo_; }
     PortNames getOutputsInfo() { return outputInfo_; }

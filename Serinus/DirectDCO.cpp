@@ -10,10 +10,10 @@ const ParameterTypes DirectDCO::parameterInfo_ = {
 const PortNames DirectDCO::outputInfo_ = {"sample"};
 const PortNames DirectDCO::inputInfo_ = {"pitch","pwm","phase","amp"};
 
-DirectDCO::DirectDCO(int maxPoly, int bufferSize) : PatchModule (maxPoly, bufferSize) {
+DirectDCO::DirectDCO(int maxPoly) : PatchModule (maxPoly) {
     ItilializeVoices(O::OMAX, I::IMAX);
-    phasor_ = new float[maxPoly];
-    for (int i = 0; i < maxPoly; ++i) {
+    phasor_ = new float[kMaxPoly];
+    for (int i = 0; i < kMaxPoly; ++i) {
         phasor_[i] = 0.0;
     }
     parameters_ = new void*[parameterInfo_.size()];
@@ -26,14 +26,11 @@ DirectDCO::DirectDCO(int maxPoly, int bufferSize) : PatchModule (maxPoly, buffer
 }
 
 void DirectDCO::FillBuffers() {
-    for (int voice = 0; voice < maxPoly_; ++voice) {
-        Sample* ampbuf   = input_[voice][I::AMP];
-        Sample* pwmbuf   = input_[voice][I::PWM];
-        Sample* pitchbuf = input_[voice][I::PITCH];
-        for (int i = 0; i < bufferSize_; ++i) {
-            Sample  amplitude = *(ampbuf+i);
-            Sample  pwm       = *(pwmbuf+i);
-            Sample  pitch     = *(pitchbuf+i);
+    for (int voice = 0; voice < voiceCount_; ++voice) {
+        for (int i = 0; i < kBufferSize; ++i) {
+            Sample  amplitude = *input_[voice][I::AMP][i];
+            Sample  pwm       = *input_[voice][I::PWM][i];
+            Sample  pitch     = *input_[voice][I::PITCH][i];
             Sample* output    = &output_[voice][O::SAMPLE][i];
             switch (waveform_) {
                 case SAW:

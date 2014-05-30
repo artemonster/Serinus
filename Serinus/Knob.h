@@ -10,7 +10,7 @@ Last revision: 13.05.2014
 class Knob : public PatchModule {
 public:
     static const CreatorImpl<Knob> creator;
-    Knob(int maxPoly, int bufferSize);
+    Knob(int maxPoly);
     ~Knob() {};
     void FillBuffers();
     void ProcessCommand(const int &cmdType, int polyVoiceNr, const MidiCmd &inValue, int &retVal) {};

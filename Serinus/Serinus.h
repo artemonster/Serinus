@@ -90,6 +90,13 @@ Also, the polyphony is only forced between polykeys and polymixer. The amount of
 then derived from its receivers (max value) - NOT DONE YET.
 Controller+Generator model will be implemented soon enough.
 Laid fondation for SubPatch module and 
+
+30.05.2014: Revamped linking
+I've tried to optimize polyphony usage and linking. Well, I kind of did it. We initialize each module with maximum
+amount of polyphony and buffers (inputs, outputs, state - all poly and buffered), and then, starting from polykeys 
+module, the polyphony is inherited to next modules, until polymixer is encountered, which stops polyphonic duplication.
+Also, "controllers" like PolyKeys and Knobs are now not buffered, meaning you don't copy same values anymore, just
+to fill up the buffer. Inputs are again buffered, and in this case they are linked all to 1 value.
 */
 
 #define SRS_DEBUG                                   //Define this, if you want debug output

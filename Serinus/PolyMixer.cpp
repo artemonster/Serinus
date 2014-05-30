@@ -6,31 +6,32 @@ const ParameterTypes PolyMixer::parameterInfo_ = {
 const PortNames PolyMixer::outputInfo_ = {"sample"};
 const PortNames PolyMixer::inputInfo_ = {"in"};
 
-PolyMixer::PolyMixer(int maxPoly, int bufferSize) : PatchModule (maxPoly, bufferSize) {
+PolyMixer::PolyMixer(int maxPoly) : PatchModule (maxPoly) {
     ItilializeVoices(O::OMAX, I::IMAX);
-    outputSample_ = new float[maxPoly];
-    for (int i = 0; i < maxPoly; ++i) {
+    outputSample_ = new float[kMaxPoly];
+    for (int i = 0; i < kMaxPoly; ++i) {
         outputSample_[i] = 0;
     } 
+    voiceCount_ = maxPoly;
     parameters_ = new void*[parameterInfo_.size()];
     parameters_[0] = &clampedMix_;
     clampedMix_ = true;
 }
 
 void PolyMixer::FillBuffers() {
-    for (int bufIndex = 0; bufIndex < bufferSize_; ++bufIndex) {
+    for (int bufIndex = 0; bufIndex < kBufferSize; ++bufIndex) {
         Sample outSample = 0;
         if (clampedMix_) {
-            for (int i = 0; i < maxPoly_; ++i) {
-                outSample += *( input_[i][I::POLYSAMPLE] + bufIndex );
+            for (int voice = 0; voice < voiceCount_; ++voice) {
+                outSample += *input_[voice][I::POLYSAMPLE][bufIndex];
             }
             outSample *= 0.707946f; //-3dB
             if (outSample >= 1.0f) outSample = 1.0f;
             if (outSample <= -1.0f) outSample = -1.0f;
         } else {
-            Sample scaleFactor = static_cast<Sample>( 1.0/maxPoly_ );
-            for (int i = 0; i < maxPoly_; ++i) {
-                outSample += *( input_[i][I::POLYSAMPLE] + bufIndex )*scaleFactor;
+            Sample scaleFactor = static_cast<Sample>( 1.0/voiceCount_ );
+            for (int voice = 0; voice < voiceCount_; ++voice) {
+                outSample += *input_[voice][I::POLYSAMPLE][bufIndex]*scaleFactor;
             }
         }
         output_[0][O::SAMPLE][bufIndex] = outSample;

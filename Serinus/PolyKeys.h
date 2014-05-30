@@ -11,7 +11,7 @@ Last revision: 29.05.2014
 class PolyKeys : public PatchModule {
 public:
     static const CreatorImpl<PolyKeys> creator;
-    PolyKeys(int maxPoly, int bufferSize);
+    PolyKeys(int maxPoly);
     ~PolyKeys() {};
     void FillBuffers();
     void ProcessCommand(const int &cmdType, int polyVoiceNr, const MidiCmd &inValue, int &retVal);

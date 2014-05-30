@@ -10,12 +10,12 @@ const ParameterTypes ADSR::parameterInfo_ = {
 const PortNames ADSR::outputInfo_ = {"sample"};
 const PortNames ADSR::inputInfo_ = {"gate"};
 
-ADSR::ADSR(int maxPoly, int bufferSize) : PatchModule (maxPoly, bufferSize) {
+ADSR::ADSR(int maxPoly) : PatchModule (maxPoly) {
     ItilializeVoices(O::OMAX, I::IMAX);
-    outputSample_ = new float[maxPoly];
-    state_ = new State[maxPoly];
-    keyPressed_ = new bool[maxPoly];
-    for (int i = 0; i < maxPoly; ++i) {
+    outputSample_ = new float[kMaxPoly];
+    state_ = new State[kMaxPoly];
+    keyPressed_ = new bool[kMaxPoly];
+    for (int i = 0; i < kMaxPoly; ++i) {
         outputSample_[i] = 0;
         state_[i] = IDLE;
         keyPressed_[i] = false;
@@ -31,10 +31,9 @@ ADSR::ADSR(int maxPoly, int bufferSize) : PatchModule (maxPoly, bufferSize) {
 }
 
 void ADSR::FillBuffers() {
-    for (int voice = 0; voice < maxPoly_; ++voice) {
-        Sample* gatebuf = input_[voice][I::GATE];
-        for (int i = 0; i < bufferSize_; ++i) {
-            Sample gate = *(gatebuf + i);
+    for (int voice = 0; voice < voiceCount_; ++voice) {
+        for (int i = 0; i < kBufferSize; ++i) {
+            Sample gate = *input_[voice][I::GATE][i];
             if (gate >= 0.5f && keyPressed_[voice]==false) {
                 keyPressed_[voice] = true;
                 state_[voice]      = ATTACK;

@@ -18,7 +18,7 @@ std::map<std::string, int> Engine::eventLookUp = {
 
 Engine::Engine() {
     //these initalizers are here just for fun
-    voices = 2;
+    voices = 5;
     /*
         TODO register all available hardware (buttons, pots, lcd, io, etc) and assign proper handlers to it.
         TODO initialize filesystem and load a patch from it.
@@ -61,10 +61,11 @@ Engine::Engine() {
     outputSamples = new Sample[kBufferSize];
     inSample = NULL;
 
-    PatchModule* exitModule = loadedPatch.back();  
-    outputSamples = exitModule->getOutput(0, 0); //last module can't be polyphonic! link only to the 1st sample
+    PatchModule* exitModule = loadedPatch.back();
+
+    outputSamples = exitModule->getOutput(0, 0, 0); //last module can't be polyphonic! link only to the 1st sample
     //Initialize voices
-    for (int i = 0; i < kMaxPoly; ++i) {
+    for (int i = 0; i < voices; ++i) {
         availableVoices.push_back(Voice { i, 0 });       
     } 
 }
@@ -75,7 +76,7 @@ void Engine::LoadPatch(std::vector<PatchModule*> &container, rapidxml::xml_node<
     for (xml_node<>* patchModule = patch_node->first_node(); patchModule; patchModule = patchModule->next_sibling()) {
         std::string moduleName = patchModule->name();
         if (moduleName == "SubPatch") {
-            SubPatch* subPatch = new SubPatch(kMaxPoly,kBufferSize);
+            SubPatch* subPatch = new SubPatch(voices);
             //TODO fetch patch from existing ones or use local one
             xml_node<>* patch_node = patchModule->first_node("Patch");
             if (patch_node != NULL) {
@@ -85,7 +86,7 @@ void Engine::LoadPatch(std::vector<PatchModule*> &container, rapidxml::xml_node<
             }
             // TODO link IO, don't forget IDs
         } else {    
-            PatchModule* currentModule = Factory::create(moduleName, kMaxPoly, kBufferSize);
+            PatchModule* currentModule = Factory::create(moduleName, voices);
             if (currentModule != NULL) {
                 std::string id = patchModule->first_attribute("id")->value();
                 container.push_back(currentModule);          
@@ -131,9 +132,7 @@ void Engine::LoadPatch(std::vector<PatchModule*> &container, rapidxml::xml_node<
                         if (inIndex < 0) {
                             std::cout << "Could not find input by name: " << dest << " of " << id << "\n";
                         }
-                        for (int j = 0; j < kMaxPoly; ++j) {
-                            currentModule->setLink(j, inIndex, source->getOutput(j, outIndex));
-                        }
+                        currentModule->setLink(source, inIndex, outIndex);
                     }
                 }
                 //Parse event sources, if available

@@ -11,7 +11,7 @@ Last revision: 29.05.2014
 class SubPatch : public PatchModule {
 public:
     static const CreatorImpl<SubPatch> creator;    
-    SubPatch(int maxPoly, int bufferSize);
+    SubPatch(int maxPoly);
     ~SubPatch() {};
     void FillBuffers();
     void ProcessCommand(const int &cmdType, int polyVoiceNr, const MidiCmd &inValue, int &retVal) {};

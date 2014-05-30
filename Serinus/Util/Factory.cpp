@@ -1,12 +1,12 @@
 #include "Factory.h"
 #include "Creator.h"
 
-PatchModule* Factory::create(const std::string& classname, int maxPoly, int bufferSize) {
+PatchModule* Factory::create(const std::string& classname, int maxPoly) {
     std::map<std::string, Creator*>::iterator i;
     i = get_table().find(classname);
 
     if (i != get_table().end())
-        return i->second->create(maxPoly, bufferSize);
+        return i->second->create(maxPoly);
     else
         return (PatchModule*)NULL;
 }

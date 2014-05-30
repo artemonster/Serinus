@@ -38,7 +38,7 @@ public:
             for (int i = 0; i < kMaxPoly; ++i) {
                 output_[i] = new Sample*[maxOutputs];
                 for (int j = 0; j < maxOutputs; ++j) {
-                    output_[i][j] = new Sample[bufferSize_];
+                    output_[i][j] = new Sample[kBufferSize];
                 }
             }
         }
@@ -46,9 +46,12 @@ public:
         if (maxInputs == 0) {
             input_ = NULL;
         } else {
-            input_ = new Sample**[kMaxPoly];
+            input_ = new Sample***[kMaxPoly];
             for (int i = 0; i < kMaxPoly; ++i) {
-                input_[i] = new Sample*[maxInputs];
+                input_[i] = new Sample**[maxInputs];
+                for (int j = 0; j < maxInputs; ++j) {
+                    input_[i][j] = new Sample*[kBufferSize];
+                }
             }
         }
     }   
@@ -73,8 +76,8 @@ public:
         }
     };
     /**This method returns the address of the output buffer start of a given index and voice number.*/
-    inline Sample* getOutput(const int voiceNum, const int index) {
-        return &(output_[voiceNum][index][0]);
+    inline Sample* getOutput(const int voiceNum, const int index, const int bufferOffset) {
+        return &(output_[voiceNum][index][bufferOffset]);
     }
     /**This method sets the parameter by string name and string value.*/
     inline int setParameter(std::string prop_name, std::string prop_value) {
@@ -114,8 +117,22 @@ public:
         return 0;
     }
     /**This method is used to link input with the output of other module.*/
-    inline void setLink(const int voiceNum, const int index, Sample* link) {
-        input_[voiceNum][index] = link;
+    inline void setLink(PatchModule* source, const int inputNo, const int outputNo) {
+        for (int voice = 0; voice < kMaxPoly; ++voice) {
+            int targetVoice = source->isMonophonic() ? 0 : voice;
+            for (int bufIndex = 0; bufIndex < kBufferSize; ++bufIndex) {
+                int bufferOffset = source->isBuffered() ? bufIndex : 0;
+                input_[voice][inputNo][bufIndex] = source->getOutput(targetVoice, outputNo, bufferOffset);
+            }
+        }
+        setVoiceCount(source->getVoiceCount());
+    }
+    inline void setVoiceCount(const int polyphony) {
+        if (polyphony > voiceCount_) voiceCount_ = polyphony;
+        if (voiceCount_ > 1) isMonophonic_ = false;
+    }
+    inline int getVoiceCount() {
+        return voiceCount_;
     }
     /**This method sets the id (label) to the module.*/
     void setId(std::string id) {
@@ -129,10 +146,15 @@ public:
             return false;
         }
     }
+    virtual bool isMonophonic() {
+        return isMonophonic_;
+    }
+    inline bool isBuffered() {
+        return isBuffered_;
+    }
     /**Default constructor to be called from all derived classes.*/
-    PatchModule(int maxPoly, int maxBufferSize) {
-        maxPoly_ = maxPoly;
-        bufferSize_ = maxBufferSize;
+    PatchModule(int voiceCount) { 
+        voiceCount_ = 1;
     }
     /**Virtual desctructor, so we can delete derived by deleting base class.*/
     virtual ~PatchModule() {
@@ -143,12 +165,13 @@ public:
     };
 protected:
     std::string id_;
-    int maxPoly_;
-    int bufferSize_;
+    int voiceCount_;
+    bool isMonophonic_ = true;
+    bool isBuffered_ = true;
     /**Pointer to an array of output buffer samples (multiple voices).*/
     Sample ***output_;
     /**Pointer to an output buffer array of some module at specified index (multiple voices).*/
-    Sample ***input_;
+    Sample ****input_;
     /**Pointer to an array of pointers to internal parameters of the module.*/
     void **parameters_;
     /**Map with string name of the parameter, index to the look-up table and type.*/

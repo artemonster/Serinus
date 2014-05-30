@@ -13,7 +13,7 @@ Last revision: 29.05.2014
 class VCA : public PatchModule {
 public:
     static const CreatorImpl<VCA> creator;
-    VCA(int maxPoly, int bufferSize);
+    VCA(int maxPoly);
     ~VCA() {};
     void FillBuffers();
     void ProcessCommand(const int &cmdType, int polyVoiceNr, const MidiCmd &inValue, int &retVal) {};

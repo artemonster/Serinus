@@ -5,31 +5,32 @@ const ParameterTypes PolyKeys::parameterInfo_ = {};
 const PortNames PolyKeys::outputInfo_ = {"cv","gate","velo"};
 const PortNames PolyKeys::inputInfo_ = {};
 
-PolyKeys::PolyKeys(int maxPoly, int bufferSize) : PatchModule (maxPoly, bufferSize) {
+PolyKeys::PolyKeys(int maxPoly) : PatchModule (maxPoly) {
     ItilializeVoices(O::OMAX, 0);
-    gate_ = new int[maxPoly];
-    note_ = new int[maxPoly];
-    velocity_ = new int[maxPoly];
-    for (int i = 0; i < maxPoly; ++i) {
+    isMonophonic_ = false;
+    isBuffered_ = false;
+    voiceCount_ = maxPoly;
+    gate_ = new int[kMaxPoly];
+    note_ = new int[kMaxPoly];
+    velocity_ = new int[kMaxPoly];
+    for (int i = 0; i < kMaxPoly; ++i) {
         gate_[i] = velocity_[i] = 0;
         note_[i] = 60;
     }
 }
 
 void PolyKeys::FillBuffers() {
-    for (int voice = 0; voice < maxPoly_; ++voice) {
-        for (int i = 0; i < bufferSize_; ++i) {
-            Sample* gateOut = &output_[voice][O::GATE][i];
-            Sample* cvOut   = &output_[voice][O::CV][i];
-            Sample* veloOut = &output_[voice][O::VELO][i];
-            if (gate_[voice] == 1) {
-                *gateOut = 1.0f;
-            } else {
-                *gateOut = 0.0f;
-            }
-            *cvOut = static_cast<float>((note_[voice]-60))/12.0f; //Centered around C4
-            *veloOut = static_cast<float>(velocity_[voice])/127.0f; //Normalized to 0...1
+    for (int voice = 0; voice < voiceCount_; ++voice) {
+        Sample* gateOut = &output_[voice][O::GATE][0];
+        Sample* cvOut   = &output_[voice][O::CV][0];
+        Sample* veloOut = &output_[voice][O::VELO][0];
+        if (gate_[voice] == 1) {
+            *gateOut = 1.0f;
+        } else {
+            *gateOut = 0.0f;
         }
+        *cvOut = static_cast<float>((note_[voice]-60))/12.0f; //Centered around C4
+        *veloOut = static_cast<float>(velocity_[voice])/127.0f; //Normalized to 0...1
     }
 }
 

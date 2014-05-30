@@ -103,7 +103,7 @@
       <Filter>Header Files\Modules</Filter>
     </ClInclude>
     <ClInclude Include="PolyMixer.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Modules</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -11,7 +11,7 @@ Last revision: 13.05.2014
 class DirectDCO : public PatchModule {
 public:
     static const CreatorImpl<DirectDCO> creator;
-    DirectDCO(int maxPoly, int bufferSize);
+    DirectDCO(int maxPoly);
     ~DirectDCO() {};
     void FillBuffers();
     void ProcessCommand(const int &cmdType, int polyVoiceNr, const MidiCmd &inValue, int &retVal) {};

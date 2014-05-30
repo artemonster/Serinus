@@ -12,7 +12,7 @@ Last revision: 29.05.2014
 class ADSR : public PatchModule {
 public:
     static const CreatorImpl<ADSR> creator;    
-    ADSR(int maxPoly, int bufferSize);
+    ADSR(int maxPoly);
     ~ADSR() {};
     void FillBuffers();
     void ProcessCommand(const int &cmdType, int polyVoiceNr, const MidiCmd &inValue, int &retVal) {};
